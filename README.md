@@ -1,10 +1,12 @@
 # Splat Convert Desktop
 
-基于 [PlayCanvas Splat Transform](https://github.com/playcanvas/splat-transform) 的非官方 Windows / macOS 图形界面转换工具。文件在本地处理，不需要上传到转换网站。
+大文件本地转换，绕开在线网页的体积与浏览器环境限制；免安装便携，图形界面上手即用。基于 [PlayCanvas Splat Transform](https://github.com/playcanvas/splat-transform) 的非官方 Windows / macOS 转换工具，文件不上传。
 
 项目地址：**https://github.com/a13409512853-maker/splat-convert-desktop**
 
-![macOS 界面](docs/interface.png)
+![Windows 界面](docs/interface-windows.png)
+
+当前 Windows 版本为 **1.2.0**。本轮更新了 macOS 源码，但未重新制作或真机验收苹果 1.2.0 应用。
 
 ## 下载与运行
 
@@ -12,13 +14,18 @@
 
 | 系统 | 文件 | 使用方法 |
 | --- | --- | --- |
-| Windows 10 / 11，64 位 x64 | `Splat-Convert-Desktop-1.1.0-win-x64.exe` | 双击运行，无需安装 Node.js |
+| Windows 10 / 11，64 位 x64 | `Splat-Convert-Desktop-1.2.0-win-x64.exe` | 双击运行，无需安装 Node.js |
 | macOS 13 或更高，Apple 芯片 | `Splat-Convert-Desktop-1.1.0-mac-arm64-adhoc.zip` | 解压后，将 `.app` 拖入“应用程序”并打开 |
 | macOS 13 或更高，Intel 芯片 | `Splat-Convert-Desktop-1.1.0-mac-x64-adhoc.zip` | 解压后，将 `.app` 拖入“应用程序”并打开 |
 
 Windows 版使用系统自带的 .NET Framework 4.8。苹果芯片型号可在苹果菜单的“关于本机”中查看：显示 Apple M 系列就用 arm64，显示 Intel 就用 x64。
 
 ## 功能
+
+- 七种界面语言：简体中文、英语、日语、韩语、德语、法语、西班牙语。原始引擎日志保留原文。
+- 带图标的实时资源角标：CPU、物理内存、GPU、显存。未知指标显示“暂不可用”，不会伪装为 0%。
+- 根据本次任务估算与当前资源余量比较，仅在可能不足时预警；用户可返回调整或继续，不自动降低画质。
+- 常见失败原因弹窗、诊断复制和日志入口；主动取消不弹错误框。
 
 - 输入：PLY（含压缩 PLY）、SOG、KSPLAT、SPLAT、SPZ。
 - 输出：标准 PLY、压缩 PLY、SOG、CSV 表格、HTML 内嵌查看器、体素 ZIP 碰撞数据包。
@@ -29,6 +36,16 @@ Windows 版使用系统自带的 .NET Framework 4.8。苹果芯片型号可在�
 - 两端主界面都有本项目仓库入口。首次成功导出后，仅提示一次为项目点 Star（赞）。关闭后也不会再次提示；不自动打开浏览器。
 
 默认输出 SOG，保留 100% 的高斯点。球谐阶数上限在“变换与筛选”中添加。点数精简低于 100% 时，非标准 PLY 输出会先生成中间 PLY 再编码，需要额外磁盘空间。
+
+### 资源监测与预警
+
+Windows 使用系统内存接口、处理器时间、DXGI 显卡信息和本地 GPU 性能计数器。约每 2 秒后台采样，窗口最小化时约每 10 秒采样。鼠标悬停资源角标可查看设备名称、可用内存、系统提交余量和采样时间。
+
+启动转换时，对可快速读取元数据的标准高斯 PLY、SOG 和 SPLAT 估算基础数组与编码开销区间。根据球谐阶数、点数保留比例、线程和设备设置调整需求；减点前的精简阶段也计入内存压力。范围筛选导致的点数不确定时标为上限。其他输入仍可转换，但不会虚构内存预估。
+
+只有预计需求接近或超过当前物理内存、提交额度或可靠显存余量时提示。CPU 高占用只影响速度，不单独预警；采样过期或指标未知不被当作资源不足。自动显卡模式无法可靠确认实际设备时，显存预警采取保守判断，不承诺提前识别全部显卡错误。
+
+macOS 源码读取 CPU 和内存压力近似余量；Apple 芯片标记统一内存，不重复计算独立显存。通用接口无法取得 GPU 使用率或显存占用时显示不可用。内存估算不是精确峰值保证。
 
 ## 本地构建
 
@@ -70,8 +87,8 @@ node scripts/sign-mac.cjs dist/Splat-Convert-Desktop-1.1.0-mac-arm64-unsigned.zi
 推送 `v` 开头的版本标签会自动创建一个草稿发行版，并附上三种程序文件；维护者检查后再发布。版本号位于 `package.json`、`app/package.json` 和 Windows 的程序集信息中，发布前应同步修改。
 
 ```sh
-git tag v1.1.0
-git push origin v1.1.0
+git tag v1.2.0
+git push origin v1.2.0
 ```
 
 只推送源码与锁文件，不要把 `node_modules/`、`.cache/`、`dist/`、模型文件或本机凭据放进仓库。EXE 和苹果 ZIP 应上传到发行版附件。
@@ -106,6 +123,8 @@ Windows 保留原有原生界面；macOS 使用 Electron 桌面窗口。两端�
 ## 许可证与致谢
 
 本项目界面与构建代码采用 [MIT License](LICENSE)。上游引擎、Node.js、Electron、Dawn/WebGPU、WebP、SPZ 以及图标等组件分别遵循其自身许可证。本仓库提供 `THIRD-PARTY-LICENSES.txt`，构建过程也会将依赖许可放入程序和发行包。
+
+新增的 macOS 元数据读取依赖许可另见 `docs/licenses/`；重新构建时会合并到第三方许可清单中。
 
 - [PlayCanvas Splat Transform](https://github.com/playcanvas/splat-transform)
 - [SuperSplat Convert](https://superspl.at/convert)

@@ -1,6 +1,8 @@
 const { contextBridge, ipcRenderer, webUtils } = require('electron');
 contextBridge.exposeInMainWorld('desktop', {
   config: () => ipcRenderer.invoke('config'),
+  resources: () => ipcRenderer.invoke('resources'),
+  setLanguage: code => ipcRenderer.invoke('language', code),
   chooseInputs: () => ipcRenderer.invoke('choose-inputs'),
   droppedInputs: files => ipcRenderer.invoke('dropped-inputs', files.map(file => webUtils.getPathForFile(file))),
   chooseOutput: options => ipcRenderer.invoke('choose-output', options),

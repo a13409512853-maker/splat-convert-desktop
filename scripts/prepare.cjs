@@ -119,7 +119,7 @@ function fileList(platform) {
   return list;
 }
 async function notices(runtime) {
-  const licensePaths = ['@playcanvas/splat-transform/LICENSE', 'playcanvas/LICENSE', '@adobe/spz/LICENSE', 'webgpu/LICENSE.md', 'yazl/LICENSE', 'buffer-crc32/LICENSE', 'lucide-static/LICENSE',
+  const licensePaths = ['@playcanvas/splat-transform/LICENSE', 'playcanvas/LICENSE', '@adobe/spz/LICENSE', 'webgpu/LICENSE.md', 'yazl/LICENSE', 'buffer-crc32/LICENSE', 'lucide-static/LICENSE', 'yauzl/LICENSE', 'pend/LICENSE',
     'webgpu/dist/win32-x64/dxcompiler-LICENSE.TXT', 'webgpu/dist/win32-x64/dxcompiler-ThirdPartyNotices.txt'];
   const parts = [
     'Splat Convert Desktop - third-party notices',

@@ -1,5 +1,7 @@
 using System;
 using System.Diagnostics;
+using System.Drawing;
+using System.Drawing.Imaging;
 using System.IO;
 using System.IO.Compression;
 using System.Linq;
@@ -8,10 +10,39 @@ using System.Threading;
 using System.Windows.Forms;
 
 static class Smoke {
+    internal static int Layout(string folder) {
+        Directory.CreateDirectory(folder); I18n.Language="zh";
+        using(var ui=new MainWindow(new string[0])) {
+            var timer=new System.Windows.Forms.Timer {Interval=4000};
+            timer.Tick+=(s,e)=>{
+                timer.Stop();ui.SetLanguage("zh");ui.PerformLayout();ui.Refresh();Application.DoEvents();
+                File.WriteAllLines(Path.Combine(folder,"bounds.txt"),Descendants(ui).Select(c=>c.GetType().Name+" "+c.AccessibleName+" text="+c.Text+" bounds="+c.Bounds+" visible="+c.Visible+" screen="+ui.PointToClient(c.PointToScreen(Point.Empty))));
+                Capture(ui,Path.Combine(folder,"window.png"));
+                ui.Size=ui.MinimumSize;
+                foreach(string code in I18n.Codes){ui.SetLanguage(code);ui.PerformLayout();ui.Refresh();Application.DoEvents();Capture(ui,Path.Combine(folder,"minimum-"+code+".png"));}
+                ui.Close();
+            };
+            timer.Start();Application.Run(ui);timer.Dispose();
+        }
+        return 0;
+    }
+    static void Capture(Form window,string path) {
+        window.Refresh();Application.DoEvents();
+        using(var bitmap=new Bitmap(window.Width,window.Height)) {
+            window.DrawToBitmap(bitmap,new Rectangle(Point.Empty,window.Size));
+            bitmap.Save(path,ImageFormat.Png);
+        }
+    }
     public static int Run(string folder) {
         Directory.CreateDirectory(folder);
         using (var log = new StreamWriter(Path.Combine(folder, "self-test.log"), false, Encoding.UTF8) { AutoFlush = true }) {
             int failures = 0;
+            try { HealthTests.Run(folder, log.WriteLine); } catch(Exception ex) { failures++; log.WriteLine(ex); }
+            using (var monitor = new ResourceMonitor()) {
+                var first = monitor.Sample(); Thread.Sleep(600); var measured = monitor.Sample();
+                if (measured.TotalMemory <= 0 || measured.AvailableMemory <= 0 || !measured.Cpu.HasValue) { failures++; log.WriteLine("FAIL live CPU / RAM sampling"); }
+                else log.WriteLine("PASS live metrics: CPU=" + measured.Cpu + "; RAM=" + measured.AvailableMemory + "/" + measured.TotalMemory + "; commit=" + measured.CommitAvailable + "; GPUs=" + String.Join(";",measured.Gpus.Select(g=>g.Name+" usage="+g.Usage+" vram="+g.MemoryUsed+"/"+g.MemoryTotal)));
+            }
             string ply = Path.Combine(folder, "测试 样本.ply");
             Fixture(ply, 2048, true);
             using (var ui = new MainWindow(new[] { ply })) {
@@ -19,26 +50,53 @@ static class Smoke {
                     ui.PromptMarker = Path.Combine(folder, "ui-star-marker");
                     int promptCount = 0;
                     ui.PromptOverride = () => promptCount++;
+                    ui.ErrorOverride = (diagnostic, details) => log.WriteLine("GUI ERROR " + diagnostic.Code + ": " + details);
+                    ui.WarningOverride = text => { log.WriteLine("GUI WARNING " + text); return true; };
                     ui.Show(); Application.DoEvents(); ui.Refresh();
-                    var formats = Descendants(ui).OfType<ComboBox>().Single(b => b.Items.Count == Converter.Formats.Length);
+                    var warmup=Stopwatch.StartNew();while(warmup.ElapsedMilliseconds<9000 && (ui.LastResources==null||!ui.LastResources.Cpu.HasValue)){Application.DoEvents();Thread.Sleep(20);}
+                    var formats = Descendants(ui).OfType<ComboBox>().Single(b => b.AccessibleName == "format");
                     if (!formats.Text.StartsWith("SOG")) throw new InvalidOperationException("Default format mismatch");
                     formats.SelectedIndex = Converter.Formats.Length - 1;
-                    if (!formats.Text.StartsWith("体素") || !Descendants(ui).OfType<TrackBar>().Any(t => t.Visible && t.AccessibleName == "体素边长"))
+                    if (!formats.Text.StartsWith("体素") || !Descendants(ui).OfType<TrackBar>().Any(t => t.Visible && t.AccessibleName == "voxel"))
                         throw new InvalidOperationException("Voxel controls are not visible");
                     formats.SelectedIndex = 0;
-                    Button button = Descendants(ui).OfType<Button>().Single(b => b.Text == "开始转换");
+                    foreach(string language in I18n.Codes) {
+                        ui.SetLanguage(language); Application.DoEvents();
+                        if(Descendants(ui).OfType<Button>().Single(b=>b.AccessibleName=="start").Text!=I18n.T("start")) throw new IOException("Language switch failed: "+language);
+                        Capture(ui,Path.Combine(folder,"interface-"+language+".png"));
+                    }
+                    ui.SetLanguage("zh");
+                    Button button = Descendants(ui).OfType<Button>().Single(b => b.AccessibleName == "start");
                     if (!button.Visible || !button.Enabled || button.Width < 60) throw new InvalidOperationException("Start button is not actionable");
                     string output = Path.Combine(folder, "界面 测试.sog");
-                    Descendants(ui).OfType<TextBox>().Single(t => !t.Multiline).Text = output;
+                    Descendants(ui).OfType<TextBox>().Single(t => t.AccessibleName == "output").Text = output;
                     button.PerformClick();
                     var timer = Stopwatch.StartNew();
                     while (!button.Enabled && timer.ElapsedMilliseconds < 30000) { Application.DoEvents(); Thread.Sleep(20); }
-                    if (!File.Exists(output) || new FileInfo(output).Length == 0) throw new IOException(Descendants(ui).OfType<TextBox>().Single(t => t.Multiline).Text);
+                    if (!File.Exists(output) || new FileInfo(output).Length == 0) throw new IOException(Descendants(ui).OfType<TextBox>().Single(t => t.AccessibleName == "log").Text);
                     if (promptCount != 1 || StarPrompt.TryClaim(ui.PromptMarker)) throw new IOException("One-time star prompt failed");
                     if (!Descendants(ui).OfType<LinkLabel>().Any(x => x.Text == App.Repository)) throw new IOException("Repository link missing");
+                    int warnings=0;
+                    ui.ResourceOverride=()=>new ResourceSnapshot {Sampled=DateTime.UtcNow,TotalMemory=16e9,AvailableMemory=1,CommitAvailable=1};
+                    ui.WarningOverride=text=>{warnings++;return false;};
+                    Descendants(ui).OfType<TextBox>().Single(t=>t.AccessibleName=="output").Text=Path.Combine(folder,"must-not-exist.sog");
+                    button.PerformClick();timer.Restart();while(!button.Enabled&&timer.ElapsedMilliseconds<10000){Application.DoEvents();Thread.Sleep(20);}
+                    if(warnings!=1||File.Exists(Path.Combine(folder,"must-not-exist.sog")))throw new IOException("Preflight did not return to settings safely");
+                    log.WriteLine("PASS preflight insufficient-resource dialog and return without converting");
                     ui.Close();
                     log.WriteLine("PASS window layout, repository link, default GUI conversion and one-time star prompt");
                 } catch (Exception ex) { failures++; log.WriteLine("FAIL window test: " + ex); }
+            }
+            string invalid=Path.Combine(folder,"invalid-source.ply");File.WriteAllText(invalid,"not a PLY file\n");
+            using(var ui=new MainWindow(new[]{invalid})) {
+                int errors=0;ui.ErrorOverride=(d,raw)=>{errors++;if(!raw.Contains("Engine: 3.10.3"))throw new IOException("Diagnostic lacks version");};
+                ui.PromptMarker=Path.Combine(folder,"must-not-prompt");ui.WarningOverride=text=>true;ui.Show();Application.DoEvents();
+                Descendants(ui).OfType<TextBox>().Single(t=>t.AccessibleName=="output").Text=Path.Combine(folder,"invalid-output.sog");
+                var button=Descendants(ui).OfType<Button>().Single(b=>b.AccessibleName=="start");button.PerformClick();var timer=Stopwatch.StartNew();
+                while(!button.Enabled&&timer.ElapsedMilliseconds<20000){Application.DoEvents();Thread.Sleep(20);}
+                if(errors!=1||File.Exists(ui.PromptMarker)||File.Exists(Path.Combine(folder,"invalid-output.sog"))){failures++;log.WriteLine("FAIL real engine failure notification");}
+                else log.WriteLine("PASS real engine failure produces exactly one diagnostic and no success prompt");
+                ui.Close();
             }
             using (var c = new Converter()) {
                 foreach (var format in Converter.Formats) {

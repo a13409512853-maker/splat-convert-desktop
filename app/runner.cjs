@@ -80,7 +80,7 @@ function processRun(runtime, args, signal, log) {
       { cwd: runtime, env: environment, shell: false, windowsHide: true, stdio: ['ignore', 'pipe', 'pipe'] });
     const tail = [];
     const readers = [child.stdout, child.stderr].map(stream => readline.createInterface({ input: stream }));
-    readers.forEach(reader => reader.on('line', line => { tail.push(line); if (tail.length > 6) tail.shift(); log(line); }));
+    readers.forEach(reader => reader.on('line', line => { tail.push(line); if (tail.length > 80) tail.shift(); log(line); }));
     const cancel = () => child.kill('SIGTERM');
     signal?.addEventListener('abort', cancel, { once: true });
     if (signal?.aborted) cancel();
@@ -111,14 +111,14 @@ async function convert(request, runtime, { signal, status = () => {}, log = () =
     const args = job.inputs.flatMap(i => [i.path, ...i.args]);
     args.push(separate ? reduced : engineOutput, ...job.ops);
     if (reduce) args.push('--decimate', job.keep + '%', '--scratch-dir', staging);
-    status(separate ? '阶段 1 / 2：精简高斯点…' : '正在转换…');
+    status(separate ? 'reducing' : 'converting');
     await processRun(runtime, engineArgs(job, args, reduce), signal, log);
     if (separate) {
-      status('阶段 2 / 2：编码输出…');
+      status('encoding');
       await processRun(runtime, engineArgs(job, [reduced, engineOutput]), signal, log);
     }
     if (job.format === 'voxel') {
-      signal?.throwIfAborted(); status('正在打包体素…');
+      signal?.throwIfAborted(); status('packing');
       const zip = new yazl.ZipFile();
       const done = pipeline(zip.outputStream, fs.createWriteStream(output), { signal });
       for (const file of [engineOutput, engineOutput.replace(/\.json$/i, '.bin')]) zip.addFile(file, path.basename(file));

@@ -9,19 +9,19 @@
   <script defer src="renderer.js"></script>
 </head>
 <body>
-  <header><h1>Splat Convert <span>本地转换</span></h1><span class="engine">Splat Transform 3.10.3</span></header>
+  <header><h1>Splat Convert <span data-i18n="local">本地转换</span></h1><div class="header-tools"><span class="engine">Splat Transform 3.10.3</span><label class="language"><img src="icons/languages.svg" alt=""><select id="language" aria-label="Language"><option value="zh">简体中文</option><option value="en">English</option><option value="ja">日本語</option><option value="ko">한국어</option><option value="de">Deutsch</option><option value="fr">Français</option><option value="es">Español</option></select></label></div></header>
   <main>
     <fieldset id="workspace">
       <section class="inputs">
-        <div class="section-head"><h2><b>01</b> 源文件</h2><span id="total">0 个文件</span></div>
+        <div class="section-head"><h2><b>01</b> <span data-i18n="inputs">源文件</span></h2><span id="total">0 个文件</span></div>
         <div class="toolbar">
-          <button id="add-files"><img src="icons/plus.svg" alt="">添加文件</button>
+          <button id="add-files"><img src="icons/plus.svg" alt=""><span data-i18n="add">添加文件</span></button>
           <button id="remove-file" class="icon" title="移除文件" aria-label="移除文件"><img src="icons/minus.svg" alt=""></button>
           <button id="file-up" class="icon" title="上移文件" aria-label="上移文件"><img src="icons/arrow-up.svg" alt=""></button>
           <button id="file-down" class="icon" title="下移文件" aria-label="下移文件"><img src="icons/arrow-down.svg" alt=""></button>
         </div>
-        <div id="drop-zone"><table><thead><tr><th>文件名</th><th>大小</th></tr></thead><tbody id="file-list"></tbody></table></div>
-        <div class="section-head"><h2><b>02</b> 变换与筛选</h2></div>
+        <div id="drop-zone"><table><thead><tr><th data-i18n="fileName">文件名</th><th data-i18n="size">大小</th></tr></thead><tbody id="file-list"></tbody></table></div>
+        <div class="section-head"><h2><b>02</b> <span data-i18n="actions">变换与筛选</span></h2></div>
         <div class="toolbar"><select id="scope" aria-label="操作范围"><option value="-1">合并后的结果</option></select>
           <button id="add-op" class="icon" title="添加操作" aria-label="添加操作"><img src="icons/plus.svg" alt=""></button>
           <button id="edit-op" class="icon" title="编辑操作" aria-label="编辑操作"><img src="icons/pencil.svg" alt=""></button>
@@ -32,24 +32,25 @@
         <select id="operations" size="5" aria-label="按执行顺序排列的操作"></select>
       </section>
       <section class="settings">
-        <div class="section-head"><h2><b>03</b> 输出设置</h2></div>
-        <label class="field"><span>导出格式</span><select id="format"></select></label>
-        <div class="field"><label for="output">输出文件</label><div class="path-field"><input id="output" type="text" spellcheck="false"><button id="browse-output" class="icon" title="选择输出位置" aria-label="选择输出位置"><img src="icons/folder-open.svg" alt=""></button></div></div>
-        <label class="slider"><span>保留点数</span><input id="keep" type="range" min="1" max="100" value="100"><output for="keep">100%</output></label>
-        <label class="slider sog-setting"><span>球谐压缩迭代</span><input id="iterations" type="range" min="1" max="100" value="10"><output for="iterations">10</output></label>
-        <label class="slider sog-setting"><span>WebP 打包强度</span><input id="effort" type="range" min="-1" max="9" value="-1"><output for="effort">默认</output></label>
-        <label class="slider sog-setting"><span>编码线程</span><input id="workers" type="range" min="0" max="16" value="4"><output for="workers">4</output></label>
-        <label class="slider voxel-setting" hidden><span>体素边长</span><input id="voxel" type="range" min="1" max="500" value="50"><output for="voxel">0.05</output></label>
-        <label class="slider voxel-setting" hidden><span>不透明度阈值</span><input id="opacity" type="range" min="0" max="100" value="10"><output for="opacity">0.1</output></label>
-        <label class="field" id="device-field"><span>计算设备</span><select id="device"><option value="auto">自动选用显卡</option><option value="cpu">CPU（处理器）</option><option value="metal">Metal（苹果图形后端）</option></select></label>
-        <button id="licenses" class="quiet">开源许可</button>
+        <div class="section-head"><h2><b>03</b> <span data-i18n="settings">输出设置</span></h2></div>
+        <label class="field"><span data-i18n="format">导出格式</span><select id="format"></select></label>
+        <div class="field"><label for="output" data-i18n="output">输出文件</label><div class="path-field"><input id="output" type="text" spellcheck="false"><button id="browse-output" class="icon" title="选择输出位置" aria-label="选择输出位置"><img src="icons/folder-open.svg" alt=""></button></div></div>
+        <label class="slider"><span data-i18n="keep">保留点数</span><input id="keep" type="range" min="1" max="100" value="100"><output for="keep">100%</output></label>
+        <label class="slider sog-setting"><span data-i18n="iterations">球谐压缩迭代</span><input id="iterations" type="range" min="1" max="100" value="10"><output for="iterations">10</output></label>
+        <label class="slider sog-setting"><span data-i18n="effort">WebP 打包强度</span><input id="effort" type="range" min="-1" max="9" value="-1"><output for="effort">默认</output></label>
+        <label class="slider sog-setting"><span data-i18n="workers">编码线程</span><input id="workers" type="range" min="0" max="16" value="4"><output for="workers">4</output></label>
+        <label class="slider voxel-setting" hidden><span data-i18n="voxel">体素边长</span><input id="voxel" type="range" min="1" max="500" value="50"><output for="voxel">0.05</output></label>
+        <label class="slider voxel-setting" hidden><span data-i18n="opacity">不透明度阈值</span><input id="opacity" type="range" min="0" max="100" value="10"><output for="opacity">0.1</output></label>
+        <label class="field" id="device-field"><span data-i18n="device">计算设备</span><select id="device"><option value="auto" data-i18n="auto">自动选用显卡</option><option value="cpu" data-i18n="cpuDevice">CPU（处理器）</option><option value="metal" data-i18n="metal">Metal（苹果图形后端）</option></select></label>
+        <button id="licenses" class="quiet" data-i18n="licenses">开源许可</button>
       </section>
     </fieldset>
-    <section class="logs"><h2>运行日志</h2><pre id="log" aria-live="off"></pre></section>
-    <footer><div><strong id="status" role="status">就绪</strong><button id="show-output" class="quiet" hidden>打开输出目录</button></div><div class="toolbar"><button id="cancel" disabled><img src="icons/square.svg" alt="">取消</button><button id="start" class="primary" disabled><img src="icons/play.svg" alt="">开始转换</button></div></footer>
+    <section class="logs"><h2 data-i18n="logs">运行日志</h2><pre id="log" aria-live="off"></pre></section>
+    <footer><div><strong id="status" role="status">就绪</strong><button id="show-output" class="quiet" data-i18n="openOutput" hidden>打开输出目录</button></div><div class="toolbar"><button id="cancel" disabled><img src="icons/square.svg" alt=""><span data-i18n="cancel">取消</span></button><button id="start" class="primary" disabled><img src="icons/play.svg" alt=""><span data-i18n="start">开始转换</span></button></div></footer>
     <progress id="progress" max="100" value="0" aria-label="转换进度"></progress>
     <a id="repository" href="https://github.com/a13409512853-maker/splat-convert-desktop"><img src="icons/github.svg" alt="">https://github.com/a13409512853-maker/splat-convert-desktop</a>
   </main>
-  <dialog id="operation-dialog"><form method="dialog" id="operation-form"><h2 id="op-title">添加操作</h2><label>操作<select id="op-type"></select></label><div id="op-fields"></div><p id="op-error" role="alert"></p><div class="dialog-actions"><button type="button" id="dismiss-op">取消</button><button type="submit" class="primary">确定</button></div></form></dialog>
+  <aside class="resource-bar" aria-label="Resources"><span id="metric-cpu"><img src="icons/cpu.svg" alt=""><span></span></span><span id="metric-memory"><img src="icons/memory-stick.svg" alt=""><span></span></span><span id="metric-gpu"><img src="icons/monitor.svg" alt=""><span></span></span><span id="metric-vram"><img src="icons/microchip.svg" alt=""><span></span></span></aside>
+  <dialog id="operation-dialog"><form method="dialog" id="operation-form"><h2 id="op-title">添加操作</h2><select id="op-type" aria-label="Action"></select><div id="op-fields"></div><p id="op-error" role="alert"></p><div class="dialog-actions"><button type="button" id="dismiss-op" data-i18n="cancel">取消</button><button type="submit" class="primary" data-i18n="ok">确定</button></div></form></dialog>
 </body>
 </html>

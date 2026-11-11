@@ -13,452 +13,381 @@ using System.Windows.Forms;
 
 static class App {
     internal const string Repository = "https://github.com/a13409512853-maker/splat-convert-desktop";
-    [STAThread]
-    static int Main(string[] args) {
+    [STAThread] static int Main(string[] args) {
         Application.EnableVisualStyles();
         Application.SetCompatibleTextRenderingDefault(false);
+        if (args.Length == 2 && args[0] == "--ui-test") return Smoke.Layout(args[1]);
+        if (args.Length == 2 && args[0] == "--health-test") {
+            Directory.CreateDirectory(args[1]);
+            using (var log = new StreamWriter(Path.Combine(args[1], "health-tests.log"))) {
+                try { HealthTests.Run(args[1], log.WriteLine); return 0; }
+                catch (Exception ex) { log.WriteLine(ex); return 1; }
+            }
+        }
         if (args.Length == 2 && args[0] == "--self-test") return Smoke.Run(args[1]);
+        I18n.Restore();
         using (var win = new MainWindow(args)) Application.Run(win);
         return 0;
     }
 }
 
-sealed class Knob : Panel {
-    readonly TrackBar track;
-    readonly Label value;
-    public int Value { get { return track.Value; } }
-    public Knob(string name, int min, int max, int initial, Func<int, string> format, string tip, ToolTip tips) {
-        Height = 55;
-        var label = new Label { Text = name, ForeColor = MainWindow.Ink, Dock = DockStyle.Left, Width = 136, TextAlign = ContentAlignment.MiddleLeft };
-        value = new Label { Dock = DockStyle.Right, Width = 62, TextAlign = ContentAlignment.MiddleRight, ForeColor = MainWindow.Teal };
-        track = new TrackBar { Minimum = min, Maximum = max, Value = initial, Dock = DockStyle.Fill, TickStyle = TickStyle.None, AutoSize = false, AccessibleName = name };
-        var rail = new Panel { Dock = DockStyle.Fill, Padding = new Padding(0, 14, 0, 12) };
-        rail.Controls.Add(track);
-        Controls.Add(rail);
-        Controls.Add(value);
-        Controls.Add(label);
-        track.ValueChanged += (s, e) => value.Text = format(track.Value);
-        value.Text = format(initial);
-        tips.SetToolTip(label, tip);
-        tips.SetToolTip(value, tip);
+static class Art {
+    static readonly Dictionary<string, Image> Images = new Dictionary<string, Image>();
+    internal static Image Icon(string name) {
+        Image image;
+        if (!Images.TryGetValue(name, out image)) {
+            using (var stream = Assembly.GetExecutingAssembly().GetManifestResourceStream("icon." + name + ".png")) {
+                if (stream == null) return null;
+                using (var original = Image.FromStream(stream)) image = new Bitmap(original, 20, 20);
+            }
+            Images[name] = image;
+        }
+        return image;
     }
 }
 
+sealed class DisplayCombo : ComboBox {
+    internal DisplayCombo() {
+        DropDownStyle=ComboBoxStyle.DropDownList; DrawMode=DrawMode.OwnerDrawFixed;
+        ItemHeight=Font.Height+6;
+    }
+    protected override void OnFontChanged(EventArgs e) {base.OnFontChanged(e);ItemHeight=Font.Height+6;}
+    protected override void OnDrawItem(DrawItemEventArgs e) {
+        e.DrawBackground();
+        if(e.Index>=0 && e.Index<Items.Count)TextRenderer.DrawText(e.Graphics,GetItemText(Items[e.Index]),Font,Rectangle.Inflate(e.Bounds,-5,0),e.ForeColor,TextFormatFlags.VerticalCenter|TextFormatFlags.SingleLine|TextFormatFlags.EndEllipsis|TextFormatFlags.NoPrefix);
+        e.DrawFocusRectangle();base.OnDrawItem(e);
+    }
+    protected override void WndProc(ref Message message) {
+        base.WndProc(ref message);
+        // Native combo boxes omit the edit-area text when rendered with WM_PRINTCLIENT.
+        if(message.Msg==0x318 && message.WParam!=IntPtr.Zero) {
+            using(var graphics=Graphics.FromHdc(message.WParam)) {
+                var rectangle=new Rectangle(3,2,Math.Max(0,ClientSize.Width-SystemInformation.VerticalScrollBarWidth-6),Math.Max(0,ClientSize.Height-4));
+                using(var brush=new SolidBrush(SystemColors.Window))graphics.FillRectangle(brush,rectangle);
+                TextRenderer.DrawText(graphics,Text,Font,rectangle,Enabled?ForeColor:SystemColors.GrayText,TextFormatFlags.VerticalCenter|TextFormatFlags.SingleLine|TextFormatFlags.EndEllipsis|TextFormatFlags.NoPrefix);
+            }
+        }
+    }
+}
+
+sealed class Knob : UserControl {
+    internal readonly TrackBar Track;
+    readonly Label label, value;
+    readonly string key;
+    readonly Func<int, string> format;
+    internal int Value { get { return Track.Value; } }
+    internal Knob(string key, int min, int max, int initial, Func<int, string> format) {
+        this.key = key; this.format = format; Height = 53; Margin = Padding.Empty;
+        var grid = new TableLayoutPanel { Dock = DockStyle.Fill, ColumnCount = 3, RowCount = 1, Margin = Padding.Empty };
+        grid.ColumnStyles.Add(new ColumnStyle(SizeType.Absolute, 166));
+        grid.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 100));
+        grid.ColumnStyles.Add(new ColumnStyle(SizeType.Absolute, 78));
+        label = new Label { Dock = DockStyle.Fill, TextAlign = ContentAlignment.MiddleLeft, AutoEllipsis = true };
+        value = new Label { Dock = DockStyle.Fill, TextAlign = ContentAlignment.MiddleRight, ForeColor = MainWindow.Teal, AutoEllipsis = true };
+        Track = new TrackBar { Minimum = min, Maximum = max, Value = initial, TickStyle = TickStyle.None, Dock = DockStyle.Fill,
+            AutoSize = false, Margin = new Padding(0, 11, 0, 7), AccessibleName = key };
+        Track.ValueChanged += (s, e) => value.Text = format(Track.Value);
+        grid.Controls.Add(label, 0, 0); grid.Controls.Add(Track, 1, 0); grid.Controls.Add(value, 2, 0);
+        Controls.Add(grid); Translate();
+    }
+    internal void Translate() { label.Text = I18n.T(key); value.Text = format(Track.Value); }
+}
+
 sealed class MainWindow : Form {
-    internal static readonly Color Ink = Color.FromArgb(25, 37, 43), Teal = Color.FromArgb(0, 105, 94);
-    static readonly Color Muted = Color.FromArgb(78, 96, 103), Paper = Color.FromArgb(247, 249, 248), Line = Color.FromArgb(217, 226, 224);
+    internal static readonly Color Ink = Color.FromArgb(30, 40, 39), Teal = Color.FromArgb(0, 116, 95),
+        Muted = Color.FromArgb(98, 111, 106), Line = Color.FromArgb(218, 225, 221), Paper = Color.FromArgb(245, 247, 246);
     readonly Converter converter = new Converter();
+    readonly ResourceMonitor monitor = new ResourceMonitor();
     readonly List<InputFile> inputs = new List<InputFile>();
     readonly List<Op> outputOps = new List<Op>();
     readonly ListView files = new ListView();
     readonly ListBox steps = new ListBox();
-    readonly ComboBox scope = Combo(), formats = Combo(), device = Combo();
+    readonly ComboBox scope = Combo(), formats = Combo(), device = Combo(), language = Combo();
     readonly TextBox output = new TextBox(), logView = new TextBox();
-    readonly Label status = LabelOf("就绪", true), tally = LabelOf("0 个文件", false);
+    readonly Label status = new Label(), tally = new Label();
     readonly ProgressBar progress = new ProgressBar();
     readonly ToolTip tips = new ToolTip();
     readonly ConcurrentQueue<string> events = new ConcurrentQueue<string>();
     readonly System.Windows.Forms.Timer ticker = new System.Windows.Forms.Timer { Interval = 250 };
+    readonly List<Action> translations = new List<Action>();
+    readonly Label[] metrics = new Label[4];
     readonly Knob keep, iterations, effort, workers, voxel, opacity;
-    readonly TableLayoutPanel workspace, settings;
+    readonly TableLayoutPanel workspace;
     readonly Button start, cancel, reveal;
     CancellationTokenSource active;
-    bool autoPath = true, updatingPath, closing;
-    string completed;
+    bool autoPath = true, updatingPath, closing, sampling, changing;
+    DateTime nextSample = DateTime.MinValue;
+    ResourceSnapshot resources;
+    string completed, statusKey = "ready";
     internal string PromptMarker;
     internal Action PromptOverride;
+    internal Action<Diagnostic, string> ErrorOverride;
+    internal Func<string, bool> WarningOverride;
+    internal Func<ResourceSnapshot> ResourceOverride;
+    internal ResourceSnapshot LastResources { get { return resources; } }
 
-    public MainWindow(string[] paths) {
-        Text = "SuperSplat Convert · 桌面版";
-        Font = new Font("Microsoft YaHei UI", 9F);
-        BackColor = Paper; ForeColor = Ink;
-        AutoScaleMode = AutoScaleMode.Font;
-        MinimumSize = new Size(890, 665);
-        Size = new Size(1040, 760);
-        StartPosition = FormStartPosition.CenterScreen;
-        Icon = SystemIcons.Application;
-        var header = new Panel { Dock = DockStyle.Top, Height = 60, BackColor = Color.FromArgb(21, 49, 46), Padding = new Padding(20, 0, 20, 0) };
-        var title = new Label { Dock = DockStyle.Fill, Text = "SuperSplat Convert   /   本地转换", ForeColor = Color.White,
-            Font = new Font(Font.FontFamily, 15, FontStyle.Bold), TextAlign = ContentAlignment.MiddleLeft };
-        var build = new Label { Dock = DockStyle.Right, Width = 220, Text = "SPLAT TRANSFORM  3.10.3", ForeColor = Color.FromArgb(174, 220, 206), TextAlign = ContentAlignment.MiddleRight };
-        header.Controls.Add(title); header.Controls.Add(build);
-
-        var footer = Grid(3, 2); footer.Dock = DockStyle.Bottom; footer.Height = 90; footer.Padding = new Padding(18, 8, 18, 9);
-        footer.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 100)); footer.ColumnStyles.Add(new ColumnStyle(SizeType.Absolute, 103)); footer.ColumnStyles.Add(new ColumnStyle(SizeType.Absolute, 141));
-        footer.RowStyles.Add(new RowStyle(SizeType.Percent, 100)); footer.RowStyles.Add(new RowStyle(SizeType.Absolute, 14));
-        var footLeft = Bar(); footLeft.Controls.Add(status);
-        reveal = ButtonOf("打开输出目录", "打开最近一次输出所在的文件夹", 115, () => OpenOutput()); reveal.Visible = false;
-        footLeft.Controls.Add(reveal);
-        cancel = ButtonOf("取消", "停止正在进行的转换", 95, () => Stop()); cancel.Enabled = false;
-        start = ButtonOf("开始转换", "开始本地转换", 130, Begin); start.BackColor = Teal; start.ForeColor = Color.White; start.FlatAppearance.BorderColor = Teal;
-        footer.Controls.Add(footLeft, 0, 0); footer.Controls.Add(cancel, 1, 0); footer.Controls.Add(start, 2, 0);
-        progress.Dock = DockStyle.Fill; progress.Style = ProgressBarStyle.Continuous; progress.MarqueeAnimationSpeed = 30;
-        footer.Controls.Add(progress, 0, 1); footer.SetColumnSpan(progress, 3);
-
-        var center = Grid(1, 2); center.Dock = DockStyle.Fill; center.Padding = new Padding(18, 12, 18, 0);
-        center.RowStyles.Add(new RowStyle(SizeType.Percent, 100)); center.RowStyles.Add(new RowStyle(SizeType.Absolute, 116));
-        workspace = Grid(2, 1); workspace.Dock = DockStyle.Fill;
-        workspace.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 52)); workspace.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 48));
+    internal MainWindow(string[] paths) {
+        Font = new Font("Microsoft YaHei UI", 9F); BackColor = Paper; ForeColor = Ink; AutoScaleMode = AutoScaleMode.Dpi;
+        MinimumSize = new Size(1030, 800); Size = new Size(1180, 870); StartPosition = FormStartPosition.CenterScreen;
+        Text = "Splat Convert Desktop 1.2.0"; Icon = SystemIcons.Application;
+        var root = Grid(1, 6);
+        foreach (int height in new[] { 76, -1, 137, 58, 35, 41 })
+            root.RowStyles.Add(height < 0 ? new RowStyle(SizeType.Percent, 100) : new RowStyle(SizeType.Absolute, height));
+        var header = new Panel { Dock = DockStyle.Fill, BackColor = Color.FromArgb(28, 43, 39), Padding = new Padding(23, 0, 23, 0) };
+        var brand = new Label { Text = "Splat Convert", Font = new Font(Font.FontFamily, 19, FontStyle.Bold), ForeColor = Color.White,
+            Dock = DockStyle.Left, Width = 215, TextAlign = ContentAlignment.MiddleLeft };
+        var subtitle = new Label { ForeColor = Color.FromArgb(174, 199, 182), Dock = DockStyle.Fill, TextAlign = ContentAlignment.MiddleLeft };
+        Bind(subtitle, "local");
+        language.Items.AddRange(I18n.Names); language.SelectedIndex = Array.IndexOf(I18n.Codes, I18n.Language); language.AccessibleName = "language";
+        var langHost = new Panel { Dock = DockStyle.Right, Width = 193, Padding = new Padding(30, 22, 0, 22) };
+        langHost.Controls.Add(language);
+        langHost.Controls.Add(new PictureBox { Image = Art.Icon("language-white"), SizeMode = PictureBoxSizeMode.CenterImage, Dock = DockStyle.Left, Width = 25 });
+        header.Controls.Add(subtitle); header.Controls.Add(brand); header.Controls.Add(langHost); root.Controls.Add(header, 0, 0);
+        workspace = Grid(2, 1); workspace.Padding = new Padding(23, 16, 23, 6);
+        workspace.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 50)); workspace.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 50));
         workspace.Controls.Add(InputsPanel(), 0, 0);
-
-        settings = Grid(1, 11); settings.Dock = DockStyle.Top; settings.AutoSize = true; settings.AutoSizeMode = AutoSizeMode.GrowAndShrink;
+        var settingsHost = new Panel { Dock = DockStyle.Fill, Padding = new Padding(23, 0, 0, 0), AutoScroll = true };
+        var settings = new TableLayoutPanel { ColumnCount = 1, RowCount = 11, Dock = DockStyle.Top, AutoSize = true,
+            AutoSizeMode = AutoSizeMode.GrowAndShrink, Margin = Padding.Empty };
         for (int i = 0; i < 11; i++) settings.RowStyles.Add(new RowStyle(SizeType.AutoSize));
-        var settingsHost = new Panel { Dock = DockStyle.Fill, AutoScroll = true, Padding = new Padding(13, 0, 3, 0) };
-        settingsHost.Controls.Add(settings);
-        Row(settings, Section("03", "输出设置"), 0, 40);
-        formats.Items.AddRange(Converter.Formats); formats.SelectedIndex = 0;
-        Row(settings, Pair("导出格式", formats), 1, 38);
-        output.Dock = DockStyle.Fill;
+        Row(settings, Section("03", "settings", "settings"), 0, 38);
+        formats.Items.AddRange(Converter.Formats); formats.SelectedIndex = 0; formats.AccessibleName = "format";
+        Row(settings, Pair("format", formats), 1, 40);
+        output.Dock = DockStyle.Fill; output.AccessibleName = "output";
         output.TextChanged += (s, e) => { if (!updatingPath) autoPath = false; RefreshStart(); };
-        var outputField = Grid(2, 1); outputField.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 100)); outputField.ColumnStyles.Add(new ColumnStyle(SizeType.Absolute, 40));
-        outputField.Controls.Add(output, 0, 0);
-        outputField.Controls.Add(ButtonOf("…", "选择输出位置", 32, BrowseOutput), 1, 0);
-        Row(settings, Pair("输出文件", outputField), 2, 40);
-        keep = new Knob("保留点数", 1, 100, 100, v => v + "%", "低于 100% 时合并相似高斯点。", tips);
-        iterations = new Knob("球谐压缩迭代", 1, 100, 10, v => v.ToString(), "增加迭代通常能改善高阶球谐的编码质量，但更慢。", tips);
-        effort = new Knob("WebP 打包强度", -1, 9, -1, v => v == -1 ? "默认" : v.ToString(), "提高无损打包强度可能减小体积，不改变打包前的画质。", tips);
-        workers = new Knob("编码线程", 0, 16, 4, v => v == 0 ? "串行" : v.ToString(), "线程越多，峰值内存通常越高。", tips);
-        voxel = new Knob("体素边长", 1, 500, 50, v => F(v / 1000.0), "单位为场景坐标单位。数值越小越精细。", tips);
-        opacity = new Knob("体素不透明度阈值", 0, 100, 10, v => F(v / 100.0), "高于阈值的体素视为实心。", tips);
-        Row(settings, keep, 3, 50); Row(settings, iterations, 4, 50); Row(settings, effort, 5, 50); Row(settings, workers, 6, 50);
-        Row(settings, voxel, 7, 50); Row(settings, opacity, 8, 50);
-        device.Items.AddRange(new[] { "自动选用显卡", "CPU（处理器）", "Vulkan（兼容后端）" });
-        device.SelectedIndex = 0;
-        Row(settings, Pair("计算设备", device), 9, 37);
-        Row(settings, ButtonOf("开源许可", "查看随程序分发的第三方许可", 92, ShowLicenses), 10, 34);
-        formats.SelectedIndexChanged += (s, e) => FormatChanged();
-        workspace.Controls.Add(settingsHost, 1, 0);
-
-        var logPanel = Grid(1, 2); logPanel.Dock = DockStyle.Fill;
-        logPanel.RowStyles.Add(new RowStyle(SizeType.Absolute, 28)); logPanel.RowStyles.Add(new RowStyle(SizeType.Percent, 100));
-        logPanel.Controls.Add(LabelOf("运行日志", true), 0, 0);
-        logView.Dock = DockStyle.Fill; logView.Multiline = true; logView.ReadOnly = true; logView.ScrollBars = ScrollBars.Vertical;
-        logView.BackColor = Color.White; logView.ForeColor = Muted; logView.BorderStyle = BorderStyle.FixedSingle;
-        logPanel.Controls.Add(logView, 0, 1);
-        center.Controls.Add(workspace, 0, 0); center.Controls.Add(logPanel, 0, 1);
-        var repository = new LinkLabel { Dock = DockStyle.Bottom, Height = 30, Text = App.Repository,
-            LinkColor = Teal, Padding = new Padding(22, 4, 12, 0), AutoEllipsis = true, AccessibleName = "本项目 GitHub 仓库" };
-        repository.LinkClicked += (s, e) => OpenRepository();
-        Controls.Add(center); Controls.Add(footer); Controls.Add(repository); Controls.Add(header);
-        ticker.Tick += (s, e) => FlushLog(); ticker.Start();
-        FormClosing += (s, e) => { if (active != null) { e.Cancel = true; closing = true; Stop(); } };
-        FormClosed += (s, e) => { ticker.Dispose(); tips.Dispose(); converter.Dispose(); };
-        FormatChanged();
-        AddFiles(paths);
-    }
-
-    Control InputsPanel() {
-        var pane = Grid(1, 6); pane.Dock = DockStyle.Fill; pane.Padding = new Padding(0, 0, 13, 0);
-        pane.RowStyles.Add(new RowStyle(SizeType.Absolute, 40)); pane.RowStyles.Add(new RowStyle(SizeType.Absolute, 41));
-        pane.RowStyles.Add(new RowStyle(SizeType.Percent, 53)); pane.RowStyles.Add(new RowStyle(SizeType.Absolute, 43));
-        pane.RowStyles.Add(new RowStyle(SizeType.Absolute, 40)); pane.RowStyles.Add(new RowStyle(SizeType.Percent, 47));
-        pane.Controls.Add(Section("01", "源文件"), 0, 0);
-        var fileTools = Bar();
-        fileTools.Controls.Add(ButtonOf("＋ 添加文件", "选择一个或多个高斯泼溅文件", 107, BrowseInputs));
-        fileTools.Controls.Add(ButtonOf("−", "移除选中的源文件", 32, RemoveFiles));
-        fileTools.Controls.Add(ButtonOf("↑", "上移文件", 32, () => MoveFile(-1)));
-        fileTools.Controls.Add(ButtonOf("↓", "下移文件", 32, () => MoveFile(1)));
-        fileTools.Controls.Add(tally); pane.Controls.Add(fileTools, 0, 1);
-        files.Dock = DockStyle.Fill; files.View = View.Details; files.FullRowSelect = true; files.HideSelection = false;
-        files.Columns.Add("文件名", 255); files.Columns.Add("大小", 95, HorizontalAlignment.Right);
-        files.Resize += (s, e) => files.Columns[0].Width = Math.Max(140, files.ClientSize.Width - 100);
-        files.AllowDrop = true;
-        files.DragEnter += (s, e) => { if (e.Data.GetDataPresent(DataFormats.FileDrop)) e.Effect = DragDropEffects.Copy; };
-        files.DragDrop += (s, e) => AddFiles((string[])e.Data.GetData(DataFormats.FileDrop));
-        files.SelectedIndexChanged += (s, e) => { if (files.SelectedIndices.Count == 1) scope.SelectedIndex = files.SelectedIndices[0] + 1; };
-        files.ShowItemToolTips = true;
-        pane.Controls.Add(files, 0, 2);
-        pane.Controls.Add(Section("02", "变换与筛选"), 0, 3);
-        var opTools = Grid(2, 1); opTools.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 100)); opTools.ColumnStyles.Add(new ColumnStyle(SizeType.Absolute, 205));
-        scope.Items.Add("合并后的结果"); scope.SelectedIndex = 0;
-        scope.SelectedIndexChanged += (s, e) => RefreshOps(-1);
-        opTools.Controls.Add(scope, 0, 0);
-        var buttons = Bar();
-        buttons.Controls.Add(ButtonOf("＋", "添加操作", 32, () => EditOp(false)));
-        buttons.Controls.Add(ButtonOf("编辑", "编辑所选操作", 50, () => EditOp(true)));
-        buttons.Controls.Add(ButtonOf("−", "移除所选操作", 32, () => { int i = steps.SelectedIndex; if (i >= 0) { CurrentOps().RemoveAt(i); RefreshOps(i); } }));
-        buttons.Controls.Add(ButtonOf("↑", "将所选操作提前", 32, () => MoveOp(-1)));
-        buttons.Controls.Add(ButtonOf("↓", "将所选操作延后", 32, () => MoveOp(1)));
-        opTools.Controls.Add(buttons, 1, 0); pane.Controls.Add(opTools, 0, 4);
-        steps.Dock = DockStyle.Fill; steps.IntegralHeight = false;
-        steps.DoubleClick += (s, e) => EditOp(true);
-        pane.Controls.Add(steps, 0, 5);
-        return pane;
-    }
-
-    static TableLayoutPanel Grid(int cols, int rows) { return new TableLayoutPanel { ColumnCount = cols, RowCount = rows, Margin = Padding.Empty, Dock = DockStyle.Fill }; }
-    static FlowLayoutPanel Bar() { return new FlowLayoutPanel { Dock = DockStyle.Fill, WrapContents = false, Margin = Padding.Empty }; }
-    static Label LabelOf(string text, bool bold) {
-        var l = new Label { Text = text, AutoSize = true, ForeColor = bold ? Ink : Muted, Margin = new Padding(4, 9, 4, 0) };
-        if (bold) l.Font = new Font("Microsoft YaHei UI", 9F, FontStyle.Bold);
-        return l;
-    }
-    static Label Section(string number, string name) {
-        return new Label { Text = number + "   " + name, TextAlign = ContentAlignment.MiddleLeft, Dock = DockStyle.Fill, ForeColor = Teal,
-            Font = new Font("Microsoft YaHei UI", 11F, FontStyle.Bold), Margin = Padding.Empty };
-    }
-    static ComboBox Combo() {
-        var box = new ComboBox { DropDownStyle = ComboBoxStyle.DropDownList, Dock = DockStyle.Fill, IntegralHeight = true, DrawMode = DrawMode.OwnerDrawFixed };
-        box.FontChanged += (s, e) => box.ItemHeight = box.Font.Height + 5;
-        box.DrawItem += (s, e) => {
-            e.DrawBackground();
-            if (e.Index >= 0 && e.Index < box.Items.Count) {
-                var area = Rectangle.Inflate(e.Bounds, -4, 0);
-                TextRenderer.DrawText(e.Graphics, box.GetItemText(box.Items[e.Index]), e.Font, area, e.ForeColor,
-                    TextFormatFlags.SingleLine | TextFormatFlags.VerticalCenter | TextFormatFlags.EndEllipsis | TextFormatFlags.NoPrefix);
-            }
-            e.DrawFocusRectangle();
+        var outputField = Grid(2, 1); outputField.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 100));
+        outputField.ColumnStyles.Add(new ColumnStyle(SizeType.Absolute, 39)); outputField.Controls.Add(output, 0, 0);
+        outputField.Controls.Add(ButtonOf(null, "browse", "folder", 34, BrowseOutput), 1, 0);
+        Row(settings, Pair("output", outputField), 2, 40);
+        keep = new Knob("keep", 1, 100, 100, v => v + "%"); iterations = new Knob("iterations", 1, 100, 10, v => v.ToString());
+        effort = new Knob("effort", -1, 9, -1, v => v < 0 ? I18n.T("default") : v.ToString());
+        workers = new Knob("workers", 0, 16, 4, v => v == 0 ? I18n.T("serial") : v.ToString());
+        voxel = new Knob("voxel", 1, 500, 50, v => F(v / 1000d)); opacity = new Knob("opacity", 0, 100, 10, v => F(v / 100d));
+        Row(settings, keep, 3, 53); Row(settings, iterations, 4, 53); Row(settings, effort, 5, 53); Row(settings, workers, 6, 53);
+        Row(settings, voxel, 7, 53); Row(settings, opacity, 8, 53);
+        device.AccessibleName = "device"; Row(settings, Pair("device", device), 9, 40);
+        Row(settings, ButtonOf("licenses", "licenses", "file", 210, ShowLicenses), 10, 34);
+        settingsHost.Controls.Add(settings); workspace.Controls.Add(settingsHost, 1, 0); root.Controls.Add(workspace, 0, 1);
+        var logs = Grid(1, 2); logs.Padding = new Padding(23, 0, 23, 5);
+        logs.RowStyles.Add(new RowStyle(SizeType.Absolute, 26)); logs.RowStyles.Add(new RowStyle(SizeType.Percent, 100));
+        var logHeading = new Label { Dock = DockStyle.Fill, TextAlign = ContentAlignment.MiddleLeft };
+        Bind(logHeading, "logs"); logs.Controls.Add(IconText(logHeading,"logs"), 0, 0);
+        logView.Multiline = true; logView.ReadOnly = true; logView.Dock = DockStyle.Fill; logView.ScrollBars = ScrollBars.Vertical;
+        logView.BorderStyle = BorderStyle.FixedSingle; logView.BackColor = Color.White; logView.ForeColor = Muted;
+        logView.Font = new Font("Consolas", 9); logView.AccessibleName = "log"; logs.Controls.Add(logView, 0, 1); root.Controls.Add(logs, 0, 2);
+        var footer = Grid(4, 1); footer.Padding = new Padding(23, 4, 23, 4);
+        footer.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 100)); footer.ColumnStyles.Add(new ColumnStyle(SizeType.Absolute, 185));
+        footer.ColumnStyles.Add(new ColumnStyle(SizeType.Absolute, 145)); footer.ColumnStyles.Add(new ColumnStyle(SizeType.Absolute, 175));
+        status.Dock = DockStyle.Fill; status.TextAlign = ContentAlignment.MiddleLeft; status.AutoEllipsis = true; footer.Controls.Add(status, 0, 0);
+        reveal = ButtonOf("openOutput", "openOutput", "folder", 177, OpenOutput); reveal.Visible = false;
+        cancel = ButtonOf("cancel", "cancel", "stop", 137, Stop); cancel.Enabled = false;
+        start = ButtonOf("start", "start", "play-white", 167, Begin); start.BackColor = Teal; start.ForeColor = Color.White;
+        start.FlatAppearance.BorderColor = Teal; start.AccessibleName = "start";
+        footer.Controls.Add(reveal, 1, 0); footer.Controls.Add(cancel, 2, 0); footer.Controls.Add(start, 3, 0); root.Controls.Add(footer, 0, 3);
+        var repoHost = Grid(1, 2); repoHost.Padding = new Padding(23, 0, 23, 0);
+        repoHost.RowStyles.Add(new RowStyle(SizeType.Absolute, 4)); repoHost.RowStyles.Add(new RowStyle(SizeType.Percent, 100));
+        progress.Dock = DockStyle.Fill; progress.MarqueeAnimationSpeed = 30; repoHost.Controls.Add(progress, 0, 0);
+        var repository = new LinkLabel { Text = App.Repository, Dock = DockStyle.Fill, LinkColor = Muted, TextAlign = ContentAlignment.MiddleLeft,
+            AutoEllipsis = true, AccessibleName = "repository" };
+        repository.LinkClicked += (s, e) => OpenRepository(); repoHost.Controls.Add(IconText(repository,"github"), 0, 1); root.Controls.Add(repoHost, 0, 4);
+        var resourceBar = Grid(4, 1); resourceBar.BackColor = Color.FromArgb(232, 237, 233); resourceBar.Padding = new Padding(18, 2, 18, 2);
+        string[] iconNames = { "cpu", "memory", "gpu", "vram" };
+        for (int i = 0; i < 4; i++) {
+            resourceBar.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 25));
+            metrics[i] = new Label { Dock = DockStyle.Fill, TextAlign = ContentAlignment.MiddleLeft, AutoEllipsis = true, AccessibleName = "metric-" + iconNames[i] };
+            resourceBar.Controls.Add(IconText(metrics[i],iconNames[i]), i, 0);
+        }
+        root.Controls.Add(resourceBar, 0, 5); Controls.Add(root);
+        formats.SelectedIndexChanged += (s, e) => { if (!changing) FormatChanged(); };
+        language.SelectedIndexChanged += (s, e) => {
+            if (changing || language.SelectedIndex < 0) return;
+            I18n.Language = I18n.Codes[language.SelectedIndex]; I18n.Save(); Translate();
         };
-        return box;
+        ticker.Tick += (s, e) => { FlushLog(); if (!sampling && DateTime.UtcNow >= nextSample) SampleResources(); }; ticker.Start();
+        FormClosing += (s, e) => { if (active != null) { e.Cancel = true; closing = true; Stop(); } };
+        FormClosed += (s, e) => { ticker.Dispose(); tips.Dispose(); converter.Dispose(); Task.Run(() => monitor.Dispose()); };
+        Translate(); AddFiles(paths);
     }
-    static Control Pair(string name, Control input) {
-        var p = Grid(2, 1); p.ColumnStyles.Add(new ColumnStyle(SizeType.Absolute, 132)); p.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 100));
-        p.Controls.Add(LabelOf(name, false), 0, 0); p.Controls.Add(input, 1, 0);
-        return p;
-    }
-    static void Row(TableLayoutPanel panel, Control c, int row, int height) {
-        c.Height = height; c.Margin = Padding.Empty; c.Dock = DockStyle.Top;
-        panel.Controls.Add(c, 0, row);
-    }
-    Button ButtonOf(string text, string hint, int width, Action action) {
-        var b = new Button { Text = text, Width = width, Height = 31, FlatStyle = FlatStyle.Flat, BackColor = Color.White, ForeColor = Ink,
-            Margin = new Padding(0, 2, 4, 0), AccessibleName = hint };
-        b.FlatAppearance.BorderColor = Line; b.Click += (s, e) => action(); tips.SetToolTip(b, hint);
-        return b;
-    }
-    static string F(double v) { return v.ToString("0.###", CultureInfo.InvariantCulture); }
-    static string SizeText(long n) { return n >= 1073741824 ? (n / 1073741824d).ToString("0.00") + " GB" : n >= 1048576 ? (n / 1048576d).ToString("0.0") + " MB" : Math.Max(1, n / 1024d).ToString("0") + " KB"; }
 
-    void BrowseInputs() {
-        using (var d = new OpenFileDialog { Multiselect = true, Filter = "高斯泼溅文件|*.ply;*.sog;*.ksplat;*.splat;*.spz", Title = "添加源文件" })
-            if (d.ShowDialog(this) == DialogResult.OK) AddFiles(d.FileNames);
+    void Bind(Control control, string key) { var label=control as Label;if(label!=null)label.UseMnemonic=false;translations.Add(() => control.Text = I18n.T(key)); control.Text = I18n.T(key); }
+    static TableLayoutPanel Grid(int cols, int rows) {
+        var grid=new TableLayoutPanel { ColumnCount = cols, RowCount = rows, Dock = DockStyle.Fill, Margin = Padding.Empty };
+        if(rows==1)grid.RowStyles.Add(new RowStyle(SizeType.Percent,100));
+        return grid;
     }
+    static ComboBox Combo() { return new DisplayCombo { Dock = DockStyle.Fill, Margin = new Padding(0, 4, 0, 4) }; }
+    static Control IconText(Control text,string icon) {
+        var row=Grid(2,1);row.ColumnStyles.Add(new ColumnStyle(SizeType.Absolute,28));row.ColumnStyles.Add(new ColumnStyle(SizeType.Percent,100));
+        row.Controls.Add(new PictureBox {Image=Art.Icon(icon),Dock=DockStyle.Fill,SizeMode=PictureBoxSizeMode.CenterImage},0,0);row.Controls.Add(text,1,0);return row;
+    }
+    Button ButtonOf(string text, string hint, string icon, int width, Action action) {
+        var button = new Button { Width = width, Height = 34, FlatStyle = FlatStyle.Flat, BackColor = Color.White, ForeColor = Ink,
+            Margin = new Padding(0, 2, 6, 2), Image = Art.Icon(icon), TextImageRelation = TextImageRelation.ImageBeforeText,
+            Padding = new Padding(3, 0, 3, 0), AutoEllipsis = true, UseMnemonic = false };
+        button.FlatAppearance.BorderColor = Line; button.FlatAppearance.MouseOverBackColor = Color.FromArgb(225, 238, 231);
+        button.Click += (s, e) => action();
+        translations.Add(() => { button.Text = text == null ? "" : I18n.T(text); tips.SetToolTip(button, I18n.T(hint)); });
+        return button;
+    }
+    Control Section(string number, string key, string icon) {
+        var label = new Label { Dock = DockStyle.Fill, TextAlign = ContentAlignment.MiddleLeft, Font = new Font(Font.FontFamily, 10, FontStyle.Bold),UseMnemonic=false };
+        translations.Add(() => label.Text = number + "  " + I18n.T(key)); return IconText(label,icon);
+    }
+    Control Pair(string key, Control field) {
+        var grid = Grid(2, 1); grid.ColumnStyles.Add(new ColumnStyle(SizeType.Absolute, 166)); grid.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 100));
+        var label = new Label { Dock = DockStyle.Fill, TextAlign = ContentAlignment.MiddleLeft, AutoEllipsis = true }; Bind(label, key);
+        grid.Controls.Add(label, 0, 0); field.Dock = DockStyle.Fill; grid.Controls.Add(field, 1, 0); return grid;
+    }
+    static void Row(TableLayoutPanel grid, Control control, int row, int height) { control.Height = height; control.Dock = DockStyle.Top; control.Margin = Padding.Empty; grid.Controls.Add(control, 0, row); }
+    Control InputsPanel() {
+        var pane = Grid(1, 6); pane.Padding = new Padding(0, 0, 23, 0);
+        foreach (int height in new[] { 38, 42, -1, 44, 42, -1 }) pane.RowStyles.Add(height < 0 ? new RowStyle(SizeType.Percent, 50) : new RowStyle(SizeType.Absolute, height));
+        var heading = Grid(2, 1); heading.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 55)); heading.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 45));
+        heading.Controls.Add(Section("01", "inputs", "file"), 0, 0); tally.Dock = DockStyle.Fill; tally.TextAlign = ContentAlignment.MiddleRight;
+        tally.ForeColor = Muted; tally.AutoEllipsis = true; heading.Controls.Add(tally, 1, 0); pane.Controls.Add(heading, 0, 0);
+        var tools = new FlowLayoutPanel { Dock = DockStyle.Fill, WrapContents = false, Margin = Padding.Empty };
+        tools.Controls.Add(ButtonOf("add", "add", "plus", 200, BrowseInputs)); tools.Controls.Add(ButtonOf(null, "remove", "minus", 34, RemoveFiles));
+        tools.Controls.Add(ButtonOf(null, "up", "up", 34, () => MoveFile(-1))); tools.Controls.Add(ButtonOf(null, "down", "down", 34, () => MoveFile(1))); pane.Controls.Add(tools, 0, 1);
+        files.Dock = DockStyle.Fill; files.View = View.Details; files.FullRowSelect = true; files.HideSelection = false;
+        files.BorderStyle = BorderStyle.FixedSingle; files.Columns.Add("", 230); files.Columns.Add("", 95, HorizontalAlignment.Right); files.ShowItemToolTips = true;
+        files.Resize += (s, e) => files.Columns[0].Width = Math.Max(140, files.ClientSize.Width - 100);
+        files.AllowDrop = true; files.DragEnter += (s, e) => { if (active == null && e.Data.GetDataPresent(DataFormats.FileDrop)) e.Effect = DragDropEffects.Copy; };
+        files.DragDrop += (s, e) => AddFiles((string[])e.Data.GetData(DataFormats.FileDrop));
+        files.SelectedIndexChanged += (s, e) => { if (!changing && files.SelectedIndices.Count == 1) scope.SelectedIndex = files.SelectedIndices[0] + 1; }; pane.Controls.Add(files, 0, 2);
+        pane.Controls.Add(Section("02", "actions", "layers"), 0, 3);
+        var opTools = Grid(2, 1); opTools.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 100)); opTools.ColumnStyles.Add(new ColumnStyle(SizeType.Absolute, 200));
+        scope.Items.Add(""); scope.SelectedIndex = 0; scope.AccessibleName = "scope"; scope.SelectedIndexChanged += (s, e) => { if (!changing) RefreshOps(-1); }; opTools.Controls.Add(scope, 0, 0);
+        var opButtons = new FlowLayoutPanel { Dock = DockStyle.Fill, WrapContents = false, Margin = Padding.Empty };
+        opButtons.Controls.Add(ButtonOf(null, "addOp", "plus", 34, () => EditOp(false))); opButtons.Controls.Add(ButtonOf(null, "edit", "edit", 34, () => EditOp(true)));
+        opButtons.Controls.Add(ButtonOf(null, "remove", "minus", 34, () => { int i = steps.SelectedIndex; if (i >= 0) { CurrentOps().RemoveAt(i); RefreshOps(i); } }));
+        opButtons.Controls.Add(ButtonOf(null, "up", "up", 34, () => MoveOp(-1))); opButtons.Controls.Add(ButtonOf(null, "down", "down", 34, () => MoveOp(1)));
+        opTools.Controls.Add(opButtons, 1, 0); pane.Controls.Add(opTools, 0, 4);
+        steps.Dock = DockStyle.Fill; steps.IntegralHeight = false; steps.ItemHeight = 26; steps.BorderStyle = BorderStyle.FixedSingle;
+        steps.DoubleClick += (s, e) => EditOp(true); pane.Controls.Add(steps, 0, 5); return pane;
+    }
+
+    internal void SetLanguage(string code) {
+        int index = Array.IndexOf(I18n.Codes, code); if (index < 0) return;
+        changing = true; language.SelectedIndex = index; I18n.Language = code; changing = false; Translate();
+    }
+    void Translate() {
+        changing = true; foreach (var update in translations) update(); files.Columns[0].Text = I18n.T("fileName"); files.Columns[1].Text = I18n.T("size");
+        int index = Math.Max(0, formats.SelectedIndex); formats.Items.Clear(); formats.Items.AddRange(Converter.Formats); formats.SelectedIndex = index;
+        RefreshDevices(); foreach (var knob in new[] { keep, iterations, effort, workers, voxel, opacity }) knob.Translate();
+        changing = false; FormatVisibility(); RefreshFiles(-1); SetStatus(statusKey); PaintMetrics();
+    }
+    void RefreshDevices() {
+        int selected = Math.Max(0, device.SelectedIndex); device.Items.Clear(); device.Items.Add(I18n.T("auto"));
+        if (!SelectedFormat.Voxel) device.Items.Add(I18n.T("cpuDevice")); device.Items.Add(I18n.T("backend")); device.SelectedIndex = Math.Min(selected, device.Items.Count - 1);
+    }
+    void FormatChanged() { RefreshDevices(); FormatVisibility(); autoPath = true; SuggestPath(); }
+    void FormatVisibility() { iterations.Visible = effort.Visible = workers.Visible = SelectedFormat.Sog; voxel.Visible = opacity.Visible = SelectedFormat.Voxel; device.Parent.Visible = SelectedFormat.Sog || SelectedFormat.Voxel; }
+    Format SelectedFormat { get { return (Format)formats.SelectedItem; } }
+    static string F(double number) { return number.ToString("0.###", CultureInfo.InvariantCulture); }
+    static string SizeText(long size) { return size >= 1073741824 ? Budget.GB(size) : (size / 1048576d).ToString("0.0", CultureInfo.InvariantCulture) + " MiB"; }
+    void BrowseInputs() { using (var dialog = new OpenFileDialog { Multiselect = true, Filter = I18n.T("inputs") + "|*.ply;*.sog;*.ksplat;*.splat;*.spz", Title = I18n.T("add") }) if (dialog.ShowDialog(this) == DialogResult.OK) AddFiles(dialog.FileNames); }
     void AddFiles(IEnumerable<string> paths) {
         if (active != null) return;
-        int rejected = 0;
         foreach (string p in paths ?? new string[0]) {
-            string path = Path.GetFullPath(p);
-            if (!Converter.Supported(path) || !File.Exists(path)) { rejected++; continue; }
-            if (!inputs.Any(i => String.Equals(i.Path, path, StringComparison.OrdinalIgnoreCase))) inputs.Add(new InputFile(path));
+            try { string full = Path.GetFullPath(p); if (Converter.Supported(full) && File.Exists(full) && !inputs.Any(i => String.Equals(i.Path, full, StringComparison.OrdinalIgnoreCase))) inputs.Add(new InputFile(full)); }
+            catch (ArgumentException) { }
         }
         RefreshFiles(-1);
-        if (rejected > 0) status.Text = "已跳过 " + rejected + " 个无效或不支持的文件";
     }
     void RemoveFiles() { foreach (int i in files.SelectedIndices.Cast<int>().Reverse().ToArray()) inputs.RemoveAt(i); RefreshFiles(-1); }
-    void MoveFile(int d) {
-        if (files.SelectedIndices.Count != 1) return;
-        int i = files.SelectedIndices[0], j = i + d;
-        if (j < 0 || j >= inputs.Count) return;
-        var file = inputs[i]; inputs.RemoveAt(i); inputs.Insert(j, file); RefreshFiles(j);
-    }
+    void MoveFile(int delta) { if (files.SelectedIndices.Count != 1) return; int i = files.SelectedIndices[0], j = i + delta; if (j < 0 || j >= inputs.Count) return; var item = inputs[i]; inputs.RemoveAt(i); inputs.Insert(j, item); RefreshFiles(j); }
     void RefreshFiles(int select) {
-        files.BeginUpdate(); files.Items.Clear();
-        scope.Items.Clear(); scope.Items.Add("合并后的结果");
-        long bytes = 0;
-        foreach (var input in inputs) {
-            var info = new FileInfo(input.Path);
-            long size = info.Exists ? info.Length : 0; bytes += size;
-            var li = new ListViewItem(info.Name) { ToolTipText = info.FullName }; li.SubItems.Add(SizeText(size)); files.Items.Add(li);
-            scope.Items.Add(info.Name);
-        }
-        scope.SelectedIndex = select + 1;
-        if (select >= 0) files.Items[select].Selected = true;
-        files.EndUpdate();
-        tally.Text = inputs.Count + " 个文件" + (bytes > 0 ? " · " + SizeText(bytes) : "");
-        SuggestPath(); RefreshStart();
+        changing = true; int previous = scope.SelectedIndex; files.BeginUpdate(); files.Items.Clear(); scope.Items.Clear(); scope.Items.Add(I18n.T("merged")); long bytes = 0;
+        foreach (var input in inputs) { var info = new FileInfo(input.Path); long size = info.Exists ? info.Length : 0; bytes += size; var item = new ListViewItem(info.Name) { ToolTipText = info.FullName }; item.SubItems.Add(SizeText(size)); files.Items.Add(item); scope.Items.Add(info.Name); }
+        scope.SelectedIndex = select >= 0 ? select + 1 : Math.Max(0, Math.Min(previous, scope.Items.Count - 1)); if (select >= 0) files.Items[select].Selected = true;
+        files.EndUpdate(); changing = false; tally.Text = inputs.Count + " " + I18n.T("files") + (bytes > 0 ? " · " + SizeText(bytes) : ""); RefreshOps(-1); SuggestPath(); RefreshStart();
     }
     List<Op> CurrentOps() { return scope.SelectedIndex <= 0 || scope.SelectedIndex > inputs.Count ? outputOps : inputs[scope.SelectedIndex - 1].Ops; }
-    void RefreshOps(int select) {
-        steps.Items.Clear(); foreach (var op in CurrentOps()) steps.Items.Add(op);
-        if (select >= 0 && steps.Items.Count > 0) steps.SelectedIndex = Math.Min(select, steps.Items.Count - 1);
-    }
-    void MoveOp(int d) {
-        int i = steps.SelectedIndex, j = i + d; var ops = CurrentOps();
-        if (i < 0 || j < 0 || j >= ops.Count) return;
-        var op = ops[i]; ops.RemoveAt(i); ops.Insert(j, op); RefreshOps(j);
-    }
-    void EditOp(bool edit) {
-        var list = CurrentOps(); int i = steps.SelectedIndex;
-        if (edit && i < 0) return;
-        using (var dialog = new StepDialog(edit ? list[i] : null)) {
-            if (dialog.ShowDialog(this) != DialogResult.OK) return;
-            if (edit) list[i] = dialog.Result; else { i = list.Count; list.Add(dialog.Result); }
-            RefreshOps(i);
-        }
-    }
-    Format SelectedFormat { get { return (Format)formats.SelectedItem; } }
-    void FormatChanged() {
-        var f = SelectedFormat;
-        iterations.Visible = effort.Visible = workers.Visible = f.Sog;
-        voxel.Visible = opacity.Visible = f.Voxel;
-        device.Parent.Visible = f.Sog || f.Voxel;
-        device.Items.Clear(); device.Items.Add("自动选用显卡");
-        if (!f.Voxel) device.Items.Add("CPU（处理器）");
-        device.Items.Add("Vulkan（兼容后端）");
-        device.SelectedIndex = 0;
-        autoPath = true; SuggestPath();
-    }
-    void SuggestPath() {
-        if (!autoPath) return;
-        updatingPath = true;
-        output.Text = inputs.Count == 0 ? "" : Path.Combine(Path.GetDirectoryName(inputs[0].Path),
-            (inputs.Count > 1 ? "combined" : Converter.Stem(inputs[0].Path) + "-converted") + SelectedFormat.Suffix);
-        updatingPath = false;
-    }
-    void BrowseOutput() {
-        var f = SelectedFormat;
-        using (var d = new SaveFileDialog { Filter = f.Name.Replace("|", " ") + "|*" + f.Suffix, AddExtension = false,
-            FileName = Path.GetFileName(output.Text), OverwritePrompt = false, Title = "选择输出文件" }) {
-            if (inputs.Count > 0) d.InitialDirectory = Path.GetDirectoryName(inputs[0].Path);
-            if (d.ShowDialog(this) == DialogResult.OK) output.Text = Suffix(d.FileName, f.Suffix);
-        }
-    }
-    static string Suffix(string path, string suffix) { return path.EndsWith(suffix, StringComparison.OrdinalIgnoreCase) ? path : path + suffix; }
+    void RefreshOps(int select) { steps.Items.Clear(); foreach (var op in CurrentOps()) steps.Items.Add(op); if (select >= 0 && steps.Items.Count > 0) steps.SelectedIndex = Math.Min(select, steps.Items.Count - 1); }
+    void MoveOp(int delta) { var ops = CurrentOps(); int i = steps.SelectedIndex, j = i + delta; if (i < 0 || j < 0 || j >= ops.Count) return; var op = ops[i]; ops.RemoveAt(i); ops.Insert(j, op); RefreshOps(j); }
+    void EditOp(bool edit) { var ops = CurrentOps(); int i = steps.SelectedIndex; if (edit && i < 0) return; using (var dialog = new StepDialog(edit ? ops[i] : null)) { if (dialog.ShowDialog(this) != DialogResult.OK) return; if (edit) ops[i] = dialog.Result; else { i = ops.Count; ops.Add(dialog.Result); } RefreshOps(i); } }
+    void SuggestPath() { if (!autoPath) return; updatingPath = true; output.Text = inputs.Count == 0 ? "" : Path.Combine(Path.GetDirectoryName(inputs[0].Path), (inputs.Count > 1 ? "combined" : Converter.Stem(inputs[0].Path) + "-converted") + SelectedFormat.Suffix); updatingPath = false; }
+    void BrowseOutput() { var f = SelectedFormat; using (var dialog = new SaveFileDialog { Filter = f.Name.Replace("|", " ") + "|*" + f.Suffix, AddExtension = false, FileName = Path.GetFileName(output.Text), OverwritePrompt = false, Title = I18n.T("browse") }) { if (inputs.Count > 0) dialog.InitialDirectory = Path.GetDirectoryName(inputs[0].Path); if (dialog.ShowDialog(this) == DialogResult.OK) output.Text = Suffix(dialog.FileName, f.Suffix); } }
+    static string Suffix(string p, string suffix) { return p.EndsWith(suffix, StringComparison.OrdinalIgnoreCase) ? p : p + suffix; }
     void RefreshStart() { if (start != null) start.Enabled = active == null && inputs.Count > 0 && !String.IsNullOrWhiteSpace(output.Text); }
+    void SetStatus(string key) { statusKey = key; status.Text = I18n.T(key); }
+
+    async void SampleResources() {
+        sampling = true;
+        try { var sample = await Task.Run(() => monitor.Sample()); if (!IsDisposed) { resources = sample; PaintMetrics(); } }
+        catch (Exception ex) { if (!IsDisposed) tips.SetToolTip(metrics[0], I18n.T("unknown") + " · " + ex.GetType().Name); }
+        finally { sampling = false; nextSample = DateTime.UtcNow.AddSeconds(WindowState == FormWindowState.Minimized ? 10 : 2); }
+    }
+    void PaintMetrics() {
+        string unknown = I18n.T("unknown"); var r = resources;
+        metrics[0].Text = "CPU  " + (r != null && r.Cpu.HasValue ? r.Cpu.Value.ToString("0") + "%" : unknown);
+        metrics[1].Text = I18n.T("memory") + "  " + (r != null && r.TotalMemory > 0 ? F((r.TotalMemory - r.AvailableMemory) / 1073741824d) + " / " + F(r.TotalMemory / 1073741824d) + " GiB" : unknown);
+        var gpu = r == null ? null : r.Gpus.OrderByDescending(g => g.Usage ?? -1).FirstOrDefault();
+        metrics[2].Text = "GPU  " + (gpu != null && gpu.Usage.HasValue ? gpu.Usage.Value.ToString("0") + "%" : unknown) + (r != null && r.Gpus.Count > 1 ? " · " + r.Gpus.Count : "");
+        metrics[3].Text = I18n.T("vram") + "  " + (gpu != null && gpu.MemoryTotal > 0 && gpu.MemoryUsed.HasValue ? F(gpu.MemoryUsed.Value / 1073741824d) + " / " + F(gpu.MemoryTotal / 1073741824d) + " GiB" : unknown);
+        metrics[1].ForeColor = r != null && r.TotalMemory > 0 && r.AvailableMemory / r.TotalMemory < 0.1 ? Color.FromArgb(164, 64, 41) : Ink;
+        if (r == null) return;
+        string time = I18n.T("sample") + ": " + r.Sampled.ToLocalTime().ToString("HH:mm:ss"); tips.SetToolTip(metrics[0], r.CpuName + "\n" + time);
+        tips.SetToolTip(metrics[1], I18n.T("available") + ": " + Budget.GB(r.AvailableMemory) + "\n" + I18n.T("commit") + ": " + (r.CommitAvailable >= 0 ? Budget.GB(r.CommitAvailable) : unknown) + "\n" + time);
+        string gpuTip = String.Join("\n", r.Gpus.Select(g => g.Name + " · " + (g.Usage.HasValue ? g.Usage.Value.ToString("0") + "%" : unknown) + " · " + (g.MemoryUsed.HasValue && g.MemoryTotal > 0 ? Budget.GB(g.MemoryUsed.Value) + " / " + Budget.GB(g.MemoryTotal) : unknown))) + "\n" + I18n.T("gpuUnknown") + "\n" + time;
+        tips.SetToolTip(metrics[2], gpuTip); tips.SetToolTip(metrics[3], gpuTip);
+    }
 
     async void Begin() {
         if (active != null || inputs.Count == 0) return;
         string target;
         try { target = Path.GetFullPath(Suffix(output.Text.Trim(), SelectedFormat.Suffix)); }
-        catch (Exception ex) { MessageBox.Show(this, ex.Message, "输出路径无效"); return; }
+        catch (Exception ex) { ShowFailure(ex, null, null); return; }
         bool overwrite = File.Exists(target);
-        if (overwrite && MessageBox.Show(this, "转换成功后覆盖已有文件？\n" + target, "确认覆盖", MessageBoxButtons.YesNo, MessageBoxIcon.Warning) != DialogResult.Yes) return;
+        if (overwrite && MessageBox.Show(this, I18n.T("overwrite") + "\n" + target, I18n.T("output"), MessageBoxButtons.YesNo, MessageBoxIcon.Warning) != DialogResult.Yes) return;
         var f = SelectedFormat;
-        var job = new Job { Output = target, Format = f, Overwrite = overwrite, Keep = keep.Value, Iterations = iterations.Value,
-            Effort = effort.Value, Workers = workers.Value, VoxelSize = F(voxel.Value / 1000.0), Opacity = F(opacity.Value / 100.0),
+        var job = new Job { Output = target, Format = f, Overwrite = overwrite, Keep = keep.Value, Iterations = iterations.Value, Effort = effort.Value,
+            Workers = workers.Value, VoxelSize = F(voxel.Value / 1000d), Opacity = F(opacity.Value / 100d),
             Device = !(f.Sog || f.Voxel) ? "cpu" : device.SelectedIndex == 0 ? "auto" : !f.Voxel && device.SelectedIndex == 1 ? "cpu" : "vulkan" };
-        job.Inputs.AddRange(inputs); job.Ops.AddRange(outputOps);
-        active = new CancellationTokenSource(); var token = active.Token;
-        workspace.Enabled = false; cancel.Enabled = true; RefreshStart();
-        logView.Clear(); reveal.Visible = false; progress.Value = 0; progress.Style = ProgressBarStyle.Marquee;
-        var report = new Progress<string>(s => { if (active != null && !token.IsCancellationRequested) status.Text = s; });
+        job.Inputs.AddRange(inputs); job.Ops.AddRange(outputOps); active = new CancellationTokenSource(); var token = active.Token;
+        workspace.Enabled = false; language.Enabled = false; cancel.Enabled = true; RefreshStart(); logView.Clear(); reveal.Visible = false;
+        progress.Style = ProgressBarStyle.Marquee; SetStatus("preflight"); MemoryEstimate estimate = null;
         try {
-            await Task.Run(() => converter.Convert(job, token, s => ((IProgress<string>)report).Report(s), s => events.Enqueue(s)));
-            completed = job.Output; reveal.Visible = true;
-            long inputBytes = job.Inputs.Sum(i => new FileInfo(i.Path).Length), outputBytes = new FileInfo(completed).Length;
-            status.Text = "已完成 · " + SizeText(outputBytes) + (inputBytes > outputBytes ? " · 减少 " + ((1 - outputBytes / (double)inputBytes) * 100).ToString("0.0") + "%" : "");
-            events.Enqueue("输出：" + completed);
-            progress.Style = ProgressBarStyle.Continuous; progress.Value = 100;
+            estimate = await Task.Run(() => Budget.Estimate(job)); token.ThrowIfCancellationRequested();
+            var preflightResources = ResourceOverride != null ? ResourceOverride() : await Task.Run(() => monitor.Sample()); token.ThrowIfCancellationRequested();
+            resources = preflightResources; PaintMetrics();
+            var risks = Budget.Assess(estimate, preflightResources, job.Device);
+            if (risks.Count > 0) {
+                string message = Budget.Describe(estimate, preflightResources) + "\n\n" + I18n.T("memoryAdvice") + (risks.Contains("vram") ? "\n" + I18n.T("gpuAdvice") : "");
+                bool proceed = WarningOverride != null ? WarningOverride(message) : MessageDialog.Confirm(this, I18n.T("resourceWarning"), message, I18n.T("continue"), I18n.T("adjust"));
+                if (!proceed) { SetStatus("ready"); return; }
+            }
+            var report = new Progress<string>(key => { if (active != null && !token.IsCancellationRequested) SetStatus(key); });
+            await Task.Run(() => converter.Convert(job, token, key => ((IProgress<string>)report).Report(key), line => events.Enqueue(line)));
+            completed = job.Output; reveal.Visible = true; SetStatus("done"); status.Text += " · " + SizeText(new FileInfo(completed).Length);
+            events.Enqueue(I18n.T("output") + ": " + completed); progress.Style = ProgressBarStyle.Continuous; progress.Value = 100;
             if (!closing && StarPrompt.TryClaim(PromptMarker)) {
                 if (PromptOverride != null) PromptOverride();
-                else ShowStarPrompt();
+                else if (MessageDialog.Confirm(this, I18n.T("starTitle"), I18n.T("starMessage"), I18n.T("openProject"), I18n.T("close"))) OpenRepository();
             }
-        } catch (OperationCanceledException) { status.Text = "已取消"; }
-        catch (Exception ex) { status.Text = "转换失败 · 详见日志"; events.Enqueue(ex.Message); }
-        finally {
-            FlushLog(); progress.Style = ProgressBarStyle.Continuous;
-            active.Dispose(); active = null; workspace.Enabled = true; cancel.Enabled = false; RefreshStart();
-            if (closing) Close();
         }
+        catch (OperationCanceledException) { SetStatus("canceled"); }
+        catch (Exception ex) { SetStatus("failed"); events.Enqueue(ex.ToString()); FlushLog(); if (!closing) ShowFailure(ex, job, estimate); }
+        finally { FlushLog(); progress.Style = ProgressBarStyle.Continuous; active.Dispose(); active = null; workspace.Enabled = true; language.Enabled = true; cancel.Enabled = false; RefreshStart(); if (closing) Close(); }
     }
-    void Stop() { if (active != null) { status.Text = "正在取消…"; cancel.Enabled = false; active.Cancel(); } }
-    void FlushLog() {
-        var b = new System.Text.StringBuilder(); string line;
-        while (events.TryDequeue(out line)) b.AppendLine(line);
-        if (b.Length == 0) return;
-        if (logView.TextLength > 180000) logView.Text = logView.Text.Substring(logView.TextLength - 120000);
-        logView.AppendText(b.ToString());
+    void ShowFailure(Exception error, Job job, MemoryEstimate estimate) {
+        var diagnostic = Diagnostics.Classify(error, job == null ? "auto" : job.Device); string details = diagnostic.Text;
+        if (estimate != null) details += "\n\n" + Budget.Describe(estimate, resources);
+        string raw = "Splat Convert Desktop 1.2.0\nOS: " + Environment.OSVersion + "\nEngine: 3.10.3\n" +
+            (job == null ? "" : "Format: " + job.Format.Suffix + "; Device: " + job.Device + "; Workers: " + job.Workers + "\n") + details + "\n\n" + error;
+        if (ErrorOverride != null) { ErrorOverride(diagnostic, raw); return; }
+        MessageDialog.Failure(this, I18n.T(diagnostic.TitleKey), details, raw, () => { logView.Focus(); logView.SelectionStart = logView.TextLength; logView.ScrollToCaret(); });
     }
-    void OpenOutput() {
-        if (completed != null && File.Exists(completed)) Process.Start("explorer.exe", "/select,\"" + completed + "\"");
-    }
-    void OpenRepository() {
-        try { Process.Start(new ProcessStartInfo(App.Repository) { UseShellExecute = true }); }
-        catch (Exception ex) { MessageBox.Show(this, ex.Message, "无法打开浏览器"); }
-    }
-    void ShowStarPrompt() {
-        using (var dialog = new Form { Text = "转换成功，感谢使用", StartPosition = FormStartPosition.CenterParent,
-            ClientSize = new Size(440, 184), FormBorderStyle = FormBorderStyle.FixedDialog, MinimizeBox = false, MaximizeBox = false, Font = Font }) {
-            var message = new Label { Dock = DockStyle.Fill, Padding = new Padding(20, 17, 20, 0),
-                Text = "第一次转换已完成！\n\n如果这个工具帮到了你，欢迎到 GitHub 为项目点一个 Star（赞）。感谢支持。" };
-            var row = new FlowLayoutPanel { Dock = DockStyle.Bottom, Height = 50, FlowDirection = FlowDirection.RightToLeft, Padding = new Padding(12, 0, 12, 0) };
-            var open = new Button { Text = "打开项目", Width = 110, Height = 32 };
-            var dismiss = new Button { Text = "关闭", Width = 85, Height = 32, DialogResult = DialogResult.Cancel };
-            open.Click += (s, e) => { dialog.Close(); OpenRepository(); };
-            row.Controls.Add(open); row.Controls.Add(dismiss); dialog.CancelButton = dismiss;
-            dialog.Controls.Add(message); dialog.Controls.Add(row); dialog.ShowDialog(this);
-        }
-    }
+    void Stop() { if (active != null) { SetStatus("canceling"); cancel.Enabled = false; active.Cancel(); } }
+    void FlushLog() { var text = new System.Text.StringBuilder(); string line; while (events.TryDequeue(out line)) text.AppendLine(line); if (text.Length == 0) return; if (logView.TextLength > 180000) logView.Text = logView.Text.Substring(logView.TextLength - 120000); logView.AppendText(text.ToString()); }
+    void OpenOutput() { if (completed != null && File.Exists(completed)) Process.Start("explorer.exe", "/select,\"" + completed + "\""); }
+    void OpenRepository() { try { Process.Start(new ProcessStartInfo(App.Repository) { UseShellExecute = true }); } catch (Exception ex) { ShowFailure(ex, null, null); } }
     void ShowLicenses() {
-        using (var dialog = new Form { Text = "开源许可", StartPosition = FormStartPosition.CenterParent, Size = new Size(790, 555), Font = Font })
+        using (var dialog = new Form { Text = I18n.T("licenses"), StartPosition = FormStartPosition.CenterParent, Size = new Size(790, 555), Font = Font })
         using (var stream = Assembly.GetExecutingAssembly().GetManifestResourceStream("licenses.txt"))
         using (var reader = new StreamReader(stream)) {
-            var text = new TextBox { Dock = DockStyle.Fill, Multiline = true, ReadOnly = true, ScrollBars = ScrollBars.Both, WordWrap = false,
-                Text = reader.ReadToEnd().Replace("\r\n", "\n").Replace("\n", "\r\n") };
-            dialog.Controls.Add(text); dialog.ShowDialog(this);
+            dialog.Controls.Add(new TextBox { Dock = DockStyle.Fill, Multiline = true, ReadOnly = true, ScrollBars = ScrollBars.Both, WordWrap = false,
+                Text = reader.ReadToEnd().Replace("\r\n", "\n").Replace("\n", "\r\n") }); dialog.ShowDialog(this);
         }
     }
-}
-
-static class StarPrompt {
-    internal static bool TryClaim(string marker = null) {
-        marker = marker ?? Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "SplatConvertDesktop", "star-prompt-shown-v1");
-        try {
-            Directory.CreateDirectory(Path.GetDirectoryName(marker));
-            using (var stream = new FileStream(marker, FileMode.CreateNew, FileAccess.Write, FileShare.None)) {
-                byte[] bytes = System.Text.Encoding.UTF8.GetBytes(DateTime.UtcNow.ToString("O"));
-                stream.Write(bytes, 0, bytes.Length);
-                stream.Flush(true);
-            }
-            return true;
-        } catch (IOException) { return false; } catch (UnauthorizedAccessException) { return false; }
-    }
-}
-
-sealed class StepDialog : Form {
-    readonly ComboBox type = new ComboBox { Dock = DockStyle.Top, DropDownStyle = ComboBoxStyle.DropDownList };
-    readonly TableLayoutPanel values = new TableLayoutPanel { Dock = DockStyle.Fill, ColumnCount = 2, RowCount = 6 };
-    readonly List<Control> edits = new List<Control>();
-    public Op Result;
-    public StepDialog(Op op) {
-        Text = op == null ? "添加操作" : "编辑操作";
-        StartPosition = FormStartPosition.CenterParent; FormBorderStyle = FormBorderStyle.FixedDialog;
-        MinimizeBox = MaximizeBox = false; ClientSize = new Size(375, 300); Padding = new Padding(14);
-        Font = new Font("Microsoft YaHei UI", 9F);
-        values.Padding = new Padding(0, 12, 0, 0);
-        values.ColumnStyles.Add(new ColumnStyle(SizeType.Absolute, 108)); values.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 100));
-        for (int i = 0; i < 6; i++) values.RowStyles.Add(new RowStyle(SizeType.Absolute, 32));
-        var buttons = new FlowLayoutPanel { Dock = DockStyle.Bottom, Height = 34, FlowDirection = FlowDirection.RightToLeft };
-        var ok = new Button { Text = "确定", Width = 85, Height = 28 }; var cancel = new Button { Text = "取消", Width = 85, Height = 28, DialogResult = DialogResult.Cancel };
-        buttons.Controls.Add(ok); buttons.Controls.Add(cancel); AcceptButton = ok; CancelButton = cancel;
-        Controls.Add(values); Controls.Add(buttons); Controls.Add(type);
-        type.Items.AddRange(Step.All);
-        type.SelectedIndexChanged += (s, e) => Fields(null);
-        type.SelectedItem = op != null ? op.Step : Step.All[0];
-        if (op != null) Fields(op.Value);
-        ok.Click += (s, e) => Save();
-    }
-    void Fields(string previous) {
-        while (values.Controls.Count > 0) values.Controls[0].Dispose();
-        edits.Clear(); var step = (Step)type.SelectedItem;
-        if (step.Fields == "") return;
-        string[] fields = step.Fields.Split(','), data = (previous ?? step.Defaults).Split(',');
-        for (int i = 0; i < fields.Length; i++) {
-            values.Controls.Add(new Label { Text = fields[i], AutoSize = true, Margin = new Padding(0, 5, 0, 0) }, 0, i);
-            Control c = step.Flag == "--filter-harmonics"
-                ? (Control)new TrackBar { Minimum = 0, Maximum = 3, Value = Int32.Parse(data[i]), TickFrequency = 1, Dock = DockStyle.Fill, AutoSize = false }
-                : new TextBox { Text = data[i], Dock = DockStyle.Fill };
-            values.Controls.Add(c, 1, i); edits.Add(c);
-            var track = c as TrackBar;
-            if (track != null) {
-                var label = (Label)values.GetControlFromPosition(0, i);
-                track.ValueChanged += (s, e) => label.Text = "阶数：" + track.Value;
-                label.Text = "阶数：" + track.Value;
-            }
-        }
-    }
-    void Save() {
-        var step = (Step)type.SelectedItem; var numbers = new List<double>();
-        foreach (Control c in edits) {
-            if (c is TrackBar) { numbers.Add(((TrackBar)c).Value); continue; }
-            double n;
-            if (!Double.TryParse(c.Text, NumberStyles.Float, CultureInfo.InvariantCulture, out n) || Double.IsNaN(n) || Double.IsInfinity(n)) { Invalid("请输入有效数字。", c); return; }
-            numbers.Add(n);
-        }
-        if ((step.Flag == "--scale" || step.Flag == "--filter-sphere") && numbers.Last() <= 0) { Invalid("倍率或半径必须大于零。", edits.Last()); return; }
-        if (step.Flag == "--filter-box" && Enumerable.Range(0, 3).Any(i => numbers[i] > numbers[i + 3])) { Invalid("包围盒的最小值不能大于最大值。", edits[0]); return; }
-        Result = new Op { Step = step, Value = String.Join(",", numbers.Select(n => n.ToString("R", CultureInfo.InvariantCulture))) };
-        DialogResult = DialogResult.OK;
-    }
-    void Invalid(string message, Control c) { MessageBox.Show(this, message, "参数无效"); c.Focus(); }
 }

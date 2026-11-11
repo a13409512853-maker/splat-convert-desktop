@@ -17,7 +17,7 @@ async function macArchive(engine, arch) {
   const done = pipeline(zip.outputStream, fs.createWriteStream(output));
   const iconDir = path.join(root, 'app/icons');
   fs.mkdirSync(iconDir, { recursive: true });
-  for (const icon of ['plus', 'minus', 'arrow-up', 'arrow-down', 'folder-open', 'play', 'square', 'github', 'pencil', 'star', 'x']) {
+  for (const icon of ['plus', 'minus', 'arrow-up', 'arrow-down', 'folder-open', 'play', 'square', 'github', 'pencil', 'star', 'x', 'cpu', 'memory-stick', 'monitor', 'microchip', 'languages']) {
     fs.copyFileSync(path.join(root, 'node_modules/lucide-static/icons', icon + '.svg'), path.join(iconDir, icon + '.svg'));
   }
   await new Promise((resolve, reject) => {
@@ -58,7 +58,7 @@ async function macArchive(engine, arch) {
     });
   });
   for (const file of tree(path.join(root, 'app'))) zip.addFile(file.source, appPrefix + 'Resources/app/' + file.name);
-  for (const module of ['yazl', 'buffer-crc32']) {
+  for (const module of ['yazl', 'buffer-crc32', 'yauzl', 'pend']) {
     for (const file of tree(path.join(root, 'node_modules', module))) zip.addFile(file.source, appPrefix + 'Resources/app/node_modules/' + module + '/' + file.name);
   }
   for (const file of tree(engine.directory)) zip.addFile(file.source, appPrefix + 'Resources/engine/' + file.name, {

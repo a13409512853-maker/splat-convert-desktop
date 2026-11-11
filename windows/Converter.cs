@@ -11,20 +11,29 @@ using System.Threading;
 
 [assembly: AssemblyTitle("SuperSplat Convert Desktop")]
 [assembly: AssemblyProduct("SuperSplat Convert Desktop")]
-[assembly: AssemblyVersion("1.1.0.0")]
+[assembly: AssemblyVersion("1.2.0.0")]
 
 sealed class Format {
-    public readonly string Name, Suffix;
-    public Format(string name, string suffix) { Name = name; Suffix = suffix; }
+    public readonly string Suffix;
+    public string Name { get { return I18n.T(Suffix == ".sog" ? "sog" : Suffix == ".ply" ? "ply" : Suffix == ".compressed.ply" ? "compressed" : Suffix == ".csv" ? "csv" : Suffix == ".html" ? "html" : "voxelFormat"); } }
+    public Format(string name, string suffix) { Suffix = suffix; }
     public override string ToString() { return Name; }
     public bool Sog { get { return Suffix == ".sog" || Suffix == ".html"; } }
     public bool Voxel { get { return Suffix == ".voxel.zip"; } }
 }
 
 sealed class Step {
-    public readonly string Name, Flag, Fields, Defaults;
+    public readonly string Flag, Defaults;
+    public string Name { get { return I18n.T(Flag == "--translate" ? "translate" : Flag == "--rotate" ? "rotate" : Flag == "--scale" ? "scale" : Flag == "--filter-nan" ? "nan" : Flag == "--filter-harmonics" ? "harmonics" : Flag == "--filter-box" ? "box" : "sphere"); } }
+    public string Fields { get {
+        if (Flag == "--filter-nan") return "";
+        if (Flag == "--scale") return I18n.T("factor");
+        if (Flag == "--filter-harmonics") return I18n.T("band");
+        if (Flag == "--filter-box") return String.Join(",", new[] { "X", "Y", "Z" }.Select(a => I18n.T("min") + " " + a).Concat(new[] { "X", "Y", "Z" }.Select(a => I18n.T("max") + " " + a)));
+        return Flag == "--filter-sphere" ? "X,Y,Z," + I18n.T("radius") : "X,Y,Z";
+    } }
     public Step(string name, string flag, string fields, string defaults) {
-        Name = name; Flag = flag; Fields = fields; Defaults = defaults;
+        Flag = flag; Defaults = defaults;
     }
     public override string ToString() { return Name; }
     public static readonly Step[] All = {
@@ -105,16 +114,18 @@ sealed class Converter : IDisposable {
 
     public void Convert(Job job, CancellationToken token, Action<string> status, Action<string> log) {
         token.ThrowIfCancellationRequested();
-        if (job.Inputs.Count == 0 || job.Inputs.Any(i => !Supported(i.Path) || !File.Exists(i.Path)))
-            throw new IOException("源文件不存在或格式不受支持。");
+        if (job.Inputs.Count == 0 || job.Inputs.Any(i => !Supported(i.Path)))
+            throw new InvalidDataException(I18n.T("inputAdvice"));
+        var missing = job.Inputs.FirstOrDefault(i => !File.Exists(i.Path));
+        if (missing != null) throw new FileNotFoundException(I18n.T("inputAdvice"), missing.Path);
         string output = Path.GetFullPath(job.Output);
         if (!output.EndsWith(job.Format.Suffix, StringComparison.OrdinalIgnoreCase)) throw new IOException("输出扩展名不正确。");
         if (job.Inputs.Any(x => String.Equals(Path.GetFullPath(x.Path), output, StringComparison.OrdinalIgnoreCase)))
             throw new IOException("不能将输出写回源文件，请另选文件名。");
         if (File.Exists(output) && !job.Overwrite) throw new IOException("输出已存在，请确认覆盖或另选文件名。");
         string parent = Path.GetDirectoryName(output);
-        if (!Directory.Exists(parent)) throw new DirectoryNotFoundException("输出目录不存在。");
-        status("准备本地转换引擎…");
+        if (!Directory.Exists(parent)) throw new DirectoryNotFoundException(I18n.T("accessAdvice"));
+        status("preparing");
         Prepare(token);
         string staging = Path.Combine(parent, ".splat-convert-" + Guid.NewGuid().ToString("N"));
         Directory.CreateDirectory(staging);
@@ -135,16 +146,16 @@ sealed class Converter : IDisposable {
                 args.AddRange(new[] { "--decimate", job.Keep.ToString(CultureInfo.InvariantCulture) + "%", "--scratch-dir", staging });
             }
             if (separate) {
-                status("阶段 1 / 2：精简高斯点…");
+                status("reducing");
                 Run(args, job, token, log);
-                status("阶段 2 / 2：编码输出…");
+                status("encoding");
                 Run(new List<string> { reduced, engineOutput }, job, token, log);
             } else {
-                status("正在转换…");
+                status("converting");
                 Run(args, job, token, log);
             }
             if (job.Format.Voxel) {
-                status("正在打包体素文件…");
+                status("packing");
                 using (var stream = new FileStream(tempOutput, FileMode.CreateNew))
                 using (var zip = new ZipArchive(stream, ZipArchiveMode.Create)) {
                     foreach (string file in new[] { engineOutput, Path.ChangeExtension(engineOutput, ".bin") }) {
@@ -164,7 +175,7 @@ sealed class Converter : IDisposable {
             if (!File.Exists(tempOutput) || new FileInfo(tempOutput).Length == 0) throw new IOException("引擎未生成有效输出。");
             if (File.Exists(output) && job.Overwrite) File.Replace(tempOutput, output, null);
             else File.Move(tempOutput, output);
-        } finally { Clean(staging); }
+        } finally { Clean(staging); if (Directory.Exists(staging)) log(I18n.T("cleanup") + " " + staging); }
     }
 
     void Run(List<string> args, Job job, CancellationToken token, Action<string> log) {
@@ -192,7 +203,7 @@ sealed class Converter : IDisposable {
             var tail = new Queue<string>();
             DataReceivedEventHandler report = (sender, e) => {
                 if (String.IsNullOrWhiteSpace(e.Data)) return;
-                lock (tail) { tail.Enqueue(e.Data); if (tail.Count > 5) tail.Dequeue(); }
+                lock (tail) { tail.Enqueue(e.Data); if (tail.Count > 80) tail.Dequeue(); }
                 log(e.Data);
             };
             process.OutputDataReceived += report;
