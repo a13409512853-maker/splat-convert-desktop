@@ -1,6 +1,8 @@
 # Splat Convert Desktop
 
-大文件本地转换，绕开在线网页的体积与浏览器环境限制；免安装便携，图形界面上手即用。基于 [PlayCanvas Splat Transform](https://github.com/playcanvas/splat-transform) 的非官方 Windows / macOS 转换工具，文件不上传。
+高斯泼溅ply大文件本地转换，绕开在线网页的体积与浏览器环境限制；免安装便携，图形界面轻松上手。支持 PLY 压缩为 SOG，以及多格式转换、合并与筛选。
+
+基于 [PlayCanvas Splat Transform](https://github.com/playcanvas/splat-transform) 的非官方 Windows / macOS 转换工具，文件不上传。
 
 项目地址：**https://github.com/a13409512853-maker/splat-convert-desktop**
 
