@@ -1,0 +1,21 @@
+{
+  "name": "splat-convert-desktop",
+  "version": "1.1.0",
+  "private": true,
+  "description": "Unofficial Windows and macOS GUI for PlayCanvas Splat Transform",
+  "license": "MIT",
+  "author": "a13409512853-maker",
+  "repository": { "type": "git", "url": "https://github.com/a13409512853-maker/splat-convert-desktop.git" },
+  "engines": { "node": ">=22" },
+  "scripts": {
+    "test": "node --test tests/*.test.cjs",
+    "prepare:engine": "node scripts/prepare.cjs",
+    "build:win": "node scripts/build.cjs win32 x64",
+    "build:mac:arm64": "node scripts/build.cjs darwin arm64",
+    "build:mac:x64": "node scripts/build.cjs darwin x64",
+    "pack:source": "node scripts/source.cjs",
+    "test:conversion": "node tests/conversion.cjs"
+  },
+  "dependencies": { "@playcanvas/splat-transform": "3.10.3" },
+  "devDependencies": { "yauzl": "3.4.0", "yazl": "3.3.1", "lucide-static": "0.468.0", "plist": "3.1.0" }
+}

@@ -1,0 +1,7 @@
+{
+  "name": "splat-convert-desktop",
+  "productName": "Splat Convert Desktop",
+  "version": "1.1.0",
+  "main": "main.cjs",
+  "private": true
+}
