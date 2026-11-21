@@ -377,12 +377,12 @@ sealed class TelemetryChartPopup : Form {
                 int sIdx = snapshot.StartIndex;
                 var actList = sIdx >= 0 ? pts.Skip(sIdx + 1).ToArray() : new TelemetrySample[0];
                 if (actList.Length > 0) {
-                    var peakSample = actList.OrderByDescending(ReadPct).First();
+                    var peakSample = actList.OrderByDescending(x => ReadPct(x)).First();
                     peakText = FormatVal(peakSample);
                 }
                 var idleList = sIdx >= 0 ? pts.Take(sIdx + 1).ToArray() : pts;
                 if (idleList.Length > 0) {
-                    double avg = idleList.Average(ReadPct);
+                    double avg = idleList.Average(x => ReadPct(x));
                     idleAvgText = avg.ToString("0") + "%";
                 }
             }
