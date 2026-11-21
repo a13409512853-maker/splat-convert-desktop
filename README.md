@@ -1,13 +1,12 @@
 # Splat Convert Desktop
 
-高斯泼溅ply大文件本地转换，绕开在线网页的文件体积与浏览器环境限制；免安装便携，图形界面轻松上手。支持 PLY 压缩为 SOG，以及多格式转换、合并与筛选。
+高斯泼溅（3DGS）大文件本地转换工具，绕开在线网页的文件体积与浏览器环境限制；免安装便携，现代图形界面轻松上手。支持 PLY 压缩为 SOG / SPZ / HTML 等多种格式，并内置一键去飞点、批量独立转换与国内直连引擎在线更新。
 
-基于 [PlayCanvas Splat Transform](https://github.com/playcanvas/splat-transform) 的非官方 Windows / macOS 转换工具，文件本地处理不上传云端。
-
+基于 [PlayCanvas Splat Transform](https://github.com/playcanvas/splat-transform) 的非官方 Windows / macOS 转换工具，所有 3D 文件均在本地处理，不上传云端。
 
 ![Windows 界面](docs/interface-windows.png)
 
-当前 Windows 版本为 **1.2.0**。本轮更新了 macOS 源码，但未重新制作或真机验收苹果 1.2.0 应用。
+当前 Windows 版本为 **2.0.0**（内置引擎 `@playcanvas/splat-transform` **3.12.0**）。本轮仅升级 Windows 原生端，macOS 端保持原有代码不变。
 
 ## 下载与运行
 
@@ -15,45 +14,43 @@
 
 | 系统 | 文件 | 使用方法 |
 | --- | --- | --- |
-| Windows 10 / 11，64 位 x64 | `Splat-Convert-Desktop-1.2.0-win-x64.exe` | 双击运行，无需安装 Node.js |
+| Windows 10 / 11，64 位 x64 | `Splat-Convert-Desktop-2.0.0-win-x64.exe` | 双击运行，无需安装 Node.js |
 | macOS 13 或更高，Apple 芯片 | `Splat-Convert-Desktop-1.1.0-mac-arm64-adhoc.zip` | 解压后，将 `.app` 拖入“应用程序”并打开 |
 | macOS 13 或更高，Intel 芯片 | `Splat-Convert-Desktop-1.1.0-mac-x64-adhoc.zip` | 解压后，将 `.app` 拖入“应用程序”并打开 |
 
-Windows 版使用系统自带的 .NET Framework 4.8。苹果芯片型号可在苹果菜单的“关于本机”中查看：显示 Apple M 系列就用 arm64，显示 Intel 就用 x64。
+Windows 版使用系统自带的 .NET Framework 4.8，适配 Windows 11 原生圆角与深浅色标题栏。
 
-## 功能
+## v2.0.0 核心功能（Windows 端）
 
-- 七种界面语言：简体中文、英语、日语、韩语、德语、法语、西班牙语。原始引擎日志保留原文。
-- 带图标的实时资源角标：CPU、物理内存、GPU、显存。未知指标显示“暂不可用”，不会伪装为 0%。
-- 根据本次任务估算与当前资源余量比较，仅在可能不足时预警；用户可返回调整或继续，不自动降低画质。
-- 常见失败原因弹窗、诊断复制和日志入口；主动取消不弹错误框。
+- **现代 Win11 三段式流水线界面**：按 **01 源文件 → 02 清洗与变换 → 03 输出与压缩** 从左到右推进，支持**深色 / 浅色双主题切换**并自动记忆偏好，全套采用 Lucide 明暗适配图标。
+- **全量小白悬浮讲解**：鼠标悬停在任意设置项、格式、滑块或操作开关上，即弹出三段式讲解卡片（白话作用 + 调大/调小效果 + 新手建议）。
+- **引擎剥离与国内直连多镜像更新**：`.exe` 内置 v3.12.0 引擎保证断网开箱即用；运行时解耦至 `%LocalAppData%\SplatConvertDesktop\engine\`，支持点击顶部引擎徽章从 **阿里云 npmmirror（国内首选）→ 腾讯云 NPM → 华为云 NPM → 官方 npmjs** 自动测速拉取新版，经 SHA-512 校验与 `--version` 自检后原子切换，随时可一键回滚内置版本。
+- **批量独立转换 / 合并双模式**：支持一次拖入多个文件按原文件名批量输出到指定文件夹，也可切换为多文件合并输出。
+- **同步 3.12.0 新特性**：
+  - 输入：PLY（含压缩 PLY）、SOG、SPZ、KSPLAT、SPLAT、GLB、LCC、LCC2。
+  - 输出：SOG、标准 PLY、压缩 PLY、**SPZ（Niantic 压缩格式）**、CSV 表格、HTML 内嵌查看器、体素 ZIP 碰撞数据包。
+  - 清洗与变换：一键**去除空中飞点（`--filter-floaters`）**、**保留连通主体（`--filter-cluster`）**、自动清理无效点（NaN / Inf）、球谐阶数上限、平移、旋转、缩放、包围盒与球形裁剪。
+  - **自适应抽稀（`--decimate-adaptive`）**：默认开启，在大幅减面时优先保护主体细节与天空，可随时切回均匀抽稀。
+  - **Windows Vulkan 后端切换（`--gpu-backend vulkan`）**：设备设置中一键切换，绕过部分 Windows 显卡驱动在 D3D12 下的兼容问题。
+  - **小白一键预设**：内置「极致瘦身 / 网页均衡 / 高质归档」三档预设。
+- **实时百分比进度条与预估剩余时间（ETA）**：按字节块实时解析引擎进度输出，显示当前阶段、整体百分比、批量文件进度（`[i/N]`）、已用时与预计剩余时间。
+- **七种界面语言**：简体中文、英语、日语、韩语、德语、法语、西班牙语；原始引擎日志保留原文，支持折叠日志抽屉。
 
-- 输入：PLY（含压缩 PLY）、SOG、KSPLAT、SPLAT、SPZ。
-- 输出：标准 PLY、压缩 PLY、SOG、CSV 表格、HTML 内嵌查看器、体素 ZIP 碰撞数据包。
-- 多文件合并，可调整文件顺序。
-- 对单个输入文件或合并结果分别添加有序操作：平移、旋转、缩放、无效点清理、球谐阶数上限、包围盒和球形范围筛选。
-- 常用参数滑块：保留点数、球谐压缩迭代、WebP 无损打包强度、编码线程、体素边长和不透明度阈值。
-- 本地日志、取消转换、输出覆盖确认。转换成功前不会替换已有目标文件。
-- 两端主界面都有本项目仓库入口。首次成功导出后，仅提示一次为项目点 Star（赞）。关闭后也不会再次提示；不自动打开浏览器。
+### 0.5 秒高频资源监测与双色历史折线图
 
-默认输出 SOG，保留 100% 的高斯点。球谐阶数上限在“变换与筛选”中添加。点数精简低于 100% 时，非标准 PLY 输出会先生成中间 PLY 再编码，需要额外磁盘空间。
-
-### 资源监测与预警
-
-Windows 使用系统内存接口、处理器时间、DXGI 显卡信息和本地 GPU 性能计数器。约每 2 秒后台采样，窗口最小化时约每 10 秒采样。鼠标悬停资源角标可查看设备名称、可用内存、系统提交余量和采样时间。
-
-启动转换时，对可快速读取元数据的标准高斯 PLY、SOG 和 SPLAT 估算基础数组与编码开销区间。根据球谐阶数、点数保留比例、线程和设备设置调整需求；减点前的精简阶段也计入内存压力。范围筛选导致的点数不确定时标为上限。其他输入仍可转换，但不会虚构内存预估。
-
-只有预计需求接近或超过当前物理内存、提交额度或可靠显存余量时提示。CPU 高占用只影响速度，不单独预警；采样过期或指标未知不被当作资源不足。自动显卡模式无法可靠确认实际设备时，显存预警采取保守判断，不承诺提前识别全部显卡错误。
-
-macOS 源码读取 CPU 和内存压力近似余量；Apple 芯片标记统一内存，不重复计算独立显存。通用接口无法取得 GPU 使用率或显存占用时显示不可用。内存估算不是精确峰值保证。
+- Windows 端使用系统内存接口、处理器时间、DXGI 显卡信息和本地 GPU 性能计数器，窗口活跃时每 **0.5 秒**刷新一次 CPU、物理内存、GPU 与显存占用（最小化时降为 10 秒）。
+- 鼠标悬停底部任意硬件指标，即弹出详细历史折线图悬浮窗：
+  - 开始压缩时自动保留压缩前约 6 秒空闲基线，并在精确起点绘制「开始压缩」垂直虚线，空闲期与压缩期曲线以双色区分。
+  - 压缩过程中 X 轴整体自适应拉伸，不会将空闲基线或压缩曲线移出画面左侧。
+  - 压缩完成后曲线保持锁定，完整展示空闲期与整段压缩流程的负载与峰值，直至下一次压缩开始时才自动刷新。
+- 启动转换前自动估算内存/显存开销并在余量不足时预警；提供常见失败诊断弹窗、诊断复制与日志定位。
 
 ## 本地构建
 
-开发者需要 Node.js 22 或更高版本；普通使用者不需要安装它。先安装锁定的依赖并运行测试：
+开发者需要 Node.js 22 或更高版本；普通使用者不需要安装它。
 
 ```sh
-npm ci
+npm install
 npm test
 npm run test:conversion
 ```
@@ -71,61 +68,45 @@ npm run build:mac:arm64
 npm run build:mac:x64
 ```
 
-运行结果在 `dist/`。下载缓存和临时构建内容在 `.cache/`，不应提交。构建脚本校验 Node.js 和 Electron 官方 SHA-256 清单；转换引擎固定为 `3.10.3`，Node.js 为 `22.23.2`，Electron 为 `45.3.0`。
+运行结果位于 `dist/`（如 `dist/Splat-Convert-Desktop-2.0.0-win-x64.exe`）。下载缓存和临时构建内容在 `.cache/`，不应提交。构建脚本校验 Node.js 和 Electron 官方 SHA-256 清单；默认内置引擎为 `3.12.0`，Node.js 为 `22.23.2`，Electron 为 `45.3.0`。
 
-推荐在 macOS 上制作苹果正式发行包，脚本会使用系统 `codesign` 添加临时签名并验证应用。Windows 也能交叉打包苹果应用；交叉打包的 `-unsigned.zip` 不应直接发布，需要进一步签名。可运行：
+## GitHub 自动构建与获取 EXE
 
-```sh
-node scripts/sign-mac.cjs dist/Splat-Convert-Desktop-1.1.0-mac-arm64-unsigned.zip
-```
+仓库内已配置 `.github/workflows/build.yml`，提供两种自动产出 `Splat-Convert-Desktop-2.0.0-win-x64.exe` 的方式：
 
-跨平台签名脚本会下载并校验开源 `apple-codesign 0.29.0` 的 Windows 版本。Windows 创建苹果内部符号链接时，需要系统开发者模式或管理员权限。也可以用环境变量 `RCODESIGN` 指向已安装的工具。脚本只添加临时签名，不需要或包含任何私钥。
+1. **推送版本标签自动生成草稿发行版（推荐）**：
+   ```sh
+   git add .
+   git commit -m "feat(windows): upgrade to v2.0.0"
+   git push origin main
+   git tag v2.0.0
+   git push origin v2.0.0
+   ```
+   等待 Actions 运行完成后，进入仓库 **Releases** 页面即可在草稿发行版中看到并下载 `Splat-Convert-Desktop-2.0.0-win-x64.exe`（编辑发布说明后点击 Publish release 即可正式发布）。
+2. **手动触发构建并下载产物**：
+   进入 GitHub 仓库顶部的 **Actions → Build desktop releases → Run workflow**，等待 `windows-2025` 任务变绿后，点进该次运行记录，在页面最底部的 **Artifacts** 区域下载 `desktop-win32-x64` 压缩包，解压即可得到 `.exe`。
 
-## GitHub 自动构建
-
-仓库内已有 `.github/workflows/build.yml`。在 GitHub 的 Actions（自动化操作）页面手动运行 `Build desktop releases`，会分别在 Windows、Apple 芯片 Mac 和 Intel Mac 上构建。每个平台先跑测试，再提供可下载的构建产物。
-
-推送 `v` 开头的版本标签会自动创建一个草稿发行版，并附上三种程序文件；维护者检查后再发布。版本号位于 `package.json`、`app/package.json` 和 Windows 的程序集信息中，发布前应同步修改。
-
-```sh
-git tag v1.2.0
-git push origin v1.2.0
-```
-
-只推送源码与锁文件，不要把 `node_modules/`、`.cache/`、`dist/`、模型文件或本机凭据放进仓库。EXE 和苹果 ZIP 应上传到发行版附件。
+只推送源码，不要把 `node_modules/`、`.cache/`、`dist/`、模型文件或本机凭据放进仓库。
 
 ## 源码结构
 
 ```text
-windows/                 Windows 原生界面、引擎调用、一次性提示与自测
-app/                     macOS Electron 界面、受限进程通信、引擎调用
-scripts/                 官方运行时下载校验、打包、临时签名
+windows/                 Windows 原生界面（方案 C 三段式流水线、主题、悬浮讲解、性能折线图、引擎多镜像更新与自测）
+app/                     macOS Electron 界面、受限进程通信、多语言词典 locales.json
+scripts/                 官方运行时下载校验、动态引擎打包、临时签名
 tests/                   参数校验、提示持久化、真实引擎转换、苹果包结构检查
 .github/workflows/       Windows、Apple 芯片、Intel 自动构建
 ```
 
-Windows 保留原有原生界面；macOS 使用 Electron 桌面窗口。两端调用官方引擎，不修改上游压缩算法。大文件在单独的引擎进程内处理，不会先读进图形界面。
+## 隐私与本地数据
 
-## 隐私与提示记录
+不提供遥测、账号登录或后台静默联网。本地转换全程离线；仅在用户主动点击「引擎更新」检查/拉取镜像或点击仓库链接时才会发起网络请求。
 
-不提供遥测、登录或自动更新。转换不需要网络。只有点击仓库链接或提示中的“打开项目”，才会打开系统浏览器。
-
-一次性求赞提示按当前操作系统用户记录，而非按 EXE 或版本号记录。Windows 标记位于 `%LOCALAPPDATA%/SplatConvertDesktop/star-prompt-shown-v1`；macOS 标记位于 Electron 返回的应用用户数据目录，通常是 `~/Library/Application Support/SplatConvertDesktop/star-prompt-shown-v1`。删除用户数据或换用户后会重新计数；标记不可写时跳过提示，不阻断转换。
-
-## 局限性
-
-- 此项目不是 PlayCanvas 或 SuperSplat 官方产品，不代表官方背书。
-- 提供的苹果包使用临时签名（ad-hoc），没有 Apple Developer ID（开发者身份）签名或公证。Gatekeeper（系统安全检查）可能拦截首次打开。确认来源后，可按系统提供的“仍要打开”流程操作；不要全局关闭系统安全保护。Windows 包也未做商业代码签名，可能显示安全提示。
-- 本次本地验收环境是 Windows。Windows 原生版已完成实际转换与界面测试；macOS 界面完成浏览器级交互测试，苹果包完成架构、权限、依赖、链接和签名资源检查，尚未完成 Mac 真机启动和 GPU 转换验收。苹果版本首次发布建议标记为预发布。
-- 体素输出需要兼容的 GPU（图形处理器）和驱动。SOG / HTML 可改用 CPU（处理器）编码。普通网格 PLY 不一定包含高斯所需属性，不保证能作为高斯场景转换。
-- 实际压缩率、耗时、内存和临时磁盘需求取决于场景。测试使用约 472 MB、200 万点的模拟文件，不代表所有真实大文件的表现。
-- 仅覆盖转换网页提供的六种导出功能，没有把上游命令行的全部专业功能暴露为界面。
+Windows 本地状态与解耦引擎存放于 `%LOCALAPPDATA%\SplatConvertDesktop\`（包含主题偏好 `theme.txt`、语言偏好 `language.txt`、一次性求赞标记与解耦引擎目录 `engine/`）。
 
 ## 许可证与致谢
 
-本项目界面与构建代码采用 [MIT License](LICENSE)。上游引擎、Node.js、Electron、Dawn/WebGPU、WebP、SPZ 以及图标等组件分别遵循其自身许可证。本仓库提供 `THIRD-PARTY-LICENSES.txt`，构建过程也会将依赖许可放入程序和发行包。
-
-新增的 macOS 元数据读取依赖许可另见 `docs/licenses/`；重新构建时会合并到第三方许可清单中。
+本项目界面与构建代码采用 [MIT License](LICENSE)。上游引擎、Node.js、Electron、Dawn/WebGPU、WebP、SPZ 以及图标等组件分别遵循其自身许可证。
 
 - [PlayCanvas Splat Transform](https://github.com/playcanvas/splat-transform)
 - [SuperSplat Convert](https://superspl.at/convert)
