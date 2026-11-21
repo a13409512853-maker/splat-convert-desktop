@@ -453,6 +453,7 @@ sealed class FluentFileList : Control {
     }
 
     Rectangle RowRect(int i) { return new Rectangle(0, i * (RowHeight + RowGap) - scrollOffset, Width - 2, RowHeight); }
+    internal Rectangle GetRowScreenRect(int i) { var r = RowRect(i); var pt = PointToScreen(new Point(r.X, r.Y)); return new Rectangle(pt.X, pt.Y, r.Width, r.Height); }
     Rectangle DelRect(Rectangle row) { return new Rectangle(row.Right - 30, row.Y + (row.Height - 24) / 2, 24, 24); }
 
     protected override void OnMouseMove(MouseEventArgs e) {
@@ -511,7 +512,7 @@ sealed class FluentFileList : Control {
                 g.FillPath(fill, path);
                 g.DrawPath(dash, path);
             }
-            TextRenderer.DrawText(g, "拖拽 PLY / SOG / SPZ / GLB 文件到此处\n或点击添加文件", Font, box, p.Muted, TextFormatFlags.HorizontalCenter | TextFormatFlags.VerticalCenter | TextFormatFlags.WordBreak);
+            TextRenderer.DrawText(g, I18n.T("emptyFiles"), Font, box, p.Muted, TextFormatFlags.HorizontalCenter | TextFormatFlags.VerticalCenter | TextFormatFlags.WordBreak);
             return;
         }
 
@@ -651,7 +652,7 @@ sealed class FluentOpList : Control {
             using (var pen = new Pen(p.Border, 1f)) {
                 g.FillPath(fill, path); g.DrawPath(pen, path);
             }
-            TextRenderer.DrawText(g, "暂无自定义步骤\n点击上方「＋ 添加操作」添加清洗或变换", Font, box, p.Muted, TextFormatFlags.HorizontalCenter | TextFormatFlags.VerticalCenter | TextFormatFlags.WordBreak);
+            TextRenderer.DrawText(g, I18n.T("emptyOps"), Font, box, p.Muted, TextFormatFlags.HorizontalCenter | TextFormatFlags.VerticalCenter | TextFormatFlags.WordBreak);
             return;
         }
 
@@ -697,5 +698,98 @@ sealed class FluentOpList : Control {
                 TextRenderer.DrawText(g, sub, fSub, new Rectangle(r.X + 34, r.Y + 28, r.Width - 44, 17), p.Muted, TextFormatFlags.Left | TextFormatFlags.EndEllipsis | TextFormatFlags.NoPrefix);
             }
         }
+    }
+}
+
+sealed class FluentDropdown : Control {
+    readonly List<object> items = new List<object>();
+    int selectedIndex = -1;
+    bool hovered, open;
+    internal event EventHandler SelectedIndexChanged;
+    internal IList<object> Items { get { return items; } }
+    internal int SelectedIndex {
+        get { return selectedIndex; }
+        set {
+            int clamped = items.Count == 0 ? -1 : Math.Max(0, Math.Min(items.Count - 1, value));
+            if (selectedIndex == clamped) return;
+            selectedIndex = clamped;
+            Invalidate();
+            if (SelectedIndexChanged != null) SelectedIndexChanged(this, EventArgs.Empty);
+        }
+    }
+    internal object SelectedItem {
+        get { return selectedIndex >= 0 && selectedIndex < items.Count ? items[selectedIndex] : null; }
+        set { int idx = items.IndexOf(value); if (idx >= 0) SelectedIndex = idx; }
+    }
+    public override string Text {
+        get { return SelectedItem == null ? "" : SelectedItem.ToString(); }
+        set { }
+    }
+    internal FluentDropdown() {
+        DoubleBuffered = true;
+        Cursor = Cursors.Hand;
+        Height = 32;
+        SetStyle(ControlStyles.AllPaintingInWmPaint | ControlStyles.UserPaint | ControlStyles.OptimizedDoubleBuffer | ControlStyles.ResizeRedraw, true);
+    }
+    internal void SetItems(IEnumerable<object> list, int select) {
+        items.Clear();
+        if (list != null) items.AddRange(list);
+        selectedIndex = items.Count == 0 ? -1 : Math.Max(0, Math.Min(items.Count - 1, select));
+        Invalidate();
+    }
+    protected override void OnMouseEnter(EventArgs e) { hovered = true; Invalidate(); base.OnMouseEnter(e); }
+    protected override void OnMouseLeave(EventArgs e) { hovered = false; Invalidate(); base.OnMouseLeave(e); }
+    protected override void OnMouseDown(MouseEventArgs e) {
+        if (e.Button == MouseButtons.Left && Enabled && items.Count > 0) ShowPopup();
+        base.OnMouseDown(e);
+    }
+    void ShowPopup() {
+        var menu = new ContextMenuStrip { ShowImageMargin = false, Font = Font, Renderer = new FluentMenuRenderer() };
+        for (int i = 0; i < items.Count; i++) {
+            int idx = i;
+            var mi = new ToolStripMenuItem((i == selectedIndex ? "✓  " : "    ") + items[i].ToString());
+            mi.Click += (s, e) => SelectedIndex = idx;
+            menu.Items.Add(mi);
+        }
+        menu.Closed += (s, e) => { open = false; Invalidate(); };
+        open = true; Invalidate();
+        menu.MinimumSize = new Size(Width, 10);
+        menu.Show(this, new Point(0, Height + 2));
+    }
+    protected override void OnPaint(PaintEventArgs e) {
+        var p = Theme.Current;
+        var g = e.Graphics;
+        using (var bg = new SolidBrush(Parent != null ? Parent.BackColor : p.CardBg)) g.FillRectangle(bg, ClientRectangle);
+        g.SmoothingMode = SmoothingMode.AntiAlias;
+        var rect = new Rectangle(0, 0, Width - 1, Height - 1);
+        using (var path = Theme.RoundedRect(rect, 7))
+        using (var fill = new SolidBrush(Enabled ? p.InputBg : p.SubCardBg))
+        using (var pen = new Pen(open ? p.Accent : (hovered ? p.AccentBorder : p.BorderStrong), open ? 1.3f : 1f)) {
+            g.FillPath(fill, path); g.DrawPath(pen, path);
+        }
+        var tr = new Rectangle(10, 0, Math.Max(10, Width - 30), Height);
+        TextRenderer.DrawText(g, Text, Font, tr, Enabled ? p.Ink : p.Muted, TextFormatFlags.Left | TextFormatFlags.VerticalCenter | TextFormatFlags.SingleLine | TextFormatFlags.EndEllipsis | TextFormatFlags.NoPrefix);
+        // Crisp vector chevron
+        int cx = Width - 16, cy = Height / 2 - 2;
+        using (var pen = new Pen(p.Muted, 1.5f) { StartCap = LineCap.Round, EndCap = LineCap.Round })
+            g.DrawLines(pen, new[] { new Point(cx - 4, cy), new Point(cx, cy + 4), new Point(cx + 4, cy) });
+    }
+}
+
+sealed class FluentMenuRenderer : ToolStripProfessionalRenderer {
+    protected override void OnRenderToolStripBackground(ToolStripRenderEventArgs e) {
+        using (var b = new SolidBrush(Theme.Current.CardBg)) e.Graphics.FillRectangle(b, e.AffectedBounds);
+    }
+    protected override void OnRenderToolStripBorder(ToolStripRenderEventArgs e) {
+        using (var pen = new Pen(Theme.Current.BorderStrong, 1f)) e.Graphics.DrawRectangle(pen, 0, 0, e.AffectedBounds.Width - 1, e.AffectedBounds.Height - 1);
+    }
+    protected override void OnRenderMenuItemBackground(ToolStripItemRenderEventArgs e) {
+        var p = Theme.Current;
+        var r = new Rectangle(3, 1, e.Item.Width - 6, e.Item.Height - 2);
+        using (var b = new SolidBrush(e.Item.Selected ? p.AccentSoft : p.CardBg)) e.Graphics.FillRectangle(b, r);
+    }
+    protected override void OnRenderItemText(ToolStripItemTextRenderEventArgs e) {
+        e.TextColor = e.Item.Selected ? Theme.Current.Accent : Theme.Current.Ink;
+        base.OnRenderItemText(e);
     }
 }

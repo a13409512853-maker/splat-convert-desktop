@@ -353,7 +353,7 @@ sealed class Converter : IDisposable {
                                     string label = full.Substring(p + 1).Trim();
                                     int bracket = label.IndexOf('[');
                                     if (bracket > 0) label = label.Substring(0, bracket).Trim();
-                                    if (!String.IsNullOrEmpty(label)) activeStage = label;
+                                    if (!String.IsNullOrEmpty(label)) activeStage = CleanStageLabel(label);
                                 }
                                 double pct = Math.Min(96, (barsCompleted / (double)Math.Max(1, expectedBars)) * 96d);
                                 if (onBar != null) onBar(activeStage, pct);
@@ -368,7 +368,7 @@ sealed class Converter : IDisposable {
                                     string cur = lineBuf.ToString();
                                     int p = cur.IndexOf('▸');
                                     int b = cur.IndexOf('[');
-                                    if (p >= 0 && b > p) activeStage = cur.Substring(p + 1, b - p - 1).Trim();
+                                    if (p >= 0 && b > p) activeStage = CleanStageLabel(cur.Substring(p + 1, b - p - 1).Trim());
                                 } else if (inBar && ch == '#') {
                                     barTicks = Math.Min(30, barTicks + 1);
                                     double barFrac = barTicks / 30d;
@@ -405,6 +405,10 @@ sealed class Converter : IDisposable {
         }
     }
 
+    static string CleanStageLabel(string raw) {
+        if (String.IsNullOrWhiteSpace(raw)) return "";
+        return Regex.Replace(raw, @"[A-Za-z]:\\[^\s]*?\.splat-convert-[0-9a-fA-F]+\\", "");
+    }
     static string Quote(string arg) {
         return "\"" + Regex.Replace(arg, "(\\\\*)(\"|$)", m =>
             new string('\\', m.Groups[1].Length * 2 + (m.Groups[2].Length == 0 ? 0 : 1)) + m.Groups[2].Value) + "\"";

@@ -240,6 +240,46 @@ static class Budget {
         }
         lines.Add("");lines.Add(I18n.T("estimateNote"));return String.Join("\n",lines);
     }
+    internal static long[] EstimateOutputBytes(IList<InputFile> inputs, Format format, int keepPct, int? shLimit, int webpEffort) {
+        if (inputs == null || inputs.Count == 0 || format == null) return null;
+        long totalPts = 0; int maxBands = 0; bool any = false;
+        foreach (var inp in inputs) {
+            var m = Metadata(inp.Path);
+            if (m != null) {
+                any = true;
+                totalPts += m[0];
+                int b = (int)m[1];
+                if (shLimit.HasValue) b = Math.Min(b, shLimit.Value);
+                maxBands = Math.Max(maxBands, b);
+            }
+        }
+        if (!any || totalPts <= 0) return null;
+        double outPts = Math.Max(1d, totalPts * (keepPct / 100d));
+        int shCoeffs = new[] { 0, 9, 24, 45 }[Math.Max(0, Math.Min(3, maxBands))];
+        double lowBpp, highBpp;
+        if (format.Suffix == ".ply") {
+            double bpp = (14 + shCoeffs) * 4d;
+            lowBpp = bpp * 0.98; highBpp = bpp * 1.03;
+        } else if (format.Suffix == ".compressed.ply") {
+            double bpp = 16d + shCoeffs;
+            lowBpp = bpp * 0.90; highBpp = bpp * 1.15;
+        } else if (format.Suffix == ".spz") {
+            double bpp = 16d + shCoeffs * 0.55;
+            lowBpp = bpp * 0.45; highBpp = bpp * 0.80;
+        } else if (format.Suffix == ".sog" || format.Suffix == ".html") {
+            double effScale = webpEffort >= 6 ? 0.90 : (webpEffort == 0 ? 1.12 : 1.0);
+            double baseBpp = 10.5 + (maxBands == 0 ? 0 : maxBands == 1 ? 3.5 : maxBands == 2 ? 6.5 : 10.0);
+            lowBpp = baseBpp * 0.72 * effScale; highBpp = baseBpp * 1.18 * effScale;
+        } else if (format.Suffix == ".csv") {
+            double bpp = (14 + shCoeffs) * 10d;
+            lowBpp = bpp * 0.85; highBpp = bpp * 1.25;
+        } else {
+            // Voxel zip
+            lowBpp = 0.8; highBpp = 3.5;
+        }
+        long overhead = format.Suffix == ".html" ? 1800000L : 65536L;
+        return new long[] { (long)(outPts * lowBpp) + overhead, (long)(outPts * highBpp) + overhead };
+    }
     internal static string GB(double bytes) { return (bytes/GiB).ToString("0.00",CultureInfo.InvariantCulture)+" GiB"; }
 }
 

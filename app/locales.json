@@ -1267,5 +1267,248 @@
     "Stapel",
     "Lot",
     "Lote"
+  ],
+  "presetFast": [
+    "快速转换",
+    "Fast",
+    "高速",
+    "빠른 변환",
+    "Schnell",
+    "Rapide",
+    "Rápido"
+  ],
+  "devAuto": [
+    "自动显卡",
+    "Auto GPU",
+    "自動GPU",
+    "자동 GPU",
+    "Auto-GPU",
+    "GPU auto",
+    "GPU auto"
+  ],
+  "devVulkan": [
+    "Vulkan",
+    "Vulkan",
+    "Vulkan",
+    "Vulkan",
+    "Vulkan",
+    "Vulkan",
+    "Vulkan"
+  ],
+  "devCpu": [
+    "纯 CPU",
+    "CPU Only",
+    "CPUのみ",
+    "CPU 전용",
+    "Nur CPU",
+    "CPU seul",
+    "Solo CPU"
+  ],
+  "estOutput": [
+    "预估输出体积",
+    "Est. output size",
+    "推定出力サイズ",
+    "예상 출력 크기",
+    "Gesch. Größe",
+    "Taille estimée",
+    "Tamaño est."
+  ],
+  "estUnknown": [
+    "添加 PLY/SOG/SPLAT 后自动预估",
+    "Add PLY/SOG/SPLAT to estimate",
+    "ファイル追加で容量予測",
+    "파일 추가 시 용량 예측",
+    "Datei hinzufügen zum Schätzen",
+    "Ajoutez un fichier pour estimer",
+    "Añade un archivo para estimar"
+  ],
+  "emptyFiles": [
+    "拖拽 PLY / SOG / SPZ / GLB 文件到此处\n或点击添加文件",
+    "Drop PLY / SOG / SPZ / GLB files here\nor click Add Files",
+    "PLY / SOG / SPZ / GLB をここにドロップ\nまたはクリックして追加",
+    "PLY / SOG / SPZ / GLB 파일을 여기에 드롭\n또는 클릭하여 추가",
+    "PLY / SOG / SPZ / GLB hier ablegen\noder zum Hinzufügen klicken",
+    "Déposez vos fichiers PLY / SOG / SPZ / GLB\nou cliquez pour ajouter",
+    "Arrastra PLY / SOG / SPZ / GLB aquí\no haz clic para añadir"
+  ],
+  "emptyOps": [
+    "暂无自定义步骤\n点击上方「＋ 添加操作」添加清洗或变换",
+    "No custom steps yet\nClick '+ Add action' above",
+    "カスタム手順はありません\n上の「＋ 追加」から追加",
+    "사용자 지정 단계 없음\n위의 '+ 작업 추가'를 클릭",
+    "Keine Schritte vorhanden\nOben auf '+ Aktion' klicken",
+    "Aucune étape personnalisée\nCliquez sur '+ Ajouter'",
+    "Sin pasos personalizados\nHaz clic en '+ Añadir'"
+  ],
+  "starCongrats": [
+    "首次转换大功告成！",
+    "First Conversion Complete!",
+    "初回の変換が完了しました！",
+    "첫 변환이 완료되었습니다!",
+    "Erste Konvertierung abgeschlossen!",
+    "Première conversion réussie !",
+    "¡Primera conversión completada!"
+  ],
+  "starSubDefault": [
+    "你的 3D 高斯场景已成功处理并保存到本地。",
+    "Your 3D Gaussian splat has been processed and saved locally.",
+    "3D Gaussian Splat がローカルに保存されました。",
+    "3D 가우시안 스플랫이 로컬에 저장되었습니다.",
+    "Ihr 3D-Gaussian-Splat wurde lokal gespeichert.",
+    "Votre scène 3D Gaussian Splat a été enregistrée localement.",
+    "Tu escena 3D Gaussian Splat se guardó localmente."
+  ],
+  "starBody": [
+    "Splat Convert Desktop 是免费开源的本地桌面工具；核心 3D 高斯压缩、格式转换与清洗能力由 PlayCanvas 开源引擎 @playcanvas/splat-transform 提供。\n\n衷心感谢 PlayCanvas 原作者及社区贡献者的杰出工作！如果本工具帮到了你，欢迎分别为本桌面端项目与上游引擎项目点亮 Star 支持开源（本提示仅出现一次）。",
+    "Splat Convert Desktop is a free, open-source local desktop GUI. Core 3D Gaussian compression, conversion, and filtering are powered by PlayCanvas's open-source @playcanvas/splat-transform engine.\n\nHeartfelt thanks to the PlayCanvas authors and contributors! If this tool helped you, please consider starring both this app and the upstream engine (shown once).",
+    "Splat Convert Desktop は無料・オープンソースのローカルデスクトップツールです。コアの変換・圧縮処理は PlayCanvas のオープンソースエンジン @playcanvas/splat-transform によって支えられています。\n\nPlayCanvas の開発者とコミュニティの貢献に心より感謝します。お役に立てれば、ぜひ両リポジトリに Star をお願いします（初回のみ表示）。",
+    "Splat Convert Desktop은 무료 오픈소스 로컬 데스크톱 도구이며, 핵심 3D 가우시안 압축·변환 엔진은 PlayCanvas의 오픈소스 @playcanvas/splat-transform을 기반으로 합니다.\n\nPlayCanvas 원작자와 기여자분들께 깊이 감사드립니다. 도움이 되셨다면 두 저장소에 Star로 응원해 주세요(최초 1회 표시).",
+    "Splat Convert Desktop ist ein kostenloses Open-Source-Desktop-Tool. Die Kernkompression und -konvertierung basiert auf der Open-Source-Engine @playcanvas/splat-transform von PlayCanvas.\n\nHerzlichen Dank an die PlayCanvas-Autoren! Wenn das Tool hilfreich war, freuen wir uns über einen Star auf GitHub (einmaliger Hinweis).",
+    "Splat Convert Desktop est un outil bureau open source gratuit. La compression et la conversion reposent sur le moteur open source @playcanvas/splat-transform de PlayCanvas.\n\nUn grand merci aux auteurs de PlayCanvas ! Si cet outil vous aide, n'hésitez pas à ajouter une étoile sur GitHub (affiché une seule fois).",
+    "Splat Convert Desktop es una herramienta de escritorio local gratuita y de código abierto, impulsada por el motor @playcanvas/splat-transform de PlayCanvas.\n\nMuchas gracias a los autores de PlayCanvas. Si te resultó útil, considera dar una estrella en GitHub a ambos proyectos (se muestra una sola vez)."
+  ],
+  "starBtn": [
+    "去 GitHub 点 Star 支持",
+    "Star on GitHub",
+    "GitHub で Star を付ける",
+    "GitHub에서 Star 누르기",
+    "Auf GitHub bewerten",
+    "Mettre une étoile",
+    "Dar estrella en GitHub"
+  ],
+  "starLater": [
+    "下次再说",
+    "Maybe Later",
+    "あとで",
+    "나중에",
+    "Später",
+    "Plus tard",
+    "Más tarde"
+  ],
+  "upstreamLink": [
+    "上游压缩引擎项目：",
+    "Upstream engine: ",
+    "ベースエンジン：",
+    "원본 압축 엔진: ",
+    "Upstream-Engine: ",
+    "Moteur source : ",
+    "Motor original: "
+  ],
+  "engineCredit": [
+    "本软件是 @playcanvas/splat-transform 的非官方本地桌面界面，底层压缩与转换能力完全由上游开源引擎提供，衷心感谢 PlayCanvas 原作者及社区贡献者！",
+    "Unofficial desktop GUI for @playcanvas/splat-transform. All core compression & conversion power comes from PlayCanvas's open-source engine — huge thanks to its authors!",
+    "@playcanvas/splat-transform の非公式デスクトップUIです。コアの変換・圧縮機能は PlayCanvas オープンソースエンジンによるもので、開発者に深く感謝します。",
+    "@playcanvas/splat-transform의 비공식 데스크톱 GUI입니다. 핵심 압축 및 변환 기능은 PlayCanvas 오픈소스 엔진이 제공합니다. 원작자분들께 감사드립니다.",
+    "Inoffizielle Desktop-Oberfläche für @playcanvas/splat-transform. Herzlichen Dank an die PlayCanvas-Autoren für die Open-Source-Engine!",
+    "Interface bureau non officielle pour @playcanvas/splat-transform. Merci aux auteurs de PlayCanvas pour ce moteur open source !",
+    "Interfaz de escritorio no oficial para @playcanvas/splat-transform. ¡Muchas gracias a los autores de PlayCanvas por el motor open source!"
+  ],
+  "licSubtitle": [
+    "核心开源项目致谢与第三方组件许可摘要",
+    "Core open-source credits & third-party license summary",
+    "主要オープンソース謝辞とライセンス概要",
+    "핵심 오픈소스 감사 및 라이선스 요약",
+    "Open-Source-Danksagung & Lizenzübersicht",
+    "Crédits open source et résumé des licences",
+    "Créditos open source y resumen de licencias"
+  ],
+  "licCoreTitle": [
+    "核心项目与致谢",
+    "Core Projects & Credits",
+    "コアプロジェクトと謝辞",
+    "핵심 프로젝트 및 감사",
+    "Kernprojekte & Dank",
+    "Projets principaux",
+    "Proyectos principales"
+  ],
+  "licDepsTitle": [
+    "内置第三方开源组件",
+    "Bundled Open-Source Components",
+    "同梱サードパーティコンポーネント",
+    "내장 오픈소스 구성 요소",
+    "Enthaltene Komponenten",
+    "Composants tiers inclus",
+    "Componentes incluidos"
+  ],
+  "licShowRaw": [
+    "查看完整第三方许可原文",
+    "View Full License Text",
+    "完全なライセンス全文を表示",
+    "전체 라이선스 전문 보기",
+    "Vollständigen Lizenztext anzeigen",
+    "Voir le texte complet des licences",
+    "Ver texto completo de licencias"
+  ],
+  "licHideRaw": [
+    "收起许可原文",
+    "Hide License Text",
+    "ライセンス全文を閉じる",
+    "라이선스 전문 접기",
+    "Lizenztext ausblenden",
+    "Masquer le texte",
+    "Ocultar texto"
+  ],
+  "warnSubtitle": [
+    "检测到本次任务可能超出当前可用内存或显存，请确认后再继续",
+    "This task may exceed available RAM or VRAM — review before continuing",
+    "メモリまたはVRAMが不足する可能性があります",
+    "사용 가능한 RAM 또는 VRAM이 부족할 수 있습니다",
+    "Verfügbarer RAM oder VRAM könnte nicht ausreichen",
+    "La RAM ou VRAM disponible pourrait être insuffisante",
+    "La RAM o VRAM disponible podría ser insuficiente"
+  ],
+  "failSubtitle": [
+    "转换未能完成，以下是自动定位的原因与建议排查方案",
+    "Conversion did not complete — see diagnosis and suggested fixes below",
+    "変換に失敗しました。原因と対処法をご確認ください",
+    "변환에 실패했습니다. 원인과 해결 방법을 확인하세요",
+    "Konvertierung fehlgeschlagen — Diagnose und Tipps unten",
+    "Échec de la conversion — diagnostic et solutions ci-dessous",
+    "Conversión fallida — diagnóstico y soluciones abajo"
+  ],
+  "warnNeed": [
+    "预计内存需求",
+    "Est. RAM Needed",
+    "推定必要メモリ",
+    "예상 필요 메모리",
+    "Gesch. RAM",
+    "RAM estimée",
+    "RAM estimada"
+  ],
+  "warnAvail": [
+    "当前可用内存",
+    "Available RAM",
+    "空きメモリ",
+    "사용 가능 메모리",
+    "Freier RAM",
+    "RAM disponible",
+    "RAM disponible"
+  ],
+  "warnVram": [
+    "显卡可用显存",
+    "Available VRAM",
+    "空きVRAM",
+    "사용 가능 VRAM",
+    "Freier VRAM",
+    "VRAM disponible",
+    "VRAM disponible"
+  ],
+  "engineBadge": [
+    "引擎 v{0} · 镜像更新",
+    "Engine v{0} · Update",
+    "エンジン v{0} · 更新",
+    "엔진 v{0} · 업데이트",
+    "Engine v{0} · Update",
+    "Moteur v{0} · MAJ",
+    "Motor v{0} · Act."
+  ],
+  "copied": [
+    "已复制 ✓",
+    "Copied ✓",
+    "コピー済 ✓",
+    "복사됨 ✓",
+    "Kopiert ✓",
+    "Copié ✓",
+    "Copiado ✓"
   ]
 }

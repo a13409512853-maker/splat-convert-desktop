@@ -13,7 +13,7 @@ static class I18n {
     internal static string Language = DefaultLanguage();
     static string DefaultLanguage() {
         string code = CultureInfo.CurrentUICulture.TwoLetterISOLanguageName;
-        return Codes.Contains(code) ? code : "en";
+        return Codes.Contains(code) ? code : "zh";
     }
     static Dictionary<string, string[]> Load() {
         using (var stream = Assembly.GetExecutingAssembly().GetManifestResourceStream("locales.json"))
@@ -23,7 +23,7 @@ static class I18n {
         string[] values;
         if (!Catalog.TryGetValue(key, out values)) return key;
         int index = Array.IndexOf(Codes, Language);
-        return values[index < 0 ? 1 : index];
+        return values[index < 0 ? 0 : index];
     }
     internal static string[] MissingKeys() { return Catalog.Where(kv=>kv.Value.Length != Codes.Length || kv.Value.Any(String.IsNullOrWhiteSpace)).Select(kv=>kv.Key).ToArray(); }
     internal static string StatePath { get { return Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "SplatConvertDesktop", "language.txt"); } }

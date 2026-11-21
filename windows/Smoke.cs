@@ -54,7 +54,7 @@ static class Smoke {
                     ui.WarningOverride = text => { log.WriteLine("GUI WARNING " + text); return true; };
                     ui.Show(); Application.DoEvents(); ui.Refresh();
                     var warmup=Stopwatch.StartNew();while(warmup.ElapsedMilliseconds<9000 && (ui.LastResources==null||!ui.LastResources.Cpu.HasValue)){Application.DoEvents();Thread.Sleep(20);}
-                    var formats = Descendants(ui).OfType<ComboBox>().Single(b => b.AccessibleName == "format");
+                    var formats = Descendants(ui).OfType<FluentDropdown>().Single(b => b.AccessibleName == "format");
                     if (!formats.Text.StartsWith("SOG")) throw new InvalidOperationException("Default format mismatch");
                     formats.SelectedIndex = Converter.Formats.Length - 1;
                     if (!formats.Text.StartsWith("体素") || !Descendants(ui).OfType<FluentSlider>().Any(t => t.Visible && t.AccessibleName == "voxel"))
