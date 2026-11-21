@@ -584,6 +584,7 @@ sealed class FluentOpList : Control {
     }
 
     Rectangle RowRect(int i) { return new Rectangle(0, i * (RowHeight + RowGap) - scrollOffset, Width - 2, RowHeight); }
+    internal Rectangle GetRowScreenRect(int i) { var r = RowRect(i); var pt = PointToScreen(new Point(r.X, r.Y)); return new Rectangle(pt.X, pt.Y, r.Width, r.Height); }
     Rectangle CheckRect(Rectangle r) { return new Rectangle(r.X + 10, r.Y + (r.Height - 16) / 2, 16, 16); }
 
     protected override void OnMouseWheel(MouseEventArgs e) { scrollOffset -= e.Delta / 3; ClampScroll(); Invalidate(); base.OnMouseWheel(e); }
