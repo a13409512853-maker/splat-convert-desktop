@@ -57,7 +57,7 @@ static class Smoke {
                     var formats = Descendants(ui).OfType<ComboBox>().Single(b => b.AccessibleName == "format");
                     if (!formats.Text.StartsWith("SOG")) throw new InvalidOperationException("Default format mismatch");
                     formats.SelectedIndex = Converter.Formats.Length - 1;
-                    if (!formats.Text.StartsWith("体素") || !Descendants(ui).OfType<TrackBar>().Any(t => t.Visible && t.AccessibleName == "voxel"))
+                    if (!formats.Text.StartsWith("体素") || !Descendants(ui).OfType<FluentSlider>().Any(t => t.Visible && t.AccessibleName == "voxel"))
                         throw new InvalidOperationException("Voxel controls are not visible");
                     formats.SelectedIndex = 0;
                     foreach(string language in I18n.Codes) {

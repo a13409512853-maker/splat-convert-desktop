@@ -11,7 +11,8 @@ $compiler = Join-Path $env:WINDIR 'Microsoft.NET/Framework64/v4.0.30319/csc.exe'
 $sources = Get-ChildItem -LiteralPath $PSScriptRoot -Filter '*.cs' | Select-Object -ExpandProperty FullName
 $icons = Get-ChildItem -LiteralPath (Join-Path $PSScriptRoot 'icons') -Filter '*.png' | ForEach-Object { "/resource:$($_.FullName),icon.$($_.Name)" }
 $locale = Join-Path $root 'app/locales.json'
+$appIcon = Join-Path $PSScriptRoot 'icons/app.ico'
 & $compiler /nologo /target:winexe /platform:x64 /optimize+ /codepage:65001 `
   /reference:System.Windows.Forms.dll /reference:System.Drawing.dll /reference:System.IO.Compression.dll /reference:System.IO.Compression.FileSystem.dll /reference:System.Web.Extensions.dll `
-  "/resource:$bundle,engine.zip" "/resource:$license,licenses.txt" "/resource:$locale,locales.json" "/out:$Output" $icons $sources
+  "/resource:$bundle,engine.zip" "/resource:$license,licenses.txt" "/resource:$locale,locales.json" "/win32icon:$appIcon" "/out:$Output" $icons $sources
 if ($LASTEXITCODE) { throw "C# compilation failed: $LASTEXITCODE" }

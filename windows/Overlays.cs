@@ -424,21 +424,38 @@ sealed class EngineUpdateDialog : Form {
         Font = owner.Font;
         BackColor = p.WindowBg;
         ForeColor = p.Ink;
-        ClientSize = new Size(560, 400);
+        ClientSize = new Size(590, 468);
         FormBorderStyle = FormBorderStyle.FixedDialog;
         StartPosition = FormStartPosition.CenterParent;
         MinimizeBox = MaximizeBox = false;
         Padding = new Padding(16);
 
-        var root = new TableLayoutPanel { Dock = DockStyle.Fill, ColumnCount = 1, RowCount = 5 };
-        root.RowStyles.Add(new RowStyle(SizeType.Absolute, 32));
-        root.RowStyles.Add(new RowStyle(SizeType.Absolute, 42));
-        root.RowStyles.Add(new RowStyle(SizeType.Absolute, 48));
+        var root = new TableLayoutPanel { Dock = DockStyle.Fill, ColumnCount = 1, RowCount = 6 };
+        root.RowStyles.Add(new RowStyle(SizeType.Absolute, 76));
+        root.RowStyles.Add(new RowStyle(SizeType.Absolute, 28));
+        root.RowStyles.Add(new RowStyle(SizeType.Absolute, 40));
+        root.RowStyles.Add(new RowStyle(SizeType.Absolute, 44));
         root.RowStyles.Add(new RowStyle(SizeType.Percent, 100));
         root.RowStyles.Add(new RowStyle(SizeType.Absolute, 46));
 
+        var creditCard = new CardPanel { UseSubCard = true, Radius = 8, Dock = DockStyle.Fill, Padding = new Padding(12, 8, 12, 8), Margin = new Padding(0, 0, 0, 6) };
+        var creditText = new Label {
+            Dock = DockStyle.Top, Height = 34, ForeColor = p.Text2,
+            Text = "本软件是 @playcanvas/splat-transform 的非官方本地桌面界面，底层压缩与转换能力完全由上游开源引擎提供，衷心感谢 PlayCanvas 原作者及开源社区的贡献！"
+        };
+        var creditLink = new LinkLabel {
+            Dock = DockStyle.Bottom, Height = 20, LinkColor = p.Accent, ActiveLinkColor = p.AccentHover, AutoEllipsis = true,
+            Text = "引擎原项目地址：https://github.com/playcanvas/splat-transform"
+        };
+        creditLink.LinkClicked += (s, e) => {
+            try { System.Diagnostics.Process.Start(new System.Diagnostics.ProcessStartInfo(App.UpstreamRepository) { UseShellExecute = true }); } catch { }
+        };
+        creditCard.Controls.Add(creditText);
+        creditCard.Controls.Add(creditLink);
+        root.Controls.Add(creditCard, 0, 0);
+
         RefreshHeader();
-        root.Controls.Add(currentLabel, 0, 0);
+        root.Controls.Add(currentLabel, 0, 1);
 
         var mirrorRow = new FlowLayoutPanel { Dock = DockStyle.Fill, WrapContents = false };
         mirrorRow.Controls.Add(new Label { Text = I18n.T("engineMirrors") + ":", AutoSize = true, Margin = new Padding(0, 8, 8, 0), ForeColor = p.Text2 });
@@ -446,16 +463,16 @@ sealed class EngineUpdateDialog : Form {
         mirrorBox.SelectedIndex = 0;
         mirrorBox.BackColor = p.InputBg; mirrorBox.ForeColor = p.Ink;
         mirrorRow.Controls.Add(mirrorBox);
-        root.Controls.Add(mirrorRow, 0, 1);
+        root.Controls.Add(mirrorRow, 0, 2);
 
         statusLabel.Dock = DockStyle.Fill;
         statusLabel.ForeColor = p.Accent;
         statusLabel.Text = "引擎已剥离至 LocalAppData，支持国内镜像直连拉取新版 @playcanvas/splat-transform。";
-        root.Controls.Add(statusLabel, 0, 2);
+        root.Controls.Add(statusLabel, 0, 3);
 
         logBox.BackColor = p.LogBg; logBox.ForeColor = p.Text2; logBox.BorderStyle = BorderStyle.FixedSingle;
         logBox.Font = new Font("Consolas", 8.5f);
-        root.Controls.Add(logBox, 0, 3);
+        root.Controls.Add(logBox, 0, 4);
 
         var actions = new FlowLayoutPanel { Dock = DockStyle.Fill, FlowDirection = FlowDirection.RightToLeft, Padding = new Padding(0, 8, 0, 0) };
         StyleBtn(btnPull, I18n.T("enginePull"), true);
@@ -464,7 +481,7 @@ sealed class EngineUpdateDialog : Form {
         actions.Controls.Add(btnPull);
         actions.Controls.Add(btnCheck);
         actions.Controls.Add(btnRollback);
-        root.Controls.Add(actions, 0, 4);
+        root.Controls.Add(actions, 0, 5);
 
         Controls.Add(root);
 
