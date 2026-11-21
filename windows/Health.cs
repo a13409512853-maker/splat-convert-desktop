@@ -260,3 +260,140 @@ static class Diagnostics {
     }
     static Diagnostic New(string code,string title,string detail,string advice) { return new Diagnostic {Code=code,TitleKey=title,DetailKey=detail,AdviceKey=advice}; }
 }
+
+enum TelemetryMode { IdleWindow, Recording, FrozenRun }
+
+sealed class TelemetrySample {
+    internal DateTime Timestamp;
+    internal double CpuPct, RamPct, RamUsedGiB, RamTotalGiB, GpuPct, VramPct, VramUsedGiB, VramTotalGiB;
+    internal bool IsCompressing;
+}
+
+sealed class TelemetrySnapshot {
+    internal TelemetrySample[] Points;
+    internal int StartIndex;   // Exact index where compression started (-1 if none)
+    internal int EndIndex;     // Exact index where compression ended (-1 if still running or none)
+    internal TelemetryMode Mode;
+}
+
+sealed class TelemetryHistory {
+    const int IdleWindowCapacity = 120;      // 60s at 0.5s interval
+    const int PreStartBaselineSamples = 12;  // Keep ~6s of idle baseline right before compression starts
+    const int MaxSessionSamples = 3600;      // Downsample cleanly if run exceeds 30 minutes at 0.5s
+    readonly List<TelemetrySample> liveIdleBuffer = new List<TelemetrySample>();
+    readonly List<TelemetrySample> sessionBuffer = new List<TelemetrySample>();
+    TelemetryMode mode = TelemetryMode.IdleWindow;
+    int startIndex = -1;
+    int endIndex = -1;
+
+    internal void MarkCompressionStarted() {
+        lock (liveIdleBuffer) {
+            sessionBuffer.Clear();
+            int skip = Math.Max(0, liveIdleBuffer.Count - PreStartBaselineSamples);
+            for (int i = skip; i < liveIdleBuffer.Count; i++) {
+                var p = liveIdleBuffer[i];
+                sessionBuffer.Add(new TelemetrySample {
+                    Timestamp = p.Timestamp, CpuPct = p.CpuPct, RamPct = p.RamPct,
+                    RamUsedGiB = p.RamUsedGiB, RamTotalGiB = p.RamTotalGiB,
+                    GpuPct = p.GpuPct, VramPct = p.VramPct,
+                    VramUsedGiB = p.VramUsedGiB, VramTotalGiB = p.VramTotalGiB,
+                    IsCompressing = false
+                });
+            }
+            // Exact boundary point: the last idle baseline point is where the vertical dashed line sits,
+            // so every segment strictly AFTER startIndex is colored active, and strictly BEFORE is idle!
+            startIndex = sessionBuffer.Count > 0 ? sessionBuffer.Count - 1 : 0;
+            endIndex = -1;
+            mode = TelemetryMode.Recording;
+        }
+    }
+
+    internal void MarkCompressionEnded() {
+        lock (liveIdleBuffer) {
+            if (mode == TelemetryMode.Recording) {
+                endIndex = Math.Max(startIndex, sessionBuffer.Count - 1);
+                mode = TelemetryMode.FrozenRun;
+            }
+        }
+    }
+
+    internal void Add(ResourceSnapshot r, bool isCompressing) {
+        if (r == null) return;
+        var gpu = r.Gpus.OrderByDescending(g => g.Usage ?? -1).FirstOrDefault();
+        double ramUsed = r.TotalMemory > 0 ? Math.Max(0, r.TotalMemory - r.AvailableMemory) : 0;
+        double ramPct = r.TotalMemory > 0 ? Math.Max(0, Math.Min(100, (ramUsed / r.TotalMemory) * 100d)) : 0;
+        double vramUsed = gpu != null && gpu.MemoryUsed.HasValue ? gpu.MemoryUsed.Value : 0;
+        double vramTotal = gpu != null ? gpu.MemoryTotal : 0;
+        double vramPct = vramTotal > 0 ? Math.Max(0, Math.Min(100, (vramUsed / vramTotal) * 100d)) : 0;
+
+        var sample = new TelemetrySample {
+            Timestamp = r.Sampled,
+            CpuPct = r.Cpu.HasValue ? Math.Max(0, Math.Min(100, r.Cpu.Value)) : 0,
+            RamPct = ramPct,
+            RamUsedGiB = ramUsed / 1073741824d,
+            RamTotalGiB = r.TotalMemory / 1073741824d,
+            GpuPct = gpu != null && gpu.Usage.HasValue ? Math.Max(0, Math.Min(100, gpu.Usage.Value)) : 0,
+            VramPct = vramPct,
+            VramUsedGiB = vramUsed / 1073741824d,
+            VramTotalGiB = vramTotal / 1073741824d,
+            IsCompressing = isCompressing
+        };
+
+        lock (liveIdleBuffer) {
+            if (!isCompressing) {
+                liveIdleBuffer.Add(sample);
+                while (liveIdleBuffer.Count > IdleWindowCapacity) liveIdleBuffer.RemoveAt(0);
+            }
+            if (mode == TelemetryMode.Recording) {
+                // Never evict left-side idle baseline or compression samples; X-axis stretches to fit entire run!
+                sessionBuffer.Add(sample);
+                if (sessionBuffer.Count > MaxSessionSamples) CompressSessionBuffer();
+            }
+        }
+    }
+
+    void CompressSessionBuffer() {
+        // Pairwise peak-preserving downsample on the active tail only, keeping pre-start baseline intact
+        if (sessionBuffer.Count <= startIndex + 4) return;
+        var next = new List<TelemetrySample>(sessionBuffer.Count / 2 + PreStartBaselineSamples + 4);
+        for (int i = 0; i <= startIndex && i < sessionBuffer.Count; i++) next.Add(sessionBuffer[i]);
+        for (int i = startIndex + 1; i < sessionBuffer.Count; i += 2) {
+            var a = sessionBuffer[i];
+            if (i + 1 >= sessionBuffer.Count) { next.Add(a); break; }
+            var b = sessionBuffer[i + 1];
+            next.Add(new TelemetrySample {
+                Timestamp = b.Timestamp,
+                CpuPct = Math.Max(a.CpuPct, b.CpuPct),
+                RamPct = Math.Max(a.RamPct, b.RamPct),
+                RamUsedGiB = Math.Max(a.RamUsedGiB, b.RamUsedGiB),
+                RamTotalGiB = b.RamTotalGiB,
+                GpuPct = Math.Max(a.GpuPct, b.GpuPct),
+                VramPct = Math.Max(a.VramPct, b.VramPct),
+                VramUsedGiB = Math.Max(a.VramUsedGiB, b.VramUsedGiB),
+                VramTotalGiB = b.VramTotalGiB,
+                IsCompressing = a.IsCompressing || b.IsCompressing
+            });
+        }
+        sessionBuffer.Clear();
+        sessionBuffer.AddRange(next);
+    }
+
+    internal TelemetrySnapshot Snapshot() {
+        lock (liveIdleBuffer) {
+            if (mode == TelemetryMode.IdleWindow) {
+                return new TelemetrySnapshot {
+                    Points = liveIdleBuffer.ToArray(),
+                    StartIndex = -1,
+                    EndIndex = -1,
+                    Mode = TelemetryMode.IdleWindow
+                };
+            }
+            return new TelemetrySnapshot {
+                Points = sessionBuffer.ToArray(),
+                StartIndex = startIndex,
+                EndIndex = endIndex,
+                Mode = mode
+            };
+        }
+    }
+}

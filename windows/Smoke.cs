@@ -89,7 +89,7 @@ static class Smoke {
             }
             string invalid=Path.Combine(folder,"invalid-source.ply");File.WriteAllText(invalid,"not a PLY file\n");
             using(var ui=new MainWindow(new[]{invalid})) {
-                int errors=0;ui.ErrorOverride=(d,raw)=>{errors++;if(!raw.Contains("Engine: 3.10.3"))throw new IOException("Diagnostic lacks version");};
+                int errors=0;ui.ErrorOverride=(d,raw)=>{errors++;if(!raw.Contains("Engine: " + EngineManager.ActiveVersion))throw new IOException("Diagnostic lacks version");};
                 ui.PromptMarker=Path.Combine(folder,"must-not-prompt");ui.WarningOverride=text=>true;ui.Show();Application.DoEvents();
                 Descendants(ui).OfType<TextBox>().Single(t=>t.AccessibleName=="output").Text=Path.Combine(folder,"invalid-output.sog");
                 var button=Descendants(ui).OfType<Button>().Single(b=>b.AccessibleName=="start");button.PerformClick();var timer=Stopwatch.StartNew();

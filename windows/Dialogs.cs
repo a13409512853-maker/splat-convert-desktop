@@ -26,17 +26,20 @@ static class MessageDialog {
         }
     }
     static Form Create(Form owner, string title, string message) {
+        var p = Theme.Current;
         var dialog = new Form { Text = title, Font = owner.Font, ClientSize = new Size(660, 420), MinimumSize = new Size(630, 390),
-            StartPosition = FormStartPosition.CenterParent, BackColor = Color.White, MinimizeBox = false, MaximizeBox = false };
-        var label = new TextBox { Dock = DockStyle.Fill, Multiline = true, ReadOnly = true, BorderStyle = BorderStyle.None, BackColor = Color.White,
+            StartPosition = FormStartPosition.CenterParent, BackColor = p.CardBg, ForeColor = p.Ink, MinimizeBox = false, MaximizeBox = false };
+        dialog.HandleCreated += (s, e) => Theme.ApplyWindowChrome(dialog);
+        var label = new TextBox { Dock = DockStyle.Fill, Multiline = true, ReadOnly = true, BorderStyle = BorderStyle.None, BackColor = p.CardBg, ForeColor = p.Ink,
             ScrollBars = ScrollBars.Vertical, Text = message.Replace("\r\n", "\n").Replace("\n", "\r\n") };
-        var host = new Panel { Dock = DockStyle.Fill, Padding = new Padding(24) }; host.Controls.Add(label); dialog.Controls.Add(host); return dialog;
+        var host = new Panel { Dock = DockStyle.Fill, Padding = new Padding(24), BackColor = p.CardBg }; host.Controls.Add(label); dialog.Controls.Add(host); return dialog;
     }
-    static FlowLayoutPanel Buttons() { return new FlowLayoutPanel { Dock = DockStyle.Bottom, Height = 62, FlowDirection = FlowDirection.RightToLeft, Padding = new Padding(12, 8, 12, 8), WrapContents = false, BackColor = MainWindow.Paper }; }
+    static FlowLayoutPanel Buttons() { return new FlowLayoutPanel { Dock = DockStyle.Bottom, Height = 62, FlowDirection = FlowDirection.RightToLeft, Padding = new Padding(12, 8, 12, 8), WrapContents = false, BackColor = Theme.Current.TitleBarBg }; }
     static Button Button(string text, string icon, Action action) {
+        var p = Theme.Current;
         var button = new Button { Text = text, AutoSize = true, MinimumSize = new Size(100, 36), Height = 36, FlatStyle = FlatStyle.Flat,
-            BackColor = Color.White, Image = icon == null ? null : Art.Icon(icon), TextImageRelation = TextImageRelation.ImageBeforeText, Padding = new Padding(8, 0, 8, 0) };
-        button.FlatAppearance.BorderColor = MainWindow.Line; button.Click += (s, e) => action(); return button;
+            BackColor = p.CardBg, ForeColor = p.Ink, Image = icon == null ? null : Art.Themed(icon), TextImageRelation = TextImageRelation.ImageBeforeText, Padding = new Padding(8, 0, 8, 0) };
+        button.FlatAppearance.BorderColor = p.BorderStrong; button.Click += (s, e) => action(); return button;
     }
 }
 
@@ -59,24 +62,31 @@ sealed class StepDialog : Form {
     readonly List<Control> edits = new List<Control>();
     internal Op Result;
     internal StepDialog(Op op) {
+        var p = Theme.Current;
         Text = I18n.T(op == null ? "addOp" : "edit"); StartPosition = FormStartPosition.CenterParent; FormBorderStyle = FormBorderStyle.FixedDialog;
-        MinimizeBox = MaximizeBox = false; ClientSize = new Size(450, 335); Padding = new Padding(18); Font = new Font("Microsoft YaHei UI", 9F);
-        values.Padding = new Padding(0, 13, 0, 0); values.ColumnStyles.Add(new ColumnStyle(SizeType.Absolute, 130)); values.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 100));
+        MinimizeBox = MaximizeBox = false; ClientSize = new Size(460, 350); Padding = new Padding(18); Font = new Font("Microsoft YaHei UI", 9F);
+        BackColor = p.WindowBg; ForeColor = p.Ink;
+        HandleCreated += (s, e) => Theme.ApplyWindowChrome(this);
+        type.BackColor = p.InputBg; type.ForeColor = p.Ink;
+        values.Padding = new Padding(0, 13, 0, 0); values.ColumnStyles.Add(new ColumnStyle(SizeType.Absolute, 140)); values.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 100));
         for (int i = 0; i < 6; i++) values.RowStyles.Add(new RowStyle(SizeType.Absolute, 33));
         var buttons = new FlowLayoutPanel { Dock = DockStyle.Bottom, Height = 38, FlowDirection = FlowDirection.RightToLeft };
-        var ok = new Button { Text = I18n.T("ok"), Width = 100, Height = 32 }; var cancel = new Button { Text = I18n.T("cancel"), Width = 110, Height = 32, DialogResult = DialogResult.Cancel };
+        var ok = new Button { Text = I18n.T("ok"), Width = 100, Height = 32, FlatStyle = FlatStyle.Flat, BackColor = p.Accent, ForeColor = p.AccentText };
+        var cancel = new Button { Text = I18n.T("cancel"), Width = 110, Height = 32, DialogResult = DialogResult.Cancel, FlatStyle = FlatStyle.Flat, BackColor = p.CardBg, ForeColor = p.Ink };
         buttons.Controls.Add(ok); buttons.Controls.Add(cancel); AcceptButton = ok; CancelButton = cancel;
         Controls.Add(values); Controls.Add(buttons); Controls.Add(type); type.Items.AddRange(Step.All); type.SelectedIndexChanged += (s, e) => Fields(null);
         type.SelectedItem = op == null ? Step.All[0] : op.Step; if (op != null) Fields(op.Value); ok.Click += (s, e) => Save();
     }
     void Fields(string previous) {
+        var p = Theme.Current;
         while (values.Controls.Count > 0) values.Controls[0].Dispose(); edits.Clear(); var step = (Step)type.SelectedItem;
         if (step.Fields == "") return;
-        string[] fields = step.Fields.Split(','), data = (previous ?? step.Defaults).Split(',');
+        string[] fields = step.Fields.Split(','), data = (String.IsNullOrEmpty(previous) ? step.Defaults : previous).Split(',');
         for (int i = 0; i < fields.Length; i++) {
-            var label = new Label { Text = fields[i], AutoSize = true, Margin = new Padding(0, 6, 0, 0) }; values.Controls.Add(label, 0, i);
-            Control control = step.Flag == "--filter-harmonics" ? (Control)new TrackBar { Minimum = 0, Maximum = 3, Value = Int32.Parse(data[i]), TickFrequency = 1, Dock = DockStyle.Fill, AutoSize = false }
-                : new TextBox { Text = data[i], Dock = DockStyle.Fill };
+            var label = new Label { Text = fields[i], AutoSize = true, Margin = new Padding(0, 6, 0, 0), ForeColor = p.Ink }; values.Controls.Add(label, 0, i);
+            string val = i < data.Length ? data[i] : "";
+            Control control = step.Flag == "--filter-harmonics" ? (Control)new TrackBar { Minimum = 0, Maximum = 3, Value = Int32.Parse(val), TickFrequency = 1, Dock = DockStyle.Fill, AutoSize = false, BackColor = p.WindowBg }
+                : new TextBox { Text = val, Dock = DockStyle.Fill, BackColor = p.InputBg, ForeColor = p.Ink };
             values.Controls.Add(control, 1, i); edits.Add(control); var track = control as TrackBar;
             if (track != null) { track.ValueChanged += (s, e) => label.Text = I18n.T("band") + ": " + track.Value; label.Text = I18n.T("band") + ": " + track.Value; }
         }
@@ -90,6 +100,7 @@ sealed class StepDialog : Form {
             numbers.Add(number);
         }
         if ((step.Flag == "--scale" || step.Flag == "--filter-sphere") && numbers.Last() <= 0) { Invalid(edits.Last()); return; }
+        if ((step.Flag == "--filter-floaters" || step.Flag == "--filter-cluster") && numbers.Any(n => n <= 0)) { Invalid(edits[0]); return; }
         if (step.Flag == "--filter-box" && Enumerable.Range(0, 3).Any(i => numbers[i] > numbers[i + 3])) { Invalid(edits[0]); return; }
         Result = new Op { Step = step, Value = String.Join(",", numbers.Select(n => n.ToString("R", CultureInfo.InvariantCulture))) }; DialogResult = DialogResult.OK;
     }

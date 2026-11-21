@@ -27,7 +27,7 @@ jobs:
         with:
           node-version: '22'
           cache: npm
-      - run: npm ci
+      - run: npm install --no-audit --no-fund
       - run: npm test
       - run: npm run test:conversion
       - run: node scripts/build.cjs ${{ matrix.platform }} ${{ matrix.arch }}

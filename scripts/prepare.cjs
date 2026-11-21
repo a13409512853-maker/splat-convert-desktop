@@ -107,11 +107,25 @@ async function nodeRuntime(platform, arch) {
   }
   return { node: path.join(runtime, platform === 'win32' ? 'node.exe' : 'bin/node'), license: path.join(runtime, 'LICENSE') };
 }
+function collectRel(baseDir, relPrefix) {
+  const full = path.join(baseDir, relPrefix);
+  if (!fs.existsSync(full)) return [];
+  const out = [];
+  for (const entry of fs.readdirSync(full, { withFileTypes: true })) {
+    const rel = path.posix.join(relPrefix, entry.name);
+    if (entry.isDirectory()) out.push(...collectRel(baseDir, rel));
+    else out.push(rel);
+  }
+  return out;
+}
 function fileList(platform) {
+  const nm = path.join(root, 'node_modules');
   const list = [
-    '@playcanvas/splat-transform/package.json', '@playcanvas/splat-transform/bin/cli.mjs',
-    '@playcanvas/splat-transform/dist/cli.mjs', '@playcanvas/splat-transform/dist/worker.mjs',
-    '@playcanvas/splat-transform/dist/spz-e5Ws0702.js', '@playcanvas/splat-transform/lib/webp.wasm',
+    '@playcanvas/splat-transform/package.json',
+    ...collectRel(nm, '@playcanvas/splat-transform/bin'),
+    ...collectRel(nm, '@playcanvas/splat-transform/dist'),
+    ...collectRel(nm, '@playcanvas/splat-transform/lib'),
+    ...collectRel(nm, '@adobe/spz'),
     'webgpu/package.json', 'webgpu/index.js'
   ];
   if (platform === 'win32') list.push(...['dawn.node', 'dxcompiler.dll', 'd3dcompiler_47.dll'].map(n => `webgpu/dist/win32-x64/${n}`));
@@ -123,7 +137,7 @@ async function notices(runtime) {
     'webgpu/dist/win32-x64/dxcompiler-LICENSE.TXT', 'webgpu/dist/win32-x64/dxcompiler-ThirdPartyNotices.txt'];
   const parts = [
     'Splat Convert Desktop - third-party notices',
-    'Splat Transform 3.10.3 and bundled PlayCanvas engine: https://github.com/playcanvas/splat-transform',
+    'Splat Transform 3.12.0 and bundled PlayCanvas engine: https://github.com/playcanvas/splat-transform',
     'Node.js ' + NODE, fs.readFileSync(runtime.license, 'utf8')
   ];
   for (const name of licensePaths) parts.push(name, fs.readFileSync(path.join(root, 'node_modules', name), 'utf8'));
