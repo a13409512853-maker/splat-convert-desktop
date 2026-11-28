@@ -1,0 +1,2260 @@
+{
+  "_meta": {
+    "code": "ja-JP",
+    "legacyCode": "ja",
+    "name": "Japanese",
+    "nativeName": "日本語",
+    "order": 3
+  },
+  "common": {
+    "ok": "OK",
+    "cancel": "キャンセル",
+    "close": "閉じる",
+    "default": "既定",
+    "unknown": "取得不可",
+    "copied": "コピー済 ✓",
+    "allFiles": "すべてのファイル",
+    "on": "オン",
+    "off": "オフ"
+  },
+  "app": {
+    "header": {
+      "local": "ローカル変換",
+      "engineBadge": "エンジン v{version} · ミラー更新",
+      "themeLight": "ライト",
+      "themeDark": "ダーク",
+      "language": "言語",
+      "portableBadge": "v3.2 ポータブル版"
+    },
+    "inputs": {
+      "title": "入力ファイル",
+      "add": "ファイルを追加",
+      "remove": "削除",
+      "up": "上へ",
+      "down": "下へ",
+      "fileName": "ファイル名",
+      "size": "サイズ",
+      "filesUnit": "ファイル",
+      "emptyHint": "PLY / SOG / SPZ / GLB をここにドロップ\nまたはクリックして追加",
+      "batchMode": "個別一括変換",
+      "mergeMode": "1つに統合",
+      "inspectBtn": "検査",
+      "fileCount": "{count} ファイル",
+      "fileCountWithSize": "{count} ファイル · {size}"
+    },
+    "pipeline": {
+      "title": "変換・補正",
+      "merged": "統合後の結果",
+      "addOp": "操作を追加",
+      "editOp": "操作を編集",
+      "previewBtn": "3D 編集",
+      "emptyHint": "カスタム手順はありません\n上の「＋ 操作を追加」から追加",
+      "scopeLabel": "操作範囲",
+      "opsListLabel": "実行順の操作リスト",
+      "sceneEditName": "3D 選択と変換",
+      "sceneEditSub": "全体適用 · ダブルクリックで編集",
+      "defaultAutoParam": "自動既定パラメーター",
+      "badgeClean": "清掃",
+      "badgeNew312": "3.12 新規",
+      "badgeCompact": "軽量化",
+      "badgeCrop": "切抜",
+      "badgeTransform": "変換",
+      "actionTypeLabel": "操作の種類"
+    },
+    "ops": {
+      "translate": "移動",
+      "rotate": "回転（度）",
+      "scale": "均等拡大縮小",
+      "nan": "無効点を削除",
+      "harmonics": "球面調和次数上限",
+      "box": "ボックスフィルター",
+      "sphere": "球形フィルター",
+      "floaters": "浮遊ノイズ除去（Filter Floaters）",
+      "cluster": "連結主体の抽出（Filter Cluster）",
+      "filterValue": "属性値フィルター",
+      "mortonOrder": "モートン順並び替え",
+      "factor": "倍率",
+      "radius": "半径",
+      "band": "次数",
+      "min": "最小",
+      "max": "最大",
+      "floaterParams": "サイズ,不透明度,最小寄与",
+      "clusterParams": "解像度,不透明度,最小寄与",
+      "filterValueParams": "列名,比較演算子,しきい値",
+      "quickFloaters": "一括浮遊ノイズ除去 (GPU)",
+      "quickNan": "無効点の自動除去 (NaN)",
+      "quickSh": "SH 次数制限",
+      "bandValue": "次数: {value}",
+      "minAxis": "最小 {axis}",
+      "maxAxis": "最大 {axis}"
+    },
+    "settings": {
+      "title": "出力設定",
+      "format": "出力形式",
+      "output": "出力ファイル",
+      "outputFolder": "出力フォルダー",
+      "browse": "保存先を選択",
+      "keep": "点の保持率",
+      "adaptiveDecimate": "適応的間引き（細部・空を保護）",
+      "uniformDecimate": "均一間引き（高速）",
+      "iterations": "SH 圧縮反復数",
+      "effort": "WebP 圧縮強度",
+      "workers": "エンコードスレッド",
+      "serial": "直列",
+      "voxel": "ボクセルサイズ",
+      "opacity": "不透明度しきい値",
+      "device": "計算デバイス",
+      "estOutput": "推定出力サイズ",
+      "estUnknown": "PLY/SOG/SPLAT 追加で容量を自動推定",
+      "advBtn": "詳細 / サイズ",
+      "jobsBtn": "ジョブ一覧",
+      "licenses": "オープンソースライセンス",
+      "estPending": "推定出力サイズ：{hint}",
+      "estRange": "推定出力サイズ：≈ {low} – {high}",
+      "estRangeSaved": "推定出力サイズ：≈ {low} – {high}  (-{pct}%)"
+    },
+    "presets": {
+      "fast": "高速変換",
+      "lite": "最小サイズ",
+      "balanced": "Web バランス",
+      "hq": "高品質保存"
+    },
+    "devices": {
+      "auto": "GPU を自動選択",
+      "cpu": "CPU（プロセッサー）",
+      "vulkan": "Vulkan（互換バックエンド）",
+      "metal": "Metal（Apple グラフィックス）",
+      "shortAuto": "自動 GPU",
+      "shortVulkan": "Vulkan",
+      "shortCpu": "CPU のみ"
+    },
+    "formats": {
+      "sog": "SOG / SuperSplat 最適化パック",
+      "ply": "PLY / 標準形式",
+      "compressed": "圧縮 PLY",
+      "spz": "SPZ / Niantic 圧縮形式",
+      "csv": "CSV / 表データ",
+      "html": "HTML / 埋め込みビューアー",
+      "voxel": "ボクセル ZIP / 衝突データ"
+    },
+    "actions": {
+      "start": "変換開始",
+      "openOutput": "出力先を開く",
+      "logs": "実行ログ",
+      "toggleLogs": "実行ログ",
+      "clearLogs": "クリア",
+      "editOutput3d": "3D · 出力結果を編集…",
+      "progressAria": "変換の進行状況",
+      "resourcesAria": "システムリソース",
+      "openNativeVulkan": "ネイティブ Vulkan ビューポート（実験バイパス）…"
+    },
+    "status": {
+      "ready": "準備完了",
+      "done": "完了",
+      "canceled": "キャンセル済み",
+      "canceling": "キャンセル中…",
+      "preflight": "利用可能なリソースを確認中…",
+      "preparing": "ローカル変換エンジンを準備中…",
+      "converting": "変換中…",
+      "reducing": "ステップ 1 / 2：ガウス点を削減中…",
+      "encoding": "ステップ 2 / 2：出力をエンコード中…",
+      "packing": "ボクセルをパッケージ中…",
+      "verifying": "出力を検証中...",
+      "failed": "変換に失敗しました",
+      "elapsed": "経過時間",
+      "etaRemaining": "残り推定",
+      "batchProgress": "バッチ進行",
+      "outputDoneSummary": "出力ファイル: {name} ({size})",
+      "batchDoneSummary": "個別一括変換 · {count} ファイル",
+      "outputLogLine": "出力ファイル: {path}"
+    },
+    "metrics": {
+      "memory": "メモリ",
+      "vram": "VRAM",
+      "cpu": "CPU",
+      "gpu": "GPU",
+      "available": "現在利用可能",
+      "commit": "コミット余裕",
+      "sample": "取得時刻",
+      "gpuUnknown": "自動モード：使用する GPU はエンジンが選択します。",
+      "unified": "ユニファイドメモリ",
+      "upperBound": "フィルター前の点数上限",
+      "baseMemory": "基本データ配列",
+      "estimatedMemory": "推定メモリ範囲",
+      "estimateNote": "推定値はピーク保証ではありません。フィルターや他アプリにより利用可能量は変動します。",
+      "chartIdle": "待機中",
+      "chartActive": "圧縮中",
+      "chartStartMark": "圧縮開始",
+      "chartCurrent": "現在値",
+      "chartPeak": "圧縮ピーク",
+      "chartIdleAvg": "待機平均",
+      "historyCpu": "CPU 使用率履歴",
+      "historyRam": "システムメモリ使用量履歴",
+      "historyGpu": "GPU 演算エンジン履歴",
+      "historyVram": "専用 VRAM 使用量履歴",
+      "modeRecording": "0.5秒間隔 · X軸自動伸縮",
+      "modeFrozen": "前回の圧縮グラフを固定 · 次回更新",
+      "modeIdle": "0.5秒高速サンプリング · 直近60秒"
+    },
+    "dialogs": {
+      "resourceWarning": "利用可能なリソースが不足する可能性があります",
+      "warnSubtitle": "このタスクは現在の空きメモリまたは VRAM を超える可能性があります。確認して続行してください",
+      "warnNeed": "推定必要メモリ",
+      "warnAvail": "空きメモリ",
+      "warnVram": "GPU 空き VRAM",
+      "memoryAdvice": "球面調和次数、保持点数、エンコードスレッドを下げ、メモリ消費アプリを閉じて仮想メモリ設定を確認してください。",
+      "gpuAdvice": "SOG / HTML は CPU モードまたは低い SH 次数を試してください。ボクセル出力には対応 GPU が必要です。",
+      "continue": "そのまま変換",
+      "adjust": "戻って調整",
+      "copy": "診断情報をコピー",
+      "viewLog": "ログを表示",
+      "failSubtitle": "変換を完了できませんでした。自動検出された原因と対処法をご確認ください",
+      "overwrite": "変換成功後に既存ファイルを上書きしますか？",
+      "invalid": "無効なパラメーター",
+      "numeric": "有効な数値を入力してください。倍率と半径は正の値、最小値は最大値以下である必要があります。",
+      "cleanup": "一時ファイルの削除が完了しませんでした。ログのパスを確認してください。"
+    },
+    "errors": {
+      "memoryTitle": "必要なメモリを確保できません",
+      "memoryDetail": "エンジンがデータ配列の確保に失敗しました。空きメモリ、コミット上限、またはランタイム制限が原因の可能性があります。",
+      "gpuTitle": "GPU リソース不足またはデバイス利用不可",
+      "diskTitle": "ディスク容量が不足しています",
+      "diskAdvice": "出力先ドライブとシステム一時ディレクトリの空き容量を増やして再試行してください。",
+      "accessTitle": "ファイルの読み書きができません",
+      "accessAdvice": "ファイル権限を確認し、出力先を変更して、ファイルを使用中のアプリを閉じてください。",
+      "inputTitle": "入力ファイルまたはデータが無効です",
+      "inputAdvice": "入力ファイルが存在し、ガウシアン属性を含むか確認してください。必要なら元ソフトから再出力してください。",
+      "emptyTitle": "フィルター後に変換可能な点がありません",
+      "emptyAdvice": "範囲フィルターと保持率を見直し、条件を緩めて再試行してください。",
+      "unknownAdvice": "原因を特定できませんでした。ログを確認するか、診断情報をコピーしてリポジトリへご報告ください。"
+    },
+    "star": {
+      "title": "変換完了・ご利用ありがとうございます",
+      "message": "初回の変換が完了しました！お役に立ちましたら、ぜひ GitHub で Star をお願いします。",
+      "openProject": "プロジェクトを開く",
+      "congrats": "初回変換が成功しました！",
+      "subDefault": "3D ガウシアンシーンがローカルに正常保存されました。",
+      "body": "Splat Convert Desktop は無料・オープンソースのローカルデスクトップツールです。コアの 3D ガウシアン圧縮・形式変換・クリーニング機能は PlayCanvas のオープンソースエンジン @playcanvas/splat-transform により提供されています。\n\nPlayCanvas の作者およびコミュニティ貢献者の皆様に心より感謝いたします！本ツールがお役に立ちましたら、当デスクトップ版とベースエンジン双方のリポジトリに Star を付けて応援していただけると幸いです（この案内は一度のみ表示されます）。",
+      "btn": "GitHub で Star を付けて応援",
+      "later": "あとで",
+      "upstreamLink": "ベース圧縮エンジン："
+    },
+    "licenses": {
+      "engineCredit": "本ソフトは @playcanvas/splat-transform の非公式ローカルデスクトップ UI です。基盤の圧縮・変換機能はすべてベースオープンソースエンジンによって提供されており、PlayCanvas の開発者とコミュニティ貢献者に深く感謝いたします。",
+      "subtitle": "主要オープンソース謝辞およびサードパーティライセンス概要",
+      "coreTitle": "コアプロジェクトと謝辞",
+      "depsTitle": "同梱サードパーティコンポーネント",
+      "showRaw": "ライセンス全文を表示",
+      "hideRaw": "ライセンス全文を閉じる",
+      "depsList": "• PlayCanvas Engine & Splat Transform 3.12.0   [MIT]\n• ReSplat Editor (Re祁, リングモード/色調補正/選択/SAM2 設計参考)   [CC BY 4.0]\n• SuperSplat (PlayCanvas Ltd., 3DGS エディター設計・SH 回転)   [MIT]\n• Spirula Studio (harry7557558, 6面ボリュームハンドル・自動整列参考)   [GPL-3.0]\n• GaussianSplatEditor (TimChen1383, 不透明度/サイズ選択参考)   [MIT]\n• Three.js [MIT] · Meta SAM 2 [Apache-2.0] · ONNX Runtime Web [MIT]\n• Node.js 22.23.2 [MIT] · WebGPU/Dawn [BSD-3/Apache-2.0] · @adobe/spz [MIT] · Lucide [ISC]"
+    },
+    "engine": {
+      "updateTitle": "エンジン更新",
+      "checkUpdates": "更新を確認",
+      "pullUpdate": "今すぐ更新",
+      "rollback": "内蔵版に戻す",
+      "mirrorsLabel": "ミラー選択（中国国内直結優先）",
+      "mirrorNpmmirror": "Alibaba Cloud npmmirror（中国直結優先）",
+      "mirrorTencent": "Tencent Cloud NPM ミラー（予備）",
+      "mirrorHuawei": "Huawei Cloud NPM ミラー（予備）",
+      "mirrorNpmjs": "公式 npmjs レジストリ（海外フォールバック）",
+      "decoupledHint": "エンジンはポータブルデータ領域に分離配置されており、複数ミラーから最新の @playcanvas/splat-transform を取得できます。",
+      "activeStatusBundled": "稼働中エンジン：v{active}（内蔵フォールバック版）   ·   内蔵版：v{bundled}",
+      "activeStatusUpdated": "稼働中エンジン：v{active}（オンライン更新版）   ·   内蔵版：v{bundled}",
+      "checkingMirrors": "ミラーの速度計測と最新版を確認中...",
+      "connectingMirror": "ミラーに接続中（優先：{mirrorId}）...",
+      "mirrorResult": "ミラー：{mirror}（{latency} ms）、最新版：v{version}",
+      "pullingVersion": "v{version} を取得して検証中...",
+      "updatedSuccess": "更新完了！エンジン v{version} に切り替えました",
+      "restoredBundled": "内蔵エンジン v{version} に復元しました",
+      "rolledBackLog": "内蔵版 v{version} にロールバックしました",
+      "errLog": "エラー：{error}",
+      "failLog": "失敗：{error}",
+      "prepRuntime": "基本ランタイム環境を準備中...",
+      "downloading": "{mirror} から v{version} をダウンロード中...",
+      "verifyingSha": "SHA-512 整合性を検証中...",
+      "shaMismatch": "SHA-512 検証に失敗したため更新を中止しました。",
+      "assemblingDir": "分離実行ディレクトリを構築中...",
+      "extractingPkg": "新版エンジンパッケージを展開中...",
+      "selfChecking": "新版エンジンの自己診断 (--version) を実行中...",
+      "selfCheckOk": "自己診断成功：@playcanvas/splat-transform {version}",
+      "selfCheckTimeout": "エンジン自己診断がタイムアウトしました。",
+      "selfCheckFailed": "エンジン自己診断に失敗：{error}",
+      "allMirrorsUnreachable": "すべてのミラーに接続できません。"
+    },
+    "inspector": {
+      "title": "シーン診断とサイズ内訳 — {name}",
+      "readingMeta": "コンテナとヘッダーメタデータをバックグラウンドで読込中...",
+      "readFailed": "読込失敗：{error}",
+      "deepBtn": "詳細エンジン診断 (--stats)",
+      "deepRunning": "詳細診断を実行中...",
+      "deepEmpty": "(エンジンから統計出力が返されませんでした)",
+      "nonGaussianTag": " · 非ガウシアン点群",
+      "headerSummary": "{name}  |  {format} ({version})  |  {count} 点  |  SH {bands} 次  |  {size}{tags}\nフィンガープリント ({algo}): {fp}",
+      "storageBreakdown": "サイズ構造内訳",
+      "nonSogSummary": "非 SOG コンテナ：合計サイズ {size}、1点あたり平均 {bpp} B",
+      "extraColumns": "追加属性列：{cols}",
+      "compatTitle": "出力形式との互換性差異",
+      "compatSogSh": "SOG v3 は 0–4 次の SH 圧縮に対応",
+      "compatSog2dgs": "SOG v3 meta.json は 2dgs フラグを保持",
+      "compatSogBlind": "SOG v3 は点単位の blind テクスチャチャンネルを保持",
+      "compatSpzShClamped": "SPZ は最大 3 次まで対応のため 4 次は切り捨てられます",
+      "compatSpzShOk": "0–3 次の球面調和を完全サポート",
+      "compatSpz2dgs": "SPZ ヘッダーは 2DGS フラグ非対応",
+      "compatSpzBlind": "SPZ はカスタム blind 属性非対応",
+      "compatPlySh": "標準 PLY は全属性を完全ロスレス保持",
+      "compatPlyOpacity": "既定で opacity_linear を出力。旧ビューアーでは --ply-logit-opacity クランプを有効にしてください",
+      "compatCompressed": "位置と属性を量子化圧縮してファイルサイズを削減",
+      "compatVoxel": "ボクセル形式は空間占有と衝突構造のみを保持し、色と SH は含みません"
+    },
+    "advanced": {
+      "title": "詳細設定・ツールチップ設定・3.12.0 全機能一覧",
+      "targetCapLabel": "目標サイズ上限 (MB, 0=無制限):",
+      "minKeepLabel": "最低保持率 %:",
+      "targetCapNote": "(SOG/HTML のみ有効、既定で最大3回試行)",
+      "sogVersionLabel": "SOG バージョン:",
+      "sogV3Rec": "v3 (推奨)",
+      "sogV2Legacy": "v2 (旧版)",
+      "shErrorLabel": "SH 色差目標:",
+      "spzVersionLabel": "SPZ バージョン:",
+      "spzV4Default": "v4 (既定)",
+      "plyLogitCheck": "PLY 互換 Logit 不透明度 (--ply-logit-opacity)",
+      "htmlUnbundledCheck": "分離型 HTML 出力 (--unbundled)",
+      "extFillCheck": "室内密閉",
+      "floorFillCheck": "屋外地面充填",
+      "carveCheck": "歩行領域彫り込み",
+      "seedPosLabel": "シード座標:",
+      "collisionMeshLabel": "衝突メッシュ:",
+      "tipDelayLabel": "ヒント表示遅延 (ms):",
+      "maxHistoryLabel": "3D 編集履歴上限:",
+      "autoSaveNote": "(ポータブル設定へ自動保存・全画面で有効)",
+      "tipRegionMainLabel": "熟練者用ヒント切替 (メイン):",
+      "tipRegionInput": "メイン · 入力エリア",
+      "tipRegionPipeline": "メイン · パイプライン",
+      "tipRegionOutput": "メイン · 出力設定",
+      "tipRegionDialog": "外部ダイアログ",
+      "tipRegionEditorLabel": "熟練者用ヒント切替 (3D):",
+      "tipRegionEdTool": "ツールバーと下部コンテキスト",
+      "tipRegionEdScene": "シーン管理と変換",
+      "tipRegionEdColor": "色調補正とヒストグラム",
+      "tipRegionEdModal": "書出し・保存ダイアログ",
+      "capNotApplicable": " · 現在の形式には非適用"
+    },
+    "jobs": {
+      "title": "再開可能ジョブ一覧 (data/jobs)",
+      "resumeBtn": "失敗項目を再開 / 再試行",
+      "emptyList": "保存済みジョブはありません（変換実行後に data/jobs/ に自動記録されます）",
+      "itemSummary": "{id}  |  {mode}  |  完了 {ok}/{total}",
+      "itemFailedSuffix": " (失敗/中断 {fail})",
+      "missingInput": "{path} (ファイル未検出・再指定が必要)",
+      "conflictDuplicate": "出力パス競合（出力先重複）：{path}",
+      "conflictExists": "出力先ファイルが既に存在します（既定で上書き拒否）：{path}"
+    },
+    "converter": {
+      "targetExistsNoOverwrite": "出力先ファイルが既に存在し、上書き許可がありません：{path}",
+      "targetSizeAttemptLog": "[目標サイズ] {attempt}/{max} 回目の全体試行 (Keep={keep}%, Effort={effort}, 上限={limit})",
+      "targetSizeAttemptDetail": "目標サイズ試行 {attempt}/{max} · {detail}",
+      "targetSizeActualLog": "[目標サイズ] 実測出力サイズ：{bytes} bytes ({gb})",
+      "targetSizeExceeded": "目標サイズ上限を達成できませんでした（上限 {limit} bytes、最小実測 {smallest} bytes、超過 {excess} bytes。品質下限を遵守し既存ファイルは保持しました）。",
+      "verifyFailed": "エクスポート後の検証に失敗：{message}",
+      "badExtension": "出力拡張子が正しくありません。",
+      "overwriteSourceDenied": "入力ファイル自体への上書きは禁止されています。別のファイル名を指定してください。",
+      "outputExists": "出力ファイルが既に存在します。上書き確認または別名を指定してください。",
+      "sharedBakeReuseLog": "[共通ベイク再利用] 固定スナップショットの中間ベイクを再利用 ({key})",
+      "losslessDirectCopyLog": "[ロスレス直通] ベイク後標準 PLY の元列構成とビット単位の属性を保持",
+      "verifyLog": "[検証] {message} ({level})",
+      "engineExited": "エンジン終了（{code}）。\n{tail}"
+    },
+    "portable": {
+      "notWritable": "ポータブルディレクトリに書き込めません（厳格ポータブルモードではシステムの AppData / TEMP へのフォールバックを禁止しています）：\n{dir}\n原因：{error}",
+      "emptyPath": "パスを空にすることはできません。",
+      "outsideRoot": "ポータブルルート外へのアクセスを拒否しました：{path}",
+      "reparseBlocked": "シンボリックリンクまたはジャンクションによる逸脱リスクを検出し拒否しました：{path}",
+      "onlyManagedCleanup": "data/ 配下の管理対象ディレクトリのみクリーンアップできます。",
+      "deleteParentDenied": "管理対象の親ディレクトリ自体は削除できません。"
+    },
+    "sceneRecipe": {
+      "invalid": "無効な 3D 編集レコード",
+      "missingObjects": "無効な 3D 編集レコード (v3 シーンオブジェクト定義が不足しています)"
+    },
+    "editorHost": {
+      "initNote": "3D ガウシアンエディター (+Y 上向き) を初期化中…",
+      "windowTitle": "3D ガウシアン編集 (+Y 上向き) · {name}",
+      "lowMemory": "空きメモリ不足のため 3D 編集を無効にしました。通常変換は引き続き利用可能です。",
+      "previewUnavailable": "プレビュー利用不可 · {error}",
+      "webviewNotReady": "WebView2 コアの準備ができていません。",
+      "initTimeout": "3D ビューポートの初期化がタイムアウトしました。WebGL2 対応を確認してください。",
+      "stageBootWorker": "ローカル点群デコードエンジンを起動中…",
+      "stageOpenAsset": "ソースアセットを開いています…",
+      "stageDecode": "ガウシアン点群データをデコード中…",
+      "stageBuildSgc3": "ロスレス SGC3 メモリブロックを生成中…",
+      "processFailed": "WebView2 描画/GPU プロセスが異常終了しました ({kind})",
+      "recoveryFailed": "フォールバック復旧に失敗：{error}",
+      "safeModeDefaultReason": "GPU 描画過負荷またはコンテキストロスト",
+      "safeModeReloadFailed": "セーフモード再読込に失敗：{error}",
+      "sam2ImportTitle": "ローカル SAM 2 ONNX モデルを選択（sam2_hiera_tiny.encoder.onnx / decoder.onnx / ort.webgpu.min.mjs）",
+      "sam2ImportFilter": "SAM 2 モデルとランタイム (*.onnx;*.mjs;*.wasm)|*.onnx;*.mjs;*.wasm|すべてのファイル|*.*",
+      "sam2Imported": "{count} 個のファイルを data/models/sam2/ にインポートしました",
+      "sam2ImportFailed": "SAM 2 ファイルのインポートに失敗：{error}",
+      "exportImageFilter": "PNG 画像 (*.png)|*.png",
+      "exportImageCanceled": "保存をキャンセルしました",
+      "exportImageFailed": "現在のビュー画像のエクスポートに失敗：{error}",
+      "exportImageTitle": "画像を書き出し",
+      "saveAsFolderDesc": "書き出し先フォルダーを選択（別名保存は元のソースファイルを一切変更しません）",
+      "saveAsCanceledFolder": "フォルダー選択をキャンセルしました",
+      "saveAsNoObjects": "エクスポート可能なオブジェクトがありません",
+      "saveAsInitEngine": "エンコードエンジンを初期化中…",
+      "saveAsSuccess": "{count} 個のファイルを {dir} に正常エクスポートしました",
+      "saveAsCanceled": "エクスポートをキャンセルしました。すべての編集データはそのまま保持されています。",
+      "saveAsFailed": "エクスポートが中断されました（編集データは保持済み、再試行可能）：{error}",
+      "nativeTitle": "ネイティブ Vulkan 1.3 バイパスビューポート (+Y上) · {name}",
+      "nativeFallbackBtn": "WebView2 へ切替",
+      "nativeSaveBtn": "レシピを保存",
+      "nativeOrbitTool": "視点回転",
+      "nativeBoxSelectTool": "矩形選択",
+      "nativeDeleteBtn": "選択を非破壊削除",
+      "nativeUndoBtn": "元に戻す",
+      "nativeRedoBtn": "やり直す",
+      "nativeSphereEnable": "可変バウンディング球",
+      "nativeSphereInvert": "球外を反転選択",
+      "nativeSphereSelectBtn": "球内の点を選択",
+      "nativeUnavailable": "ネイティブ Vulkan ビューポートを使用できないため、標準 WebView2 エディタにフォールバックします：{reason}"
+    },
+    "models": {
+      "sam21TinyName": "SAM 2.1 Hiera Tiny (FP16)",
+      "sam21TinyBadge": "内蔵既定",
+      "sam21TinyTooltip": "【内蔵既定 · 推奨】SAM 2.1 Hiera Tiny 半精度版（約 74 MB）。完全内蔵の単一ファイルでオフライン動作し、速度・VRAM 使用量・遮蔽耐性・小物選択精度のバランスが最適です。",
+      "mobileSamName": "MobileSAM (軽量高速)",
+      "mobileSamBadge": "超軽量",
+      "mobileSamTooltip": "【超軽量 · 約 43 MB】VRAM 消費を大幅に抑え、内蔵 GPU や CPU (WASM) 推論を高速化します。低スペック環境や明瞭な単体物体に適しますが、複雑な輪郭や遮蔽の精度は SAM 2.1 よりやや低下します。",
+      "sam21SmallName": "SAM 2.1 Hiera Small (高精度)",
+      "sam21SmallBadge": "高精度",
+      "sam21SmallTooltip": "【高精度強化 · 約 88 MB】Tiny より深いバックボーンにより、細い取っ手・植物の葉・複雑な重なりを持つ物体の境界をより精緻に分割します。1視点あたりの推論時間と VRAM 消費は Tiny よりやや増加します。",
+      "lamaName": "LaMa 平面テクスチャ修復 (L2)",
+      "lamaBadge": "AI 穴埋め",
+      "lamaTooltip": "【平面穴埋め L2 既定エンジン · 約 198 MB】高速フーリエ畳み込み（非拡散）に基づき、1～2 秒で木目・タイル目地・模様を自然に補完してフィット平面へ逆投影します。",
+      "missingBundle": "現在の実行ファイルに既定モデルパック (bundled_models.zip) が同梱されていません。",
+      "integrityFailed": "内蔵モデルの整合性検証に失敗：{path}",
+      "extractFailed": "内蔵モデルの展開に失敗：{error}",
+      "downloadingMb": "ダウンロード中 {done} / {total} MB…",
+      "verifyingSha256": "SHA-256 整合性を検証中…",
+      "sha256Mismatch": "ファイルの SHA-256 が一致しません（破損の可能性があります）",
+      "unknownModel": "不明なモデル：{id}",
+      "alreadyReady": "モデルは準備完了です",
+      "alreadyDownloading": "このモデルは現在ダウンロード中です。しばらくお待ちください",
+      "probingMirrors": "最適なダウンロード経路を自動テスト中…",
+      "switchingBackupMirror": "主経路が利用できないため、予備ミラーへ自動切替しました…",
+      "allMirrorsFailed": "すべてのミラーからのダウンロードに失敗：{error}",
+      "networkError": "ネットワークエラー",
+      "downloadVerified": "ダウンロードと検証が完了",
+      "downloadedModel": "ダウンロード・検証完了：{name}",
+      "downloadCanceled": "ダウンロードをキャンセルしました",
+      "downloadFailed": "ダウンロード失敗：{error}"
+    },
+    "electron": {
+      "invalidFormat": "無効な形式です",
+      "jobRunning": "既に変換ジョブが実行中です",
+      "reselectInputs": "入力ファイルを再選択してください",
+      "invalidOpCount": "操作数が無効です",
+      "invalidOpParams": "操作パラメーターが無効です",
+      "positiveScaleRadius": "倍率または半径は 0 より大きい値にしてください",
+      "shRange03": "球面調和次数は 0～3 の範囲で指定してください",
+      "invalidBoxRange": "バウンディングボックスの最小値が最大値を超えています",
+      "sliderOutOfRange": "スライダー値が範囲外です",
+      "invalidOutputFormat": "出力形式が無効です",
+      "selectInputs": "入力ファイルを選択してください",
+      "invalidInputFormat": "入力ファイル形式が無効です",
+      "invalidOutputPath": "出力パスまたは拡張子が無効です",
+      "deviceUnsupported": "計算デバイスがこの出力形式に対応していません",
+      "invalidVoxelParams": "ボクセルパラメーターが無効です",
+      "engineFailed": "エンジン変換に失敗しました：\n{tail}",
+      "cannotOverwriteSource": "ソースファイルを上書きできません。別の出力名を指定してください",
+      "outputExists": "出力ファイルは既に存在します",
+      "emptyOutput": "有効な出力が生成されませんでした"
+    },
+    "tips": {
+      "upPrefix": "増やす / オン：",
+      "downPrefix": "減らす / オフ：",
+      "recPrefix": "初心者向け：",
+      "mode": {
+        "title": "処理モード：個別一括 vs 統合",
+        "tag": "ワークフロー",
+        "summary": "複数ファイルをドロップした際、個別に変換するか1つのシーンに統合するかを決めます。",
+        "up": "個別一括変換：10個のモデルをまとめて入れると、元の名前で10ファイルを自動出力します。",
+        "down": "1つに統合：複数の部分スキャンを1つのシーンファイルに結合します。",
+        "recommend": "通常の一括変換では既定の「個別一括変換」のままがおすすめです。"
+      },
+      "format": {
+        "title": "出力形式",
+        "tag": "基本設定",
+        "summary": "出力ファイルを開けるソフトや Web ビューアー、および最終ファイルサイズを決定します。",
+        "up": "SOG / HTML は最高圧縮率（10～20分の1に軽量化）。SPZ はクロスプラットフォームの軽量保存向けです。",
+        "down": "標準 PLY は容量が最大ですが互換性が最も広く、他エディターでの再編集に適します。",
+        "recommend": "Web 公開は SOG、単体で共有閲覧は HTML、編集用アーカイブは PLY が最適です。"
+      },
+      "preset": {
+        "title": "4段階クイックプリセット",
+        "tag": "一括設定",
+        "summary": "保持率、SH 次数、反復数、圧縮強度を連動して自動調整します。",
+        "up": "高速変換：最速プレビュー出力。高品質保存：点数100%と反射表現を完全保持。",
+        "down": "最小サイズ：スマホ向け極限軽量化。Web バランス：画質・容量・速度の最良バランス。",
+        "recommend": "多くの Web 公開には「Web バランス」、即時確認には「高速変換」がおすすめです。"
+      },
+      "keep": {
+        "title": "点の保持率（間引き削減）",
+        "tag": "軽量化の核",
+        "summary": "冗長なガウス点を賢く統合してシーン規模を抑え、モバイルや Web で滑らかに表示します。",
+        "up": "100% ですべての点を保持し原画質を維持しますが、容量と VRAM 消費が大きくなります。",
+        "down": "45%～75% へ下げると大幅に軽量化・高速化でき、適応的間引きと併用すれば輪郭も保護できます。",
+        "recommend": "200万点を超えるシーンは 50%～75% に下げ、適応的間引きを有効にすることを推奨します。"
+      },
+      "adaptive": {
+        "title": "適応的間引き（--decimate-adaptive）",
+        "tag": "3.12 新規",
+        "summary": "局所的な視覚誤差に応じて間引き位置を配分し、均一削除による空や細部の崩壊を防ぎます。",
+        "up": "オンにすると屋外（空＋近景）などの混在スケールシーンで画質が大きく向上します。",
+        "down": "オフ（均一間引き）はやや高速でメモリ消費も少なめです。",
+        "recommend": "点の保持率が 100% 未満の場合はオンを推奨します。"
+      },
+      "iterations": {
+        "title": "SH 圧縮反復数（SH Iterations）",
+        "tag": "SOG 専用",
+        "summary": "表面の光沢や視点による色変化（球面調和）のクラスタリング精度を制御します。",
+        "up": "15～25 に上げると反射の階調が滑らかになりますが、処理時間が増加します。",
+        "down": "3～8 に下げると極めて高速に変換でき、テスト確認に向きます。",
+        "recommend": "簡易確認は 3～6、バランスは 10、高品質保存は 20～25 が目安です。"
+      },
+      "effort": {
+        "title": "WebP 圧縮強度（Effort 0–9）",
+        "tag": "SOG 専用",
+        "summary": "SOG の可逆 WebP テクスチャ格納時の圧縮探索強度を指定します。",
+        "up": "数値が高い（最大 9）ほど画質無劣化のまま容量が小さくなりますが、CPU 負荷が増えます。",
+        "down": "0 にすると爆速でパックでき、ファイルサイズ増加もわずかです。",
+        "recommend": "高速は 0、バランスは既定値、最小サイズ/高品質保存は 8～9 が目安です。"
+      },
+      "workers": {
+        "title": "エンコードスレッド数（Max Workers）",
+        "tag": "パフォーマンス",
+        "summary": "テクスチャ圧縮とエンコードを並列処理する CPU スレッド数です。",
+        "up": "増やすとパック時間を短縮できますが、CPU とメモリのピーク消費も増えます。",
+        "down": "減らす（または 0=直列）と省メモリで PC が重くなりにくくなります。",
+        "recommend": "既定の 4 が安定です。32GB 以上のメモリがあれば 6～8 も快適です。"
+      },
+      "voxel": {
+        "title": "ボクセル解像度（Voxel Size）",
+        "tag": "Voxel 専用",
+        "summary": "ゲームエンジン用衝突ボクセル出力時の 1辺の長さ（単位：メートル）です。",
+        "up": "大きい値（0.1～0.2）ほどメッシュが粗くなり、軽量かつ高速です。",
+        "down": "小さい値（0.03～0.05）ほど家具や壁に沿った精密な判定になりますが、VRAM を多く消費します。",
+        "recommend": "室内は 0.05、屋外の広いシーンは 0.1 が目安です。"
+      },
+      "opacity": {
+        "title": "ボクセル不透明度しきい値",
+        "tag": "Voxel 専用",
+        "summary": "どの程度不透明な点群を衝突障害物とみなすかの基準値です。",
+        "up": "上げると薄い霧状ノイズを除外でき、見えない壁への衝突を防げます。",
+        "down": "下げると細かな半透明構造まで残ります。",
+        "recommend": "多くのシーンでは既定の 0.1 が適しています。"
+      },
+      "device": {
+        "title": "計算デバイスとバックエンド（Vulkan 含む）",
+        "tag": "Windows 重要",
+        "summary": "SOG 圧縮、浮遊ノイズ除去、ボクセル計算は既定で GPU を使用します（CPU より 5～10倍高速）。",
+        "up": "Vulkan：Windows 既定の D3D12 ドライバーで起きる稀なクラッシュを回避する公式推奨モードです。",
+        "down": "CPU のみ：VRAM を使わない最も確実なフォールバックですが、5～10倍時間がかかります。",
+        "recommend": "まず自動 GPU を選び、GPU エラーが出る場合は「Vulkan」へ切り替えてください。"
+      },
+      "floaters": {
+        "title": "浮遊ノイズ除去（--filter-floaters）",
+        "tag": "3.12 新規",
+        "summary": "GPU ボクセル化により空間に浮かぶ孤立ノイズや霞を自動除去します。",
+        "up": "オンにすると見た目がクリーンになり、ファイルサイズも縮小します。",
+        "down": "オフにすると元の点群をすべて保持し、やや高速です。",
+        "recommend": "スマホやドローン撮影のシーンではオンを強く推奨します。"
+      },
+      "cluster": {
+        "title": "連結主体の抽出（--filter-cluster）",
+        "tag": "3.12 新規",
+        "summary": "中心のシード点と連結しているメインシーンのみを残し、遠方の孤立ノイズを分離除去します。",
+        "up": "室内空間や単体オブジェクトから背景の不要物を除くのに適しています。",
+        "down": "オフにすると全領域を保持します。",
+        "recommend": "背景の孤立片を強力に取り除きたい場合に使用してください。"
+      },
+      "nan": {
+        "title": "無効点の除去（NaN / Inf）",
+        "tag": "データ清掃",
+        "summary": "座標破損・無限大・回転異常の不良点を除去し、黒ブロックやちらつきを防ぎます。",
+        "up": "画質劣化はほぼゼロで、他ツールとの互換性を高めます。",
+        "down": "オフにすると不良点チェックをスキップします。",
+        "recommend": "常にオンにしておくことを推奨します。"
+      },
+      "sh": {
+        "title": "球面調和次数上限（SH Bands）",
+        "tag": "容量最適化",
+        "summary": "視点に応じて変わる光沢反射データを制御します。高次 SH は容量の半分以上を占めることがあります。",
+        "up": "3次で完全な反射を保持しますが、ファイルサイズは最大になります。",
+        "down": "0次（拡散色のみ）または 1次に下げると容量がほぼ半減します。",
+        "recommend": "Web 展示は 1次、極限軽量化は 0次がおすすめです。"
+      },
+      "translate": {
+        "title": "移動（Translate）",
+        "tag": "空間変換",
+        "summary": "+Y 上向き座標系の X / Y / Z 軸に沿ってシーン全体を移動します。",
+        "up": "原点から大きく離れたシーンを座標中心 (0,0,0) に戻す際によく使います。",
+        "down": "0,0,0 で移動なしになります。",
+        "recommend": "複数ファイルを統合して位置合わせする際に便利です。"
+      },
+      "rotate": {
+        "title": "回転補正（Rotate）",
+        "tag": "空間変換",
+        "summary": "X / Y / Z 軸まわりにシーンを回転します（単位：度）。",
+        "up": "逆さまや傾いたスキャンモデルを +Y 上向きへ正立させます。",
+        "down": "0,0,0 で回転なしになります。",
+        "recommend": "「3D 編集」内の自動整列または 3点平面補正の直接利用がおすすめです。"
+      },
+      "scale": {
+        "title": "均等拡大縮小（Scale）",
+        "tag": "空間変換",
+        "summary": "均一倍率でシーン全体の大きさを拡大・縮小します。",
+        "up": "1 より大きいと拡大、小さいと縮小（例：0.5 で半分）になります。",
+        "down": "1 で元のスケールを維持します。",
+        "recommend": "ゲームエンジンの単位系に合わせる際に使用します。"
+      },
+      "box": {
+        "title": "ボックスフィルター（Filter Box）",
+        "tag": "領域切抜",
+        "summary": "最小/最大 XYZ 直方体の範囲内にある点群のみを残し、周囲の不要背景を切り落とします。",
+        "up": "範囲を広げると周囲の環境をより多く残せます。",
+        "down": "範囲を狭めると対象領域だけを精密に切り抜けます。",
+        "recommend": "矩形の部屋や区画のトリミングに適しています。"
+      },
+      "sphere": {
+        "title": "球形フィルター（Filter Sphere）",
+        "tag": "領域切抜",
+        "summary": "中心点から指定半径内の球形範囲にある点群のみを保持します。",
+        "up": "半径を大きくすると遠景まで残ります。",
+        "down": "半径を小さくすると遠方の空や端のノイズを素早く除去できます。",
+        "recommend": "空撮や 360° 全周スキャンシーンに適しています。"
+      },
+      "estOutput": {
+        "title": "推定出力サイズ",
+        "tag": "リアルタイム推定",
+        "summary": "入力ヘッダーから読取った実点数、出力形式、保持率、SH 次数をもとに即時算出します。",
+        "up": "実際に変換を完了する前に出力サイズと削減率を見積もれます。",
+        "down": "実際の容量はシーンのテクスチャ複雑度にも左右されるため目安範囲です。",
+        "recommend": "保持率スライダーやプリセットを変えると即座に変化を確認できます。"
+      },
+      "engine": {
+        "title": "エンジン独立更新（マルチミラー対応）",
+        "tag": "分離設計",
+        "summary": "v3.12.0 を内蔵しオフライン動作に対応。オンライン時はミラーから最新 @playcanvas/splat-transform を取得できます。",
+        "up": "Alibaba / Tencent / Huawei / 公式ソースの自動切替と SHA-512 検証に対応。",
+        "down": "更新に不具合があればワンクリックで内蔵版へ戻せます。",
+        "recommend": "クリックして速度計測・更新確認およびベースプロジェクト謝辞を表示します。"
+      },
+      "preview3d": {
+        "title": "3D ガウシアン編集（+Y 上向き · 非破壊ワークフロー）",
+        "tag": "コア編集",
+        "summary": "高機能 3D ガウシアンエディターを開きます：100% スプラット/センター/リング表示、6面ボリュームと遮蔽平面、AI/属性選択、プロ色調補正、自動整列に対応。",
+        "up": "上書き保存は現在のワークフロー内ファイルのみを置換し、ディスク上の元ファイルを変更しません。",
+        "down": "エディター内から「別名保存」で統合・オブジェクト別・グループ別の直接書き出しも可能です。",
+        "recommend": "入力ファイルを選択してクリックすると非破壊仕上げ編集を開始できます。"
+      },
+      "advTargetCap": {
+        "title": "目標サイズ上限 (MB)",
+        "tag": "自動到達",
+        "summary": "SOG / HTML 出力の容量上限を設定します（0 で無制限）。超過時は保持率を自動調整して再試行します。",
+        "up": "Web 公開時のパッケージ容量制限を厳守したい場合に有効です。",
+        "down": "0 にすると現在設定で1回のみエンコードし最速です。",
+        "recommend": "モバイル共有は 15–30 MB、PC 展示は 0 が目安です。"
+      },
+      "advMinKeep": {
+        "title": "自動到達の最低保持率 %",
+        "tag": "画質下限",
+        "summary": "目標サイズ上限が有効なとき、自動間引きで下げられる保持率の下限です。",
+        "up": "上げると過度な圧縮によるモデルのぼやけを防げます。",
+        "down": "下げると目標サイズに収める余地が広がります。",
+        "recommend": "既定の 20% は達成率と視認性のバランスに優れています。"
+      },
+      "advSogVer": {
+        "title": "SOG コンテナバージョン (v3 / v2)",
+        "tag": "SOG エンコード",
+        "summary": "SuperSplat SOG コンテナ形式のバージョンを選択します。",
+        "up": "v3 は改良されたクォータニオン・不透明度量子化により高画質かつ高圧縮です。",
+        "down": "v2 は非常に古い Web ビューアーとの互換維持用です。",
+        "recommend": "特別な互換要件がない限り既定の v3 をご使用ください。"
+      },
+      "advShErr": {
+        "title": "SH 視覚色差目標",
+        "tag": "精密調整",
+        "summary": "SH クラスタリング圧縮で許容する最大色差を指定します（空欄でエンジン既定値）。",
+        "up": "小さい値ほど反射が正確になりますが、処理が遅くなり容量も増えます。",
+        "down": "大きい値ほど圧縮率が上がります。",
+        "recommend": "通常は空欄のままで問題ありません。"
+      },
+      "advSpzVer": {
+        "title": "SPZ 圧縮バージョン (v4 / v3)",
+        "tag": "SPZ エンコード",
+        "summary": "Niantic/Adobe SPZ 形式のバージョンを選択します。",
+        "up": "v4 は圧縮効率がより高く新版デコーダーに対応します。",
+        "down": "v3 は旧版 SPZ プラグインとの互換用です。",
+        "recommend": "既定の v4 を推奨します。"
+      },
+      "advPlyLogit": {
+        "title": "PLY 互換 Logit 不透明度",
+        "tag": "形式互換",
+        "summary": "標準 PLY 書き出し時に従来の 3DGS Logit 空間で opacity を保存します。",
+        "up": "オンにすると従来の 3DGS / SuperSplat / Blender プラグインとの互換性を確保します。",
+        "down": "オフではエンジン既定形式で出力します。",
+        "recommend": "他ソフトへ読み込んで再編集する場合は必要に応じてオンにしてください。"
+      },
+      "advHtmlUnbundled": {
+        "title": "分離型 HTML 出力",
+        "tag": "Web デプロイ",
+        "summary": "単一 HTML にまとめず、Web ビューアースクリプトとガウシアンデータを分離出力します。",
+        "up": "静的サイトサーバーへ公開しブラウザーキャッシュを活用する場合に適します。",
+        "down": "オフ（単一ファイル）はチャットやメールでのオフライン共有に便利です。",
+        "recommend": "単発プレビューはオフ、サイト公開時はオンがおすすめです。"
+      },
+      "advVoxelFlags": {
+        "title": "ボクセル衝突・詳細充填オプション",
+        "tag": "衝突ボクセル",
+        "summary": "室内密閉、屋外地面補完、歩行領域彫り込み、衝突メッシュ生成を制御します。",
+        "up": "有効にするとスキャン欠損を埋め、キャラクターの壁抜けや落下を防ぎます。",
+        "down": "オフで元のスキャン占有ボクセルをそのまま保ちます。",
+        "recommend": "Voxel 衝突パック出力時のみシーン種別に応じて選択してください。"
+      },
+      "advTipDelay": {
+        "title": "グローバルヒント表示遅延 (ms)",
+        "tag": "ヒント設定",
+        "summary": "唯一のグローバル遅延定数：カーソルをこのミリ秒数静止させたときのみ解説を表示し、通過時の邪魔を防ぎます。",
+        "up": "大きく（800–1200ms）すると静かで熟練者向きになります。",
+        "down": "小さく（300–500ms）すると解説を素早く参照できます。",
+        "recommend": "既定の 500ms は誤表示防止と反応速度のバランスが良く、全画面に同期適用されます。"
+      },
+      "advHistoryLimit": {
+        "title": "3D エディター最大履歴数",
+        "tag": "非破壊 Undo",
+        "summary": "3D 編集モジュールの Undo/Redo 差分履歴スタックの最大保持ステップ数です。",
+        "up": "増やす（80–200）とより長い操作履歴を遡れますが、メモリ消費がやや増えます。",
+        "down": "減らすとメモリを節約できます。",
+        "recommend": "既定の 50 ステップでほとんどの仕上げ作業に十分です。"
+      },
+      "advVeteranTips": {
+        "title": "領域別熟練者ヒント切替",
+        "tag": "表示抑制",
+        "summary": "UI 領域ごとにホバー解説のオン/オフを設定でき、慣れた領域のヒントを非表示にできます。",
+        "up": "チェックした領域ではカーソル静止時に詳細解説を表示します。",
+        "down": "チェックを外した領域ではヒントを出さず、設定は自動保存されます。",
+        "recommend": "不慣れな領域だけ残し、いつでもここで再有効化できます。"
+      },
+      "inspectDeep": {
+        "title": "詳細エンジン診断 (--stats)",
+        "tag": "診断",
+        "summary": "基盤エンジンで全ガウス点を走査し、座標範囲・スケール・不透明度・異常値分布を出力します。",
+        "up": "巨大な浮遊ノイズや異常値を正確に特定できます。",
+        "down": "大規模ファイル（200万点超）では走査に数秒かかります。",
+        "recommend": "描画のにじみや異常な浮遊物の原因調査時にご使用ください。"
+      },
+      "jobsResume": {
+        "title": "履歴ジョブの再開 / 再試行",
+        "tag": "途中再開",
+        "summary": "data/jobs/ から過去のジョブ一覧を読み込み、入力ファイルをワークフローへ再ロードします。",
+        "up": "大量バッチ処理が中断してもファイル一覧を失わず素早く復旧できます。",
+        "down": "ディスク上の既存ファイルは変更しません。",
+        "recommend": "大規模バッチ出力の中断後にご活用ください。"
+      }
+    },
+    "capability": {
+      "translate": {
+        "label": "座標移動",
+        "desc": "X/Y/Z 軸に沿ってガウス点を移動"
+      },
+      "rotate": {
+        "label": "回転（度）",
+        "desc": "オイラー角でシーンを回転"
+      },
+      "scale": {
+        "label": "均等拡大縮小",
+        "desc": "均一倍率でシーンをスケーリング"
+      },
+      "morton": {
+        "label": "モートン空間並替",
+        "desc": "Z 曲線順にガウス点を並び替えキャッシュ効率と圧縮率を向上"
+      },
+      "filter_nan": {
+        "label": "無効点除去 (NaN/Inf)",
+        "desc": "座標異常または回転ゼロの不良点を除去"
+      },
+      "filter_sh": {
+        "label": "SH 次数上限 (0–4)",
+        "desc": "指定次数を超える球面調和係数を削減（4次 SH 対応）"
+      },
+      "filter_box": {
+        "label": "ボックスフィルター",
+        "desc": "軸平行直方体内の点群を保持"
+      },
+      "filter_sphere": {
+        "label": "球形フィルター",
+        "desc": "指定中心・半径内の点群を保持"
+      },
+      "filter_value": {
+        "label": "属性値フィルター",
+        "desc": "opacity / scale / color 等の列条件でガウス点を抽出"
+      },
+      "filter_floaters": {
+        "label": "GPU 浮遊ノイズ除去",
+        "desc": "GPU ボクセル化で浮遊ノイズを除去"
+      },
+      "filter_cluster": {
+        "label": "GPU 連結主体抽出",
+        "desc": "シード点に連結する主体シーンのみ保持"
+      },
+      "decimate_uniform": {
+        "label": "均一間引き",
+        "desc": "全体を均一に統合して点数を削減"
+      },
+      "decimate_adaptive": {
+        "label": "適応的誤差間引き",
+        "desc": "局所誤差配分で簡略化し、空と細部をより良く保護"
+      },
+      "scratch_dir": {
+        "label": "間引き作業用フォルダ",
+        "desc": "PortablePaths によりパック内 data/tmp へ自動指定"
+      },
+      "sh_iterations": {
+        "label": "SH クラスタ反復数",
+        "desc": "SH パレット K-Means 反復回数"
+      },
+      "sh_color_error": {
+        "label": "SH 視覚色差目標",
+        "desc": "8-bit 視覚色差から最小 SH パレットを自動決定"
+      },
+      "sh_palette_size": {
+        "label": "固定 SH パレットサイズ",
+        "desc": "SH パレット項目数を明示指定（0 で自動）"
+      },
+      "sog_version": {
+        "label": "SOG 形式バージョン",
+        "desc": "v3 は 4次 SH・>1 不透明度・blind データ対応。v2 は旧ビューアー互換"
+      },
+      "webp_effort": {
+        "label": "WebP 可逆圧縮強度",
+        "desc": "可逆 WebP 圧縮の時間/サイズトレードオフ（0–9）"
+      },
+      "html_unbundled": {
+        "label": "分離型 HTML 出力",
+        "desc": "単一 HTML ではなく CSS/JS/SOG を個別ファイルへ分割"
+      },
+      "viewer_settings": {
+        "label": "ビューアー設定 JSON",
+        "desc": "内蔵 SuperSplat Viewer の初期カメラ・設定をカスタマイズ"
+      },
+      "spz_version": {
+        "label": "SPZ 形式バージョン",
+        "desc": "出力する Niantic SPZ バージョンを指定（既定 4）"
+      },
+      "ply_logit": {
+        "label": "互換 Logit 不透明度出力",
+        "desc": "間引き後 >1 の線形不透明度を標準 logit にクランプし旧ツール互換を維持"
+      },
+      "voxel_size": {
+        "label": "ボクセル解像度 (m)",
+        "desc": "衝突ボクセルブロックの一辺長"
+      },
+      "voxel_opacity": {
+        "label": "ボクセル不透明度しきい値",
+        "desc": "実体障害物とみなす最小不透明度"
+      },
+      "voxel_ext_fill": {
+        "label": "室内外部空洞密閉",
+        "desc": "境界からのフラッドフィルで室内シーン外部空洞を密閉"
+      },
+      "voxel_floor_fill": {
+        "label": "屋外地面下方充填",
+        "desc": "底面から上向きに屋外地形下の空間を充填"
+      },
+      "voxel_carve": {
+        "label": "カプセル歩行空間彫り込み",
+        "desc": "シード点から歩行可能なカプセル空間を彫り込み"
+      },
+      "seed_pos": {
+        "label": "シード点座標",
+        "desc": "連結クラスタ抽出やボクセル充填・彫り込みの起点"
+      },
+      "collision_mesh": {
+        "label": "衝突メッシュ同時生成 (.glb)",
+        "desc": "ボクセルグリッドから平滑またはブロック衝突サーフェスを出力"
+      },
+      "lod_select": {
+        "label": "入力 LOD レベル選択",
+        "desc": "Streamed SOG/LCC から特定の LOD レベルを選択"
+      },
+      "lod_chunk": {
+        "label": "LOD チャンク点数 (K)",
+        "desc": "ストリーミング LOD チャンクあたりの目標ガウス点数（千）"
+      },
+      "gpu": {
+        "label": "計算デバイス",
+        "desc": "圧縮・ボクセル計算に GPU または CPU のみを選択"
+      },
+      "gpu_backend": {
+        "label": "グラフィックスバックエンド (Vulkan/D3D12)",
+        "desc": "Windows では D3D12 ドライバー不具合回避のため Vulkan を推奨"
+      },
+      "max_workers": {
+        "label": "エンコードスレッド数",
+        "desc": "並列エンコードスレッド数（0=直列）"
+      },
+      "info_stats": {
+        "label": "詳細診断・統計",
+        "desc": "完全な構造メタデータと列ごとのヒストグラム統計を出力"
+      },
+      "mjs_generator": {
+        "label": "JS プロシージャル生成スクリプト",
+        "desc": "任意のローカル JS 実行を伴います",
+        "reason": "セキュリティ制限：悪意あるコード実行を防ぐため未承認ローカルスクリプト実行は既定で無効です。"
+      },
+      "remote_url": {
+        "label": "リモート URL 入力",
+        "desc": "外部ネットワークからシーンを取得",
+        "reason": "セキュリティ制限：既定の厳格オフラインモードにより未承認ネットワーク入力を禁止しています。"
+      },
+      "camera_render": {
+        "label": "オフラインカメラアニメーション描画",
+        "desc": "WebP 連番フレームと被写界深度/モーションブラーの一括描画",
+        "reason": "今後のレンダリングワークフロー更新で専用 UI を公開予定（機能一覧には登録済み）。"
+      }
+    }
+  },
+  "editor": {
+    "window": {
+      "title": "3D ガウシアン編集 (+Y 上向き) · Splat Convert Desktop 3.2.3"
+    },
+    "banners": {
+      "autoAlignTitle": "傾いた実写シーンを検出しました",
+      "autoAlignDescDefault": "地面の傾きが検出されました。ワンクリック自動整列を実行しますか？補正後も Ctrl+Z ですぐ元に戻せます。",
+      "autoAlignDescDeg": "地面に約 {deg}° の傾きが検出されました。ワンクリックで自動水平補正しますか？補正後も Ctrl+Z で元に戻せます。",
+      "autoAlignAccept": "自動補正",
+      "autoAlignDismiss": "今はしない",
+      "splitHandle": "元画像 ◀ ▶ 補正後",
+      "gotIt": "了解",
+      "safeModeText": "緊急省電力保護が有効です：「センターモード」へ切り替え、フィルターや色調補正などの高負荷ツールを凍結し、基本選択・ソフト削除・姿勢補正のみ残しています。",
+      "exitSafeMode": "フルモードへ復帰",
+      "semanticModeDefault": "分割モードを自動判定中…",
+      "preparing": "準備中…",
+      "cancelBtn": "キャンセル"
+    },
+    "loading": {
+      "title": "ガウシアン点群モデルを読込中…",
+      "preparing": "準備中…",
+      "interrupted": "読込が中断されました",
+      "readError": "ガウシアン点群の読込中にエラーが発生しました",
+      "errorHint": "ファイルの整合性または VRAM 使用量を確認して再試行してください",
+      "etaMinSec": "{min} 分 {sec} 秒",
+      "etaSec": "{sec} 秒",
+      "etaRemaining": "経過 {elapsed} 秒 · 残り約 {eta}",
+      "etaProcessing": "経過 {elapsed} 秒 · 大規模点群を処理中、正常に動作しています…",
+      "buildingWebgl": "WebGL2 ガウシアンデータ構造を構築中…",
+      "rebuildingContextLost": "グラフィックスコンテキストロストを検出。センター緊急モードでビューポートを再構築し進行状態を復元中…",
+      "transferringBinary": "点群バイナリデータを転送中…",
+      "loadBinaryHttpErr": "バイナリ点群の読込に失敗 HTTP {status}",
+      "decodingMassive": "超大規模ガウシアン点群データをデコード中…",
+      "loadFailed": "ガウシアン点群の読込に失敗しました"
+    },
+    "menu": {
+      "file": "ファイル",
+      "saveOverwrite": "上書き保存（非破壊ワークフロー）",
+      "saveAs": "別名でフォルダーへ書き出し…",
+      "cancelClose": "キャンセルして閉じる",
+      "edit": "編集",
+      "undo": "↶ 元に戻す",
+      "redo": "↷ やり直し",
+      "autoAlign": "⊞ 自動整列 (+Y 上向き)",
+      "verticalAlign": "┃ 垂直補正",
+      "groundAlign": "⊿ 水平補正",
+      "scaleCalib": "📐 スケール校正",
+      "smartMeasure": "📏 スマート計測ペン",
+      "select": "選択",
+      "selAll": "すべて選択",
+      "selNone": "選択解除",
+      "selInvert": "選択を反転",
+      "selIsolate": "選択点のみ表示（分離表示）",
+      "selHide": "選択点を一時非表示",
+      "selShowAll": "すべて表示",
+      "selSplit": "別オブジェクトへ分割",
+      "selDup": "部分コピーを作成",
+      "selDelete": "選択点をソフト削除",
+      "render": "表示",
+      "exportView": "現在のビュー画像を書き出し…",
+      "toggleGrid": "無限地面グリッド切替 (+Y 上向き)",
+      "toggleBounds": "モデルバウンディングコーナー枠切替",
+      "fitView": "主体にフォーカス",
+      "advanced": "詳細設定",
+      "secPerfDisplay": "パフォーマンスと表示補助",
+      "showBoundsTitle": "ガウシアン境界コーナー枠を表示",
+      "showBoundsDesc": "モデルの 3D 境界8隅に細い枠線を表示して範囲を示します (B)",
+      "showGridTitle": "無限延長地面グリッドを表示",
+      "showGridDesc": "Y=0 平面にアンチエイリアス付き無限地面グリッドを表示します (G)",
+      "secToolMonitor": "ツール・モニター詳細設定",
+      "toolAdvOptions": "ツール詳細オプション",
+      "secSemantic3dAdv": "3D セマンティック分割詳細",
+      "silent3dTitle": "3D セマンティックサイレント選択",
+      "silent3dDesc": "メインビューポートを奪わず裏でオフスクリーン認識します（オフ時は有効視点切替のみ表示）",
+      "semanticViewsLabel": "3D セマンティックサンプリング視点数",
+      "viewsFast4": "最速 4",
+      "viewsBal6": "標準 6",
+      "viewsFine8": "精密 8",
+      "viewsUltra12": "極限 12",
+      "semanticModelsLabel": "3D セマンティックモデル（ホバーで差異確認）",
+      "inpaintModelsLabel": "AI 平面穴埋めモデル (L2)",
+      "perfHudSettings": "パフォーマンス HUD 表示設定",
+      "secPerfFields": "右下の表示項目",
+      "secCamCoord": "視点・座標高度ツール",
+      "toggleProj": "透視 / 平行投影カメラ切替",
+      "toggleCamMode": "オービット / フライカメラ切替",
+      "opencvZup": "OpenCV (-Y) → +Y 上向きに反転",
+      "secHelpAbout": "ヘルプと情報",
+      "showShortcuts": "ショートカット一覧",
+      "showCredits": "オープンソース謝辞・情報",
+      "saveOverwriteShort": "上書き保存",
+      "saveAsShort": "別名保存"
+    },
+    "topBar": {
+      "colorPanel": "色調補正",
+      "isolate": "分離表示",
+      "hide": "一時非表示",
+      "showAll": "全表示",
+      "bounds": "境界枠",
+      "grid": "地面グリッド",
+      "exportImg": "現在のビュー画像を書き出し",
+      "displayMode": "表示モード",
+      "camOrbit": "オービット",
+      "camFly": "フライ",
+      "flySpeed": "速度",
+      "flySpeedAria": "フライ移動速度",
+      "gizmoTranslateAria": "移動 (W)",
+      "gizmoRotateAria": "回転 (E)",
+      "gizmoScaleAria": "拡大縮小 (R)",
+      "axisGizmoAria": "+Y 上向き座標軸ナビ"
+    },
+    "rail": {
+      "orbit": "閲覧",
+      "rect": "矩形",
+      "lasso": "投げ縄",
+      "ellipse": "楕円",
+      "poly": "多角形",
+      "brush": "ブラシ",
+      "filter": "抽出",
+      "filterHead": "スマート抽出選択",
+      "eyedropperFull": "スポイト選択",
+      "opacitySelFull": "不透明度選択",
+      "sizeSelFull": "サイズ選択",
+      "semanticSelFull": "AI 意味選択",
+      "floaterSelFull": "浮遊点選択",
+      "eyedropper": "スポイト",
+      "opacitySel": "不透明",
+      "sizeSel": "サイズ",
+      "semanticSel": "AI選択",
+      "floaterSel": "浮遊点",
+      "smart": "AI修復",
+      "smartHead": "AI 修復と生成",
+      "planeInpaintFull": "平面穴埋め",
+      "planeInpaint": "穴埋め",
+      "align": "姿勢",
+      "alignHead": "姿勢補正 (+Y)",
+      "autoAlignFull": "自動整列",
+      "autoAlign": "自動整",
+      "verticalAlignFull": "垂直補正",
+      "verticalAlign": "垂直",
+      "groundAlignFull": "水平補正",
+      "groundAlign": "水平",
+      "measure": "計測",
+      "measureHead": "空間計測",
+      "scaleCalibFull": "スケール校正",
+      "scaleCalib": "縮尺",
+      "smartMeasureFull": "スマート計測ペン",
+      "smartMeasure": "計測ペン",
+      "localSpace": "局所",
+      "localSpaceAria": "ローカル座標系を使用 (X)",
+      "boundsCenter": "中心",
+      "boundsCenterAria": "バウンディング中心を使用 (Z)"
+    },
+    "boolOps": {
+      "replace": {
+        "label": "置換",
+        "desc": "今回の選択範囲で現在の選択を置き換えます"
+      },
+      "add": {
+        "label": "追加",
+        "desc": "今回の選択を現在の選択に追加します（選択中 Shift で一時追加）"
+      },
+      "subtract": {
+        "label": "減算",
+        "desc": "現在の選択から今回の選択を差し引きます（選択中 Alt で一時減算）"
+      },
+      "intersect": {
+        "label": "交差",
+        "desc": "今回と現在の選択が重なる部分のみ残します（Shift+Alt で一時交差）"
+      }
+    },
+    "volBoolOps": {
+      "union": {
+        "label": "加算（和集合）",
+        "short": "加算"
+      },
+      "subtract": {
+        "label": "くり抜き（差集合）",
+        "short": "減算"
+      },
+      "intersect": {
+        "label": "重複（積集合）",
+        "short": "交差"
+      }
+    },
+    "displayModes": {
+      "splat": "スプラットモード",
+      "centers": "センターモード",
+      "rings": "リングモード",
+      "splatShort": "スプラット",
+      "centersShort": "センター",
+      "ringsShort": "リング"
+    },
+    "guides": {
+      "orbit": "【閲覧モード】左ドラッグ回転・右/中ドラッグ移動・ホイール拡大縮小。任意のガウス点をダブルクリックで回転中心を設定し 3D ギズモ表示 (W/E/R 切替)。右クリックでボリュームとクイックメニュー表示。",
+      "rect": "【矩形選択】左ドラッグで矩形選択（既定は置換 · Ctrl 一時追加 · Alt 一時減算 · Ctrl+Alt 交差）。右ドラッグで回転、中ドラッグで移動。",
+      "lasso": "【投げ縄選択】左ドラッグで自由な閉領域を選択（既定は置換 · Ctrl 一時追加 · Alt 一時減算）。",
+      "ellipse": "【楕円選択】左ドラッグで楕円選択（既定は置換 · Ctrl 一時追加 · Alt 一時減算）。右ドラッグで視点回転。",
+      "poly": "【多角形選択】クリックで頂点を追加し、ダブルクリック・Enter・始点クリックで閉じて確定。Esc でキャンセル。",
+      "brush": "【ブラシ選択】左ドラッグで塗りつぶし選択（既定は置換 · Ctrl 一時追加 · Alt 一時減算）。[ / ] またはスライダーで半径調整（最大 360px）。",
+      "eyedropper": "【スポイト選択】モデルを左クリックで色を取得し許容範囲内の近似色を選択（既定は置換 · Ctrl 一時追加 · Alt 一時減算）。1 キーで閲覧切替。",
+      "opacitySel": "【不透明度選択】下部の不透明度範囲をドラッグして対象をリアルタイム確認し、置換/追加/減算/交差 で確定。",
+      "sizeSel": "【サイズ選択】ガウスの最大軸・平均スケール・扁平比で巨大針状や微小ノイズを抽出し、下のブーリアンボタンで確定。",
+      "semanticSel": "【セマンティック選択】Shift + 左ドラッグで対象を囲み選択（通常左ドラッグで自由回転 · 既定は置換 · Ctrl 一時追加 · Alt 一時減算）。M キーで解除。",
+      "planeInpaint": "【平面補完】Shift + 左ドラッグで穴領域を囲みます（通常左ドラッグで視点回転）。L0 単色補完 / L1 高速幾何 / L2 AI修復に対応。J キーで解除。",
+      "floaterSel": "【浮遊点選択】3D ボクセル近傍密度から空中の孤立ノイズを検出します。下部でボクセルサイズと最大近傍数を調整して適用。",
+      "volume": "【ボリュームハンドル】カラー面ハンドルをドラッグして該当面のみ押し引きします。Shift ドラッグで対面も対称伸縮。W/E/R ギズモや右上の精密変換も使用可。有効時は他選択もボリューム内に限定されます。",
+      "plane": "【無限遮蔽平面】平面と現在カメラの間の片側のみ有効です。背面に回り込むと有効側が即座に反転します。ボリューム併用時は自動で積集合になります。",
+      "autoAlign": "【自動整列 (+Y 上向き)】地面を検出して Y=0 グリッドへ接地し、壁面を X/Z 軸へ整列させて原点上へ中央配置します。1ステップとして記録され Ctrl+Z 一度で完全に戻せます。",
+      "verticalAlign": "【垂直補正 (+Y 上向き)】実際の垂直エッジの下端・上端を順にクリックすると、2点目完了時に +Y へ滑らかに整列します。下部で「上下反転 / 元に戻す / 再選択」が可能。",
+      "groundAlign": "【水平補正 (+Y 上向き)】水平にしたい面上で一直線上にない 3点を順にクリックすると、3点目完了時に Y=0 へ滑らかに水平補正します。下部で「上下反転 / 元に戻す / 再選択」が可能。",
+      "scaleCalib": "【スケール校正】既知距離の 2点をモデル表面でクリックし、実長と単位（m/cm/mm）を入力すると全体の計測スケールを非破壊で校正します（元点群は不変）。",
+      "smartMeasure": "【スマート計測ペン】実面クリックで距離・折れ線計測（3点以上は始点ダブルクリックまたは下部ボタンで閉じて面積/体積計測）。Backspace で直前点取消、T で終了。"
+    },
+    "scene": {
+      "title": "シーンマネージャー",
+      "groupBtn": "グループ化",
+      "ungroupBtn": "解除",
+      "addVolBtn": "+ ボリューム",
+      "objectsHead": "シーンオブジェクト（Ctrl 複数選択 · ダブルクリックで改名）",
+      "clearSel": "選択解除",
+      "expand": "展開",
+      "collapse": "折畳",
+      "volumesHead": "ボリュームと遮蔽平面（ドラッグ並替 · グループ内ブーリアン）",
+      "mainCloud": "メインシーン点群",
+      "mainSceneShort": "メイン",
+      "volumeDefault": "ボリューム",
+      "objectGroupDefault": "グループ",
+      "allScene": "シーン全体",
+      "sceneObjectDefault": "オブジェクト",
+      "selectedCount": "{count} 個を選択中",
+      "objectGroupName": "オブジェクトグループ #{num}",
+      "splitObjectName": "分割オブジェクト #{num}",
+      "dupObjectName": "部分コピー #{num}",
+      "inpaintObjectName": "平面穴埋め {mode} #{num}",
+      "objectFallbackName": "オブジェクト #{id}",
+      "emptyVolumesHint": "ビュー右クリックまたは上部の「+ ボリューム」からボックス/楕円体/円柱/遮蔽平面を作成",
+      "expandObjGroup": "オブジェクトグループを展開",
+      "collapseObjGroup": "オブジェクトグループを折りたたむ",
+      "collapseObjGroupTitle": "グループを一括折りたたみ",
+      "collapseObjGroupTip": "グループ内の全シーンオブジェクトを折りたたむか展開します。",
+      "renameObjGroupPrompt": "オブジェクトグループ名を変更：",
+      "soloObjGroupTitle": "このグループをソロ表示",
+      "soloObjGroupTip": "このグループ内のガウシアンモデルのみ表示し、他を一時非表示にします。再クリックで復元。",
+      "hideObjGroupTitle": "グループを非表示",
+      "showObjGroupTitle": "グループを表示",
+      "toggleObjGroupTip": "グループ内全メンバーの表示/非表示を一括切替します。",
+      "deleteObjGroupTitle": "グループを削除",
+      "deleteObjGroupTip": "このグループと内部の全シーンオブジェクトを削除します（Ctrl+Z で取消可）。",
+      "deleteObjGroupDisabledTip": "少なくとも1つのオブジェクトを残す必要があるため、全オブジェクトを含むグループは削除できません。",
+      "renameObjectPrompt": "シーンオブジェクト名を変更：",
+      "soloObjectTitle": "このモデルをソロ表示",
+      "soloObjectTip": "このガウシアンオブジェクトのみを表示し他を隠します。再クリックで元の表示状態に戻ります。",
+      "hideObjectTitle": "モデルを非表示",
+      "showObjectTitle": "モデルを表示",
+      "toggleObjectTip": "このシーンオブジェクトのビューポート表示/非表示を切り替えます。",
+      "deleteObjectTitle": "オブジェクトを削除",
+      "deleteObjectTip": "このオブジェクトとガウス点を削除します（Ctrl+Z で取消可）。",
+      "deleteObjectDisabledTip": "少なくとも1つのシーンオブジェクトが必要です",
+      "expandVolGroup": "ボリュームグループを展開",
+      "collapseVolGroup": "ボリュームグループを折りたたむ",
+      "collapseVolGroupTitle": "ボリュームグループを一括折りたたみ",
+      "collapseVolGroupTip": "このボリュームグループ内のメンバーとネストされた子グループを折畳/展開します。",
+      "renameVolGroupPrompt": "ボリュームグループ名を変更：",
+      "disableVolGroupTitle": "ボリュームグループを無効化",
+      "enableVolGroupTitle": "ボリュームグループを有効化",
+      "enableVolGroupTip": "このボリュームグループが選択範囲を制限し半透明ブーリアン範囲表示を行うかを切り替えます（選択状態とは独立）。",
+      "toggleWireTitle": "ワイヤーフレーム表示/非表示",
+      "toggleWireTip": "ビューポート上の枠線とガイド表示のみを切り替え、有効制約状態には影響しません。",
+      "deleteVolGroupTitle": "ボリュームグループ全体を削除",
+      "deleteVolGroupTip": "このボリュームグループと全メンバーを一括削除します（元に戻す対応）。",
+      "volFlowArrow": "↓ 順次実行：{symbol} {label}",
+      "renameVolPrompt": "ボリューム名を変更：",
+      "disableVolTitle": "ボリュームを無効化",
+      "enableVolTitle": "ボリュームを有効化",
+      "enableVolTip": "このボリューム/遮蔽平面を有効にして黄色い範囲ガイドを表示するかを切り替えます（選択強調とは独立）。",
+      "hideVolTitle": "ボリュームを非表示",
+      "showVolTitle": "ボリュームを表示",
+      "toggleVolTip": "ビューポートの枠線のみ表示/非表示にし、範囲の有効状態には影響しません。",
+      "deleteVolTitle": "ボリュームを削除",
+      "deleteVolTip": "このボリュームを削除します（Ctrl+Z で取消可）。",
+      "planeScopeInfo": "無限遮蔽平面：平面と現在カメラの間のみ有効（背面へ回ると瞬時反転）",
+      "axisBtn": "ギズモ",
+      "toggleAxisTitle": "3D 変換ギズモを切替",
+      "toggleAxisTip": "このボリュームの 3D 移動/回転/拡大縮小ギズモを表示・非表示にします。オフ時は6面カラーハンドルの押し引きに集中できます。",
+      "copySuffix": " コピー",
+      "ctxDelete": "削除",
+      "ctxGroup": "グループ化",
+      "ctxMerge": "結合",
+      "ctxUngroup": "グループ解除",
+      "mergedVolumeName": "結合ボリューム #{num}"
+    },
+    "transform": {
+      "title": "トランスフォーム（+Y 上向き）",
+      "position": "位置",
+      "rotation": "回転",
+      "scale": "拡大縮小",
+      "pivotEditAria": "ピボット原点を編集",
+      "resetPos": "位置をリセット",
+      "resetRot": "回転をリセット",
+      "resetScale": "拡大縮小をリセット",
+      "resetAll": "変換をリセット",
+      "scaleLockAria": "縦横比をロック",
+      "modeTranslate": "移動",
+      "modeRotate": "回転",
+      "modeScale": "拡大縮小"
+    },
+    "color": {
+      "title": "カラーグレーディング",
+      "scopeDefault": "現在のオブジェクト",
+      "scopeSelection": "選択範囲 ({count} 点)",
+      "scopeObjects": "選択パーツ ({count} オブジェクト)",
+      "levelsInTitle": "三角スライダーで入力レベル（黒点 / ガンマ / 白点）を調整、ダブルクリックでリセット",
+      "lvlInBlackAria": "入力黒レベル",
+      "lvlInMidAria": "入力中間調ガンマ",
+      "lvlInWhiteAria": "入力白レベル",
+      "outputLevels": "出力レベル",
+      "levelsOutTitle": "左右スライダーで出力レベルを調整、ダブルクリックでリセット",
+      "lvlOutBlackAria": "出力黒レベル",
+      "lvlOutWhiteAria": "出力白レベル",
+      "compareHold": "長押し比較",
+      "compareSplit": "分割",
+      "resetAll": "全リセット",
+      "secLight": "ライト",
+      "eyeLightAria": "明るさ補正のオン/オフ",
+      "secColor": "カラー",
+      "eyeColorAria": "カラー補正のオン/オフ",
+      "whiteBalance": "ホワイトバランス",
+      "wbEyedropperAria": "ホワイトバランススポイト",
+      "wbCustom": "カスタム",
+      "secHsl": "HSL ミキサー",
+      "eyeHslAria": "HSL ミキサーのオン/オフ",
+      "hslEyedropper": "色抽出調整",
+      "chanHue": "色相",
+      "chanSatShort": "彩度",
+      "chanSat": "彩度",
+      "chanLight": "輝度",
+      "pickRange": "抽出範囲",
+      "rangePreview": "範囲プレビュー",
+      "resetShort": "リセット",
+      "eyeLutAria": "3D LUT のオン/オフ",
+      "lutIntensity": "適用量",
+      "lutDefault": "既定（3D LUT なし）",
+      "applyBake": "適用（SH へベイク）",
+      "dblClickReset": "ダブルクリックで既定値に戻す",
+      "clickEditVal": "クリックして数値を直接入力",
+      "sliders": {
+        "exposure": "露光量",
+        "contrast": "コントラスト",
+        "highlights": "ハイライト",
+        "shadows": "シャドウ",
+        "whites": "白レベル",
+        "blacks": "黒レベル",
+        "transparency": "透明度",
+        "temperature": "色温度",
+        "tintShift": "色かぶり",
+        "vibrance": "自然な彩度",
+        "saturation": "彩度",
+        "tolerance": "許容値",
+        "colorRange": "色域",
+        "pcHue": "抽出色相",
+        "pcSat": "抽出彩度",
+        "pcLight": "抽出輝度",
+        "hue": "色相",
+        "light": "輝度"
+      },
+      "hslBands": {
+        "red": "赤",
+        "orange": "橙",
+        "yellow": "黄",
+        "green": "緑",
+        "aqua": "水",
+        "blue": "青",
+        "purple": "紫",
+        "magenta": "マゼンタ"
+      },
+      "wbPresets": {
+        "asis": "撮影時",
+        "daylight": "昼光",
+        "cloudy": "曇天",
+        "shade": "日陰",
+        "tungsten": "電球",
+        "fluorescent": "蛍光灯"
+      },
+      "histZones": {
+        "blacks": "黒レベル",
+        "shadows": "シャドウ",
+        "exposure": "露光量",
+        "highlights": "ハイライト",
+        "whites": "白レベル"
+      },
+      "pickedColorFallback": "抽出色",
+      "wbHintHover": "無彩色のグレー/白領域をクリックしてホワイトバランスを補正",
+      "hslHintHover": "{band} · ドラッグして{chan}を調整",
+      "wbLabel": "ホワイトバランス"
+    },
+    "history": {
+      "title": "操作履歴",
+      "initialState": "初期状態",
+      "stepFallback": "操作 #{step}",
+      "lastOpStatus": "直前の操作：{label}（履歴 {count}/{max}）",
+      "transformMode": "変換 ({mode})",
+      "preciseTransform": "数値変換",
+      "deleteObject": "オブジェクト削除 ({name})",
+      "deleteObjectGroup": "グループ削除 ({name})",
+      "reorderVolumes": "ボリューム階層・順序を変更",
+      "reorderVolumesDrag": "ドラッグでボリューム順序変更",
+      "reorderVolGroupDrag": "ドラッグでボリュームグループ変更",
+      "changeBoolOp": "ブーリアン演算変更 ({op})",
+      "enableNode": "{name} を有効化",
+      "disableNode": "{name} を無効化",
+      "deleteVolGroup": "ボリュームグループ削除 ({name})",
+      "deleteVol": "{name} を削除",
+      "createVol": "{name} を作成",
+      "dragVolHandles": "ボリューム変形 ({name})",
+      "groupVolumes": "ボリュームをグループ化 ({name})",
+      "ungroupVolumes": "ボリュームグループ解除 ({name})",
+      "volumeSelect": "ボリューム{op}",
+      "flagDelta": "{label} ({count} 点)",
+      "selectAll": "すべて選択",
+      "clearSelAutoBake": "選択解除時の自動色調ベイク",
+      "deselectAll": "選択解除",
+      "invertSel": "選択反転",
+      "softDelete": "ソフト削除",
+      "isolate": "分離表示",
+      "hide": "一時非表示",
+      "showAll": "すべて表示",
+      "splitObject": "オブジェクト分割 ({name}, {count} 点)",
+      "dupObject": "部分コピー作成 ({name}, {count} 点)",
+      "switchToolAutoBake": "ツール切替時の自動色調ベイク",
+      "eyedropperSel": "スポイト選択 ({space})",
+      "opacitySel": "不透明度選択",
+      "sizeSel": "サイズ選択",
+      "floaterSel": "浮遊点選択",
+      "semantic2dDepth": "2D セマンティック深度 ({depth})",
+      "semantic2d": "2D セマンティック",
+      "semantic3d": "3D セマンティック ({views}視点)",
+      "planeInpaint": "平面穴埋め {mode} (+{count} 点)",
+      "autoAlign": "自動整列 (+Y 上向き)",
+      "opencvZup": "OpenCV (-Y) → +Y 上向き",
+      "flip180": "上下反転 (180°)",
+      "verticalAlign": "垂直補正 (+Y 上向き)",
+      "verticalFlip": "垂直補正 · 上下反転 (180°)",
+      "groundAlign": "水平補正 (+Y 上向き)",
+      "groundFlip": "水平補正 · 上下反転 (180°)",
+      "colorBakeDefault": "色調ベイク (SH)",
+      "colorCloseAutoBake": "色調パネル終了時の自動ベイク",
+      "colorApplyBake": "色調補正を SH へベイク",
+      "colorSaveAutoBake": "保存前の自動色調ベイク",
+      "selectOp": "選択{op}",
+      "restoreTransform": "変換を復元",
+      "restoreVolumes": "ボリュームを復元",
+      "restoreDelete": "削除を復元",
+      "restoreColor": "色調を復元",
+      "lassoTest": "投げ縄テスト",
+      "depthAdjust2d": "2D 深度調整",
+      "colorStep": "カラー調整",
+      "colorStepDetail": "カラー：{detail}",
+      "deleteObjectsMulti": "{count} 個のシーンオブジェクトを削除",
+      "deleteVolsMulti": "{count} 個のボリュームを削除",
+      "dupMoveObj": "{name} を複製して移動",
+      "dupMoveVol": "ボリューム {name} を複製して移動",
+      "groupColor": "カラー調整",
+      "groupCountBadge": "{count} 回",
+      "groupEditVis": "表示・削除",
+      "groupRotate": "回転",
+      "groupScale": "スケール",
+      "groupSelect": "選択調整",
+      "groupTransform": "トランスフォーム",
+      "groupTranslate": "移動",
+      "groupVolDrag": "ボリュームハンドル調整",
+      "mergeObjects": "{count} 個のオブジェクトを {name} に結合",
+      "mergeVolumes": "ボリュームを結合：{name}"
+    },
+    "contextMenu": {
+      "recallTool": "↺ 前回ツールへ戻る：{ico} {label}",
+      "undo": "↶ 元に戻す",
+      "redo": "↷ やり直し",
+      "secQuick": "クイック操作",
+      "cycleMode": "表示モード切替（センター/スプラット/リング）",
+      "colorPanel": "プロ色調補正パネル",
+      "fitView": "主体にフォーカス",
+      "autoAlign": "自動整列 (+Y 上向き)",
+      "secVolumes": "ボリュームと遮蔽平面",
+      "volBox": "+ ボックスを作成（立方体）",
+      "volEllipsoid": "+ 楕円体を作成",
+      "volCylinder": "+ 円柱を作成（+Y 軸）",
+      "volPlane": "+ 遮蔽平面を作成（無限大）",
+      "secSelection": "選択とオブジェクト",
+      "isolate": "選択点のみ表示",
+      "hide": "選択点を一時非表示",
+      "showAll": "すべて表示",
+      "split": "別オブジェクトへ分割",
+      "dup": "部分コピーを作成",
+      "delete": "選択点をソフト削除"
+    },
+    "statusBar": {
+      "coordBadge": "+Y 上向き",
+      "ready": "準備完了",
+      "totalPoints": "総点数",
+      "selectedPoints": "選択点数",
+      "deletedPoints": "削除点数",
+      "totalWithRendered": "{total}（描画 {rendered}）"
+    },
+    "contextBar": {
+      "selectionFallback": "選択",
+      "brushRadius": "半径",
+      "onlyVisible": "可視点のみ",
+      "onlyVisibleTip": "GPU リアルタイム ID 深度ピッキングにより、現在カメラから遮蔽されていない手前表面のガウス点のみを選択します。",
+      "wholeGaussian": "ガウス全体",
+      "wholeGaussianTip": "ガウス楕円体の一部でも選択範囲に入れば選択します。判定境界は「リングモード」の外枠輪郭と完全に一致します。",
+      "tolerance": "許容値",
+      "colorSpace": "色空間モード",
+      "colorSpaceRgb": "RGB ユークリッド許容",
+      "colorSpaceHsv": "HSV 色相/彩度許容",
+      "minBound": "下限",
+      "maxBound": "上限",
+      "minVal": "最小",
+      "maxVal": "最大",
+      "sizeMetric": "サイズ計測基準",
+      "sizeMetricMax": "最大主軸スケール",
+      "sizeMetricMean": "3軸平均スケール",
+      "sizeMetricRatio": "針状縦横比 (最大/最小)",
+      "semModeAuto": "自動",
+      "semModeAutoTip": "初視点分割後、3D 共面連続性と輪郭深度段差から 2D（平面局所）か 3D（立体物体・優先）かを自動判定します。",
+      "semMode2d": "2D",
+      "semMode2dTip": "2D 平面分割に固定（表面選択と可変深度/無限貫通に対応）。前回の選択枠があれば即座に再計算します。",
+      "semMode3d": "3D",
+      "semMode3dTip": "3D 多視点立体物体分割に固定（水平全周＋上半球補完＋並列遮蔽フィルタ）。前回の選択枠があれば即座に再計算します。",
+      "semModeTitle": "分割モード：{mode}",
+      "depthSurface": "表面",
+      "depthThrough": "貫通",
+      "depthInfinite": "無限深度",
+      "depthInfiniteShort": "無限貫通",
+      "voxelSize": "ボクセルサイズ",
+      "maxNeighbors": "最大近傍数",
+      "maxOpacityFilter": "不透明度のみ対象 ≤",
+      "advancedUp": "詳細設定 ▴",
+      "inpaintL1": "L1 高速幾何",
+      "inpaintL1Tip": "AI モデル不要の高速オフライン穴埋め（<0.5秒）：RANSAC 支持平面フィッティング＋扁平平面ガウス＋近傍テクスチャ合成。無地の机や壁向け。",
+      "inpaintL2": "L2 AI 修復",
+      "inpaintL2Tip": "既定推奨：LaMa 非拡散フーリエテクスチャ修復＋精密支持平面逆投影により、木目・タイル目地・模様を高品質に繋ぎます。",
+      "edgeFeather": "境界ぼかし",
+      "downloadL2": "L2 モデル取得",
+      "downloadL2Title": "L2 モデルを一括ダウンロード",
+      "downloadL2Tip": "最適ミラーを自動選択して LaMa ONNX（約 198 MB）をダウンロードします。取得前でも L1 はすぐ使用できます。",
+      "reuseLastHole": "前回穴を再利用",
+      "verticalDone": "垂直補正が完了しました (+Y 上向き)",
+      "verticalStep0": "選択 0/2 点：垂直エッジの下端をクリックしてください（2点目で自動整列）",
+      "verticalStep1": "選択 1/2 点：垂直エッジの上端をクリックしてください（即座に滑らか整列）",
+      "groundDone": "水平補正が完了しました (Y=0 · +Y 上向き)",
+      "groundStep0": "選択 0/3 点：水平にする面上で 1点目をクリック（3点目で自動整列）",
+      "groundStep1": "選択 1/3 点：同一面上で 2点目をクリック",
+      "groundStep2": "選択 2/3 点：一直線上にない 3点目をクリックして水平補正",
+      "flipVertical": "上下反転",
+      "undoShort": "戻す",
+      "repick": "再選択",
+      "repickPoints": "点を再選択",
+      "calibTagCalibrated": "校正済 (1u={factor}m · {unit})",
+      "calibTagDefault": "既定 1:1 ({unit})",
+      "calibStep0": "{tag} · 既知長さの 1点目をクリックしてください",
+      "calibStep1": "{tag} · 始点選択済、2点目をクリックしてください",
+      "calibStep2": "{tag} · 2点選択済、上部で実長を確定してください",
+      "resetScale1to1": "1:1 にリセット",
+      "toMeasurePen": "計測ペンへ (T)",
+      "measureBasePick": "3点基準面再設定：{count}/3 個の参照点を選択済（Esc で取消）",
+      "measureVolumeMode": "体積モード ({count} 点) · 頂点/基準面ひし形/最高点黄球をドラッグ可",
+      "measureAreaMode": "面積モード ({count} 点) · 境界頂点をドラッグまたは「自動スナップ」を実行",
+      "measureStep0": "実体表面をクリックして打点（2点距離 · 3点+折れ線 · 閉合で面積/体積）",
+      "measureStep1": "始点選択済 · 2点目をクリックして距離/高低差/勾配を算出（Backspace で取消）",
+      "measureStep2": "距離/高低差/勾配を算出済 · 続けてクリックで折れ線計測（Backspace で取消）",
+      "measureStepPoly": "折れ線 {count} 点 · 始点をダブルクリックまたは右の「閉じる」で面積/体積へ",
+      "closePolygon": "多角形を閉じる",
+      "undoLastPt": "直前の点を戻す",
+      "cancelBasePick": "基準面再設定を取消",
+      "remeasure": "再計測",
+      "scaleCalibFactor": "スケール ×{factor}",
+      "eyedropSwatchTitle": "取得したターゲット色",
+      "eyedropSwatchTipEmpty": "スポイトで取得した基準色を表示します（未取得）。\nモデル表面を左クリックして色を取得し、許容値内の近似色ガウス点を選択します。",
+      "eyedropSwatchTipPicked": "現在の基準色：{hex}（RGB {r}, {g}, {b}）。\nモデル左クリックで再取得、右側の許容値スライダーで一致範囲を調整できます。",
+      "voxelSizeTip": "空間ボクセル格子の1辺長（シーン単位）：小さいほど細かい孤立点向け、大きいほど本体から離れた浮遊ノイズ塊も検出します。",
+      "maxNeighborsTip": "周囲 3×3×3 ボクセル内で許容する最大近傍点数：近傍点数がこの値以下の点を孤立浮遊点として選択します。",
+      "inpaintL0": "L0 単色",
+      "inpaintL0Tip": "モデル不要の高速単色補完：近似平面上に指定単色の扁平ガウスを敷き詰めます。クリックで色相環パネルが上に開きます。",
+      "inpaintL0ColorTitle": "L0 単色補完カラー",
+      "inpaintL0ColorTip": "クリックして色相環・カラーパネルを開きます（スポイト取得と最近使用した色に対応）。"
+    },
+    "modals": {
+      "exportImgTitle": "現在のビュー画像を書き出し",
+      "resCurrent": "現在のウィンドウ",
+      "widthPx": "幅 (px)",
+      "heightPx": "高さ (px)",
+      "pngTransparent": "PNG 透過背景（ロスレスストレート Alpha）",
+      "hideHelpers": "補助要素を自動非表示（グリッド、ボリューム枠・ハンドル、選択強調、座標軸など）",
+      "confirmExportPng": "レンダリングして PNG 出力",
+      "overwriteTitle": "上書き保存（メインワークフローへ反映）",
+      "overwriteNoticeHtml": "<strong>非破壊編集について：</strong>現在のワークフロー内のファイルのみを新結果で置換し、元のソースファイルは変更しません。ソフト削除されたガウス点はすべて自動除外され、最終エクスポート時にメイン画面の設定で再エンコードされます。",
+      "overwriteSelectLabel": "ワークフローへ出力するシーンオブジェクトを選択（複数選択時は既定で1ファイルに統合）：",
+      "overwriteObjItem": "{name} ({count} 点)",
+      "overwriteConfirm": "ワークフローファイルを置換",
+      "compatProtectUnsupported": "互換保護：{warnings} 確定保存すると元のレシピが保持され、フィールドは黙って上書き・破棄されません。",
+      "compatProtectV4": "v4 互換保護：{warnings}",
+      "saveAsTitle": "別名保存（指定フォルダーへ直接書き出し）",
+      "saveAsModeLabel": "複数オブジェクト出力モード（ソフト削除点は自動除外済み）：",
+      "saveAsMerged": "すべて統合して出力（単一ファイル）",
+      "saveAsPerObject": "オブジェクトごとに個別出力（各独立ファイル）",
+      "saveAsPerGroup": "グループごとに個別出力（グループ内統合・グループ間分離）",
+      "saveAsFormatLabel": "出力エンコード形式：",
+      "fmtPly": "標準 PLY（完全な SH をロスレス保持）",
+      "fmtCompressedPly": "圧縮 PLY",
+      "fmtSog": "SOG（SuperSplat 高圧縮パック）",
+      "fmtSpz": "SPZ（軽量クロスプラットフォーム圧縮）",
+      "fmtHtml": "スタンドアロン対話 HTML",
+      "saveAsUseMainParams": "メイン画面の現在のエンコード設定を引き継ぐ（保持率・SH 反復・圧縮強度・デバイス等）",
+      "saveAsSummary": "メイン設定：保持 {keep}% · 反復 {iterations} · デバイス {device} · SOG v{sogVersion} · SPZ v{spzVersion}",
+      "saveAsSummaryDefault": "メイン設定：保持 100% · 既定エンコーダー構成",
+      "saveAsNoticeHtml": "<strong>データ消失防止保護：</strong>出力前に復旧チェックポイントを自動保存します。再エンコードが中断・失敗しても編集データと履歴は一切失われず、そのまま再試行できます。",
+      "saveAsConfirm": "フォルダーを選択して書き出し…",
+      "saveAsNoActiveObjects": "出力可能な非空オブジェクトがありません",
+      "saveAsWaitingFolder": "出力先フォルダーの選択とエンコード準備を待機中…",
+      "saveAsProgress": "エンコード出力中 ({percent}%) · {detail}",
+      "saveAsDone": "書き出し完了",
+      "saveAsFailed": "書き出し失敗",
+      "infoTitle": "情報",
+      "crashTitle": "パフォーマンス低下による自動省電力保護",
+      "crashHeading": "描画負荷過多または VRAM 不足を検出し、パフォーマンス節約のため「センターモード」へ自動切替しました。",
+      "crashDesc": "フリーズを防ぐため、スマート抽出・プロ色調補正・高負荷表示モードを一時凍結し、基本選択・ソフト削除・ボリューム・変換・姿勢補正のみを残しています。編集履歴は完全に保持されています。",
+      "crashTelemetryLabel": "発生時のパフォーマンス監視データ：",
+      "crashTelemetryFmt": "発生原因：{reason}\n{telemetry}",
+      "crashContinue": "センターモードで編集を続行"
+    },
+    "shortcuts": {
+      "title": "ショートカット一覧（各ボタンにも表示）",
+      "gizmo": "移動 / 回転 / 拡大縮小ギズモ",
+      "spaceBounds": "ローカル座標系 / バウンズ中心を使用",
+      "undoRedo": "元に戻す / やり直し",
+      "softDelete": "選択ガウス点をソフト削除",
+      "boolMods": "矩形/投げ縄の一時 追加 / 減算 / 交差",
+      "basicTools": "閲覧 / 矩形 / 投げ縄 / 楕円 / 多角形 / ブラシ",
+      "brushRadius": "ブラシ半径の拡大・縮小",
+      "filterTools": "スポイト / 不透明度 / サイズ / AI選択 / 浮遊点",
+      "alignTools": "自動整列 / 垂直補正 / 水平補正",
+      "measureTools": "スマート計測ペン / スケール校正（打点中 Backspace で1点戻す）",
+      "ctrlDragTools": "AI 意味枠選択 / 平面穴埋め枠描画（閲覧中も利用可）",
+      "ctrlLeftDrag": "Ctrl + 左ドラッグ",
+      "displayMode": "スプラット / センター / リング 表示モード切替",
+      "cameraMode": "オービット / フライ カメラ切替",
+      "colorPanel": "プロ色調補正パネル開閉",
+      "compareColor": "長押しで元画像比較 / 分割比較",
+      "visibility": "分離表示 / 一時非表示 / すべて表示",
+      "selOps": "すべて選択 / 選択解除 / 選択反転",
+      "splitDup": "オブジェクト分割 / 部分コピー作成",
+      "groupUngroup": "グループ化 / グループ解除",
+      "viewHelpers": "無限グリッド / 境界枠 / 透視平行 / フォーカス",
+      "exportView": "現在のビュー画像を書き出し",
+      "saveOps": "上書き保存（非破壊）/ 別名保存で書き出し",
+      "shiftLeftDrag": "Shift + 左ドラッグ"
+    },
+    "credits": {
+      "title": "オープンソース謝辞と著作権表示",
+      "resplat": "リングモード描画設定・輪郭境界、色調補正（8バンド HSL / 3D LUT / SH ベイク）、特殊選択、ローカル SAM 2 セマンティック分割、ビット精度 PNG 出力、ダーク UI レイアウト設計を参考にしています。",
+      "supersplat": "ReSplat 上流の 3D ガウシアンエディター設計範式および球面調和（SH Band 1–3）回転行列アルゴリズム（Andrew Willmott sh-lib ベース）。",
+      "spirula": "6面押し引きボリュームハンドル操作（Shift 対称伸縮）、+Y 上向き自動地面・壁面整列アルゴリズム、選択ワークフロー設計を参考にしています（クリーンルーム再実装）。",
+      "splatTransform": "コア 3D ガウシアンエンコード/デコード、SOG/SPZ/PLY/HTML 形式変換および間引きエンジン。",
+      "gse": "不透明度選択・サイズ選択ツールの操作設計参考。"
+    },
+    "tips": {
+      "saveOverwrite": {
+        "title": "上書き保存（非破壊）",
+        "tip": "メインワークフロー上の対象ファイルのみを更新し、ディスク上の元ソースファイルは変更しません。最終出力時に一括再エンコードされます。"
+      },
+      "saveAs": {
+        "title": "別名保存で書き出し",
+        "tip": "現在の編集結果を指定フォルダーへ直接書き出します。一括統合・オブジェクト別・グループ別出力とメイン画面エンコード設定に対応。"
+      },
+      "menuBounds": {
+        "title": "モデル境界コーナー枠",
+        "tip": "現在のガウシアンモデルの 3D 外接ボックス8隅に細い白枠を表示し、空間範囲を素早く把握できます。"
+      },
+      "menuGrid": {
+        "title": "無限延長地面グリッド",
+        "tip": "+Y 上向き座標系の Y=0 水平面にアンチエイリアス対応の無限基準グリッド（赤 X / 青 Z 原点軸付き）を描画します。"
+      },
+      "colorPanel": {
+        "title": "プロ色調補正パネル",
+        "tip": "未選択時は選択オブジェクト全体、選択時は選択範囲のみ色調補正します。ヒストグラム、8バンド HSL、3D LUT、SH ベイクに対応。"
+      },
+      "isolate": {
+        "title": "分離表示",
+        "tip": "現在選択中のガウス点のみを表示し、その他を一時的に隠します。"
+      },
+      "hide": {
+        "title": "一時非表示",
+        "tip": "現在選択中のガウス点を隠し、内部や背後の構造を編集しやすくします。"
+      },
+      "showAll": {
+        "title": "すべて表示",
+        "tip": "すべての一時非表示・分離表示を解除し、未削除の全ガウス点を再表示します。"
+      },
+      "boundsTop": {
+        "title": "ガウシアン境界コーナー枠",
+        "tip": "モデル境界の8隅 L 字枠線を切り替え、点群の 3D バウンディング範囲を明示します。"
+      },
+      "gridTop": {
+        "title": "無限地面グリッド",
+        "tip": "Y=0 平面の無限基準グリッドと原点 X/Z 軸の表示を切り替えます。"
+      },
+      "exportImgTop": {
+        "title": "現在のビュー画像を書き出し",
+        "tip": "任意解像度で現在のカメラビューを PNG 出力します（透過背景・補助線自動非表示に対応）。"
+      },
+      "displayMode": {
+        "title": "表示モード",
+        "tip": "全点ロードして個々のガウス点を精密制御：スプラット（実 3D ガウス）、センター（ひし形中心で高速配置確認）、リング（外周輪郭で浮遊ノイズを特定）。"
+      },
+      "camOrbit": {
+        "title": "オービットカメラ",
+        "tip": "注視点を中心に回転観察：左ドラッグ回転・右/中ドラッグ移動・ホイール拡大縮小。任意の点をダブルクリックで新中心に設定し 3D ギズモを呼び出します。"
+      },
+      "camFly": {
+        "title": "フライカメラ",
+        "tip": "一人称自由移動カメラ（広大な屋内外実写シーン向け）：左ドラッグで見回し、ホイールで前後、WASD 移動・Q/E で +Y 昇降（Shift 加速 / Alt 低速精密）。"
+      },
+      "flySpeed": {
+        "title": "フライ移動速度",
+        "tip": "読込モデルのサイズに応じて既定速度・最大速度を自動較正済みです。スライダーで調整、数値ダブルクリックで推奨値に戻ります（飛行中も Shift で 2.8× 加速 / Alt で 0.3× 低速）。"
+      },
+      "orbit": {
+        "title": "閲覧とオブジェクト選択",
+        "tip": "左ドラッグ回転・右ドラッグ移動。ガウス点をダブルクリックで回転中心設定と 3D ギズモ表示。"
+      },
+      "rect": {
+        "title": "矩形選択",
+        "tip": "矩形ドラッグでガウス点を選択（既定置換 · Ctrl 一時追加 / Alt 一時減算）。"
+      },
+      "lasso": {
+        "title": "投げ縄選択",
+        "tip": "自由な閉じた輪郭を描いて領域選択します。"
+      },
+      "ellipse": {
+        "title": "楕円選択",
+        "tip": "ドラッグして楕円形の選択範囲を描画します。"
+      },
+      "poly": {
+        "title": "多角形選択",
+        "tip": "クリックで頂点を打ち、ダブルクリックまたは Enter で閉じて確定します。"
+      },
+      "brush": {
+        "title": "ブラシ選択",
+        "tip": "ドラッグでなぞって選択し、[ / ] でブラシ半径を変更します。"
+      },
+      "eyedropper": {
+        "title": "スポイト選択",
+        "tip": "色を抽出して RGB/HSV 許容値に基づき近似色のガウス点を選択します。"
+      },
+      "opacitySel": {
+        "title": "不透明度選択",
+        "tip": "不透明度範囲で半透明の霧状ノイズや残像を抽出します。"
+      },
+      "sizeSel": {
+        "title": "サイズ選択",
+        "tip": "ガウス軸長や針状縦横比で異常に巨大なガウス点を抽出します。"
+      },
+      "semanticSel": {
+        "title": "AI 意味選択",
+        "tip": "Shift + 左ドラッグで対象を囲み、2D/3D セマンティック分割を実行（Ctrl 一時追加 / Alt 一時減算、通常左ドラッグで視点回転）。"
+      },
+      "floaterSel": {
+        "title": "浮遊点選択",
+        "tip": "3D ボクセル近傍密度から空中の孤立ノイズ点を検出します。"
+      },
+      "autoAlign": {
+        "title": "自動整列 (+Y 上向き)",
+        "tip": "地面を認識して Y=0 へ接地し、壁面を X/Z へ整列させ原点上へ中央配置します（1手で取消可）。"
+      },
+      "verticalAlign": {
+        "title": "垂直補正",
+        "tip": "垂直エッジの下端・上端を順にクリックすると即座に +Y へ滑らか整列します。反転・取消対応。"
+      },
+      "groundAlign": {
+        "title": "水平補正",
+        "tip": "水平にしたい面上で 3点を順にクリックすると即座に Y=0 へ滑らか整列します。反転・取消対応。"
+      },
+      "scaleCalib": {
+        "title": "スケール校正",
+        "tip": "既知距離の 2点をクリックして実長（m/cm/mm）を入力すると、非破壊で全体の計測比率を換算します。"
+      },
+      "smartMeasure": {
+        "title": "スマート計測ペン",
+        "tip": "2点距離/高低差/勾配 · 3点以上折れ線 · 閉合で面積/体積計測（自動スナップ＋4種類の体積検証ビュー）。"
+      },
+      "flyoutFilter": {
+        "title": "スマート抽出サブメニュー",
+        "tip": "スポイト(Y)、不透明度(O)、サイズ(K)、AI選択(M)、浮遊点(F) などの高度抽出ツールを格納。"
+      },
+      "flyoutAlign": {
+        "title": "姿勢補正サブメニュー",
+        "tip": "自動整列(A)、垂直補正(U)、水平補正(L) を格納。"
+      },
+      "flyoutMeasure": {
+        "title": "空間計測サブメニュー",
+        "tip": "スケール校正(Shift+T) とスマート計測ペン(T) を格納。"
+      },
+      "undo": {
+        "title": "元に戻す",
+        "tip": "直前の操作を非破壊・差分方式で元に戻します。"
+      },
+      "redo": {
+        "title": "やり直し",
+        "tip": "取り消した操作をやり直します。"
+      },
+      "gizmoTranslate": {
+        "title": "移動ギズモ",
+        "tip": "3D ギズモで選択オブジェクトまたはボリュームを X/Y/Z 軸に沿って精密移動します。"
+      },
+      "gizmoRotate": {
+        "title": "回転ギズモ",
+        "tip": "中心点を基準に選択オブジェクトまたはボリュームを回転します。"
+      },
+      "gizmoScale": {
+        "title": "拡大縮小ギズモ",
+        "tip": "軸方向または均等に選択オブジェクトまたはボリュームを拡縮します。"
+      },
+      "flyoutSmart": {
+        "title": "AI ツール",
+        "tip": "スマート修復・生成ツールを展開（平面補完 L0 単色 / L1 / L2）。"
+      },
+      "planeInpaint": {
+        "title": "平面穴埋め",
+        "tip": "Shift + 左ドラッグで平面の穴を囲んで補完（通常左ドラッグで視点回転）。L0 単色 / L1 / L2 に対応。"
+      },
+      "localSpace": {
+        "title": "ローカル座標系を使用",
+        "tip": "3D 変換ギズモの向きをローカル座標系とワールド座標系 (+Y 上向き) で切り替えます。"
+      },
+      "boundsCenter": {
+        "title": "バウンディング中心を使用",
+        "tip": "オン時はギズモが選択モデル外接ボックスの幾何中心へ吸着します。オフで元位置に戻り、閲覧時のダブルクリック中心変更や原点編集時は自動オフになります。"
+      },
+      "pivotEdit": {
+        "title": "座標原点（ピボット）を編集",
+        "tip": "オン時は移動矢印に切り替わりモデルを動かさずピボット位置のみを調整します。オフ後は新ピボット基準で回転/拡縮/移動します。"
+      },
+      "scaleLock": {
+        "title": "均等拡大縮小ロック",
+        "tip": "ロックすると X/Y/Z いずれかの拡大率変更が3軸すべてに均等連動します。"
+      },
+      "resetPos": {
+        "title": "位置をリセット",
+        "tip": "モデルは (0, 0, 0)、ボリュームは作成時の初期位置に戻します（元に戻す対応）。"
+      },
+      "resetRot": {
+        "title": "回転をリセット",
+        "tip": "モデルは (0, 0, 0)、ボリュームは作成時の初期姿勢に戻します（元に戻す対応）。"
+      },
+      "resetScale": {
+        "title": "拡大縮小をリセット",
+        "tip": "モデルは (1, 1, 1)、ボリュームは作成時の初期サイズに戻します（元に戻す対応）。"
+      },
+      "clearObjSel": {
+        "title": "オブジェクト選択を解除",
+        "tip": "現在のモデル選択を解除し、外枠バウンディングがシーン全体の有効点を囲む状態に戻します。"
+      },
+      "expandObjects": {
+        "title": "オブジェクト一覧を一括展開/折畳",
+        "tip": "狭い枠内でスクロールせずに全シーンオブジェクト一覧を展開します。"
+      },
+      "expandVolumes": {
+        "title": "ボリューム一覧を一括展開/折畳",
+        "tip": "すべてのボリュームとネストグループ一覧を展開します。"
+      },
+      "historyToggle": {
+        "title": "履歴を展開/折りたたむ",
+        "tip": "既定では直近 3ステップを表示。任意ステップをクリックして非破壊ジャンプでき、新しい変更時のみ分岐後を上書きします。"
+      },
+      "groupBtn": {
+        "title": "グループ化",
+        "tip": "複数選択したオブジェクトまたはボリューム/グループをまとめます (Ctrl+G)。ボリュームグループは入れ子と上から順のブーリアン演算に対応。"
+      },
+      "ungroupBtn": {
+        "title": "グループ解除",
+        "tip": "現在選択中のオブジェクトグループまたはボリュームグループを解除します。"
+      },
+      "addVolBtn": {
+        "title": "ボリューム / 遮蔽平面を作成",
+        "tip": "ボックス、楕円体、円柱、無限遮蔽平面を作成できます。"
+      },
+      "transformCard": {
+        "title": "精密変換 (+Y 上向き)",
+        "tip": "現在選択中のオブジェクト・ボリューム・グループの位置、回転角、スケールを数値で精密調整します。"
+      },
+      "histogram": {
+        "title": "RGB・輝度ヒストグラム",
+        "tip": "現在対象範囲の色と露出分布をリアルタイム表示します。左上の青点は黒つぶれ、右上の赤点は白飛び警告です。"
+      },
+      "compareHold": {
+        "title": "長押しで元画像比較",
+        "tip": "ボタンまたはバックスラッシュ \\ キーを押し続けると補正前の元画像を表示し、離すと補正後へ戻ります。"
+      },
+      "compareSplit": {
+        "title": "分割比較",
+        "tip": "左右にドラッグできるピクセル単位の分割比較（左：元画像 / 右：補正後）を有効にします。"
+      },
+      "colorApply": {
+        "title": "適用して SH へベイク",
+        "tip": "現在のリアルタイム色調補正を選択範囲またはオブジェクトの球面調和係数 (SH) に焼き込み、1ステップの履歴として記録します。"
+      },
+      "imgTransparent": {
+        "title": "PNG 透過背景",
+        "tip": "ロスレスのストレート Alpha エンコードで透過背景 PNG を出力し、映像・グラフィック合成に活用できます。"
+      },
+      "imgHideHelpers": {
+        "title": "補助要素を自動非表示",
+        "tip": "スクリーンショット描画時にグリッド線、ボリューム枠・ハンドル、座標軸、選択ハイライトを自動で隠します。"
+      }
+    },
+    "measure": {
+      "cardAria": "スマート計測結果",
+      "calibCardAria": "スケール校正",
+      "cardTitle": "スマート計測",
+      "dragTitle": "タイトルバーをドラッグしてパネルを自由に移動",
+      "copyBtn": "コピー",
+      "copiedBtn": "コピー済",
+      "copyTip": "計測結果を一括コピー",
+      "pinBtn": "ピン留め",
+      "pinTip": "現在の計測結果を固定して新規計測を開始",
+      "clearBtn": "クリア",
+      "clearTip": "現在の計測をクリア",
+      "vizStandard": {
+        "label": "標準",
+        "tip": "ガウシアン点群と計測オーバーレイを通常表示"
+      },
+      "vizTranslucent": {
+        "label": "半透明透過",
+        "tip": "多角形内のガウス球不透明度を下げ、基準底面と最高点ポールを透過確認"
+      },
+      "vizHeatmap": {
+        "label": "高さヒートマップ",
+        "tip": "基準底面からの高さに応じて青→赤グラデーションで着色し、上空の浮遊ノイズを一目で判別"
+      },
+      "vizGrid": {
+        "label": "メッシュ比較",
+        "tip": "内部点群を淡色化し、2.5D 表面メッシュと基準底面を強調して密着度を確認"
+      },
+      "baseFit": "近似平面",
+      "baseLowest": "最低点密着",
+      "baseHorizontal": "水平面",
+      "baseThreePoint": "3点再指定",
+      "baseFitHist": "基準底面を平面近似",
+      "baseLowestHist": "基準底面を最低点へ密着",
+      "baseHorizontalHist": "水平基準底面",
+      "baseSwitchHist": "基準底面を切替",
+      "baseThreePointHist": "3点で基準底面を再指定",
+      "errPointsTooClose": "2点間が近すぎるためスケールを校正できません",
+      "errInvalidLength": "0 より大きい実際の長さを入力してください",
+      "calibHist": "スケール校正 ({val} {unit})",
+      "calibDone": "スケールを非破壊校正しました（1 仮想単位 = {factor} m、全計測へ自動換算）",
+      "calibAlreadyDefault": "現在は既に既定の 1:1 スケールです",
+      "calibResetHist": "スケールリセット (1:1)",
+      "calibResetDone": "グローバル計測スケールを既定の 1:1 にリセットしました",
+      "basePickCanceled": "3点基準面再設定をキャンセルしました",
+      "vizExited": "体積一時ビューを終了し、標準ビューへ戻しました",
+      "calibUndoFirst": "スケール始点を取り消しました。1点目を再クリックしてください",
+      "calibUndoSecond": "2点目を取り消しました。2点目を再クリックしてください",
+      "baseUndoPt": "基準面参照点を取り消しました（現在 {count}/3）",
+      "undoAllPts": "すべての計測点を取り消しました",
+      "undoPrevPt": "直前の計測点を取り消しました（残り {count} 点）",
+      "polyClosed": "多角形を閉じました：フローティングパネルで「面積モード / 体積モード」切替や「自動スナップ」が可能です",
+      "smartSnapHist": "輪郭スマートスナップ",
+      "smartSnapDone": "スマートスナップ完了（{count} 個の境界点を再サンプリング近似、Ctrl+Z で取消可）",
+      "basePickStart": "3点基準面再設定：シーン底面の実体上で 3個の参照点を順にクリック（Esc で取消）",
+      "baseSwitched": "基準底面を「{mode}」へ切り替えました",
+      "baseHeightHist": "基準底面高さを調整",
+      "noiseFilterOnHist": "浮遊ノイズ除外を有効化",
+      "noiseFilterOffHist": "浮遊ノイズ除外を無効化",
+      "resetPeakHist": "自動最高点へ復元",
+      "kindDistance": "距離",
+      "kindPolyline": "折れ線",
+      "kindArea": "面積",
+      "kindVolume": "体積",
+      "pinName": "{kind} #{id}",
+      "pinnedStatus": "「{name}」をピン留めしました。続けて次の計測を行えます",
+      "reportCalib": "[スケール校正済: 1u = {factor} m · 単位 {unit}]",
+      "reportStraight": "直線距離: {val}",
+      "reportHoriz": "水平距離: {val}",
+      "reportDeltaH": "垂直高低差 (ΔH): {val}",
+      "reportSlope": "勾配: {deg}° ({pct})",
+      "reportPolyTotal": "折れ線全長 ({segs} 区間): {val}",
+      "reportSeg": "  第 {idx} 区間: {val}",
+      "reportAreaHead": "【面積計測結果】",
+      "reportProjArea": "水平投影面積: {val}",
+      "reportSurfArea": "表面展開面積: {val}",
+      "reportFitArea": "近似平面面積: {val}",
+      "reportPerim": "閉合周長: {val}",
+      "reportVolHead": "【体積計測結果】",
+      "reportVolume": "推定体積: {val}",
+      "reportMaxH": "最大高さ: {val}",
+      "reportMeanH": "平均高さ: {val}",
+      "reportBaseArea": "底面投影面積: {val}",
+      "copiedStatus": "計測結果をクリップボードにコピーしました",
+      "softDeformNote": "（ソフト選択弾性変形）",
+      "dragVertexHint": "ドラッグして境界点を調整{note}",
+      "dragBaseHint": "基準底面オフセット {offset}",
+      "dragPeakHint": "最高点高さ {height}",
+      "hoverBaseHint": "上下ドラッグで基準底面高さを調整",
+      "hoverPeakHint": "ドラッグで堆積物の最高点を修正",
+      "hoverVertexSoftHint": "ドラッグで境界を調整（自動ソフト選択で滑らか追従）",
+      "hoverVertexHint": "ドラッグで計測点位置を調整",
+      "hoverClosePoly": "始点をダブルクリックして多角形を閉じる（面積 / 体積）",
+      "hoverCalib1": "既知長さの始点をクリック (1/2)",
+      "hoverCalib2": "既知長さの終点をクリック (2/2)",
+      "hoverBasePt": "底面参照点をクリック ({step}/3)",
+      "hoverPt1": "実体表面をクリックして 1点目を指定（浮遊ノイズ自動除外）",
+      "hoverPt2": "2点目をクリック（直線/水平距離 · 高低差 · 勾配を算出）",
+      "hoverPtMore": "続けてクリックで折れ線（現在 {count} 点）· 始点または下部で閉合",
+      "noSolidHit": "実体表面にヒットしませんでした。位置を変えてください",
+      "dragVertexHist": "計測境界点をドラッグ調整",
+      "manualPeakHist": "最高点を手動補正",
+      "base3PtDone": "3個の実体参照点から基準底面を再近似しました",
+      "base3PtProgress": "{count}/3 個目の底面参照点を選択しました",
+      "pinBadgeTotal": "📌 全長 {val}",
+      "pinBadgeArea": "📌 面積 {val}",
+      "pinBadgeVol": "📌 体積 {vol} · 高 {height}",
+      "virtualBadge": "仮想 {dist} u",
+      "peakBadge": "▲ 最大高 {height}",
+      "calibTitle": "スケール校正",
+      "calibVirtualDist": "仮想距離",
+      "calibCurrentScaled": "現在換算 {val} {unit}",
+      "calibPlaceholder": "実際の長さを入力",
+      "calibNote": "非破壊校正：グローバル計測倍率のみを更新し、元のガウス球データは変更しません。",
+      "calibConfirm": "校正を確定",
+      "badgeTwoPt": "2点計測",
+      "badgeCalibPill": "校正済 ×{factor}",
+      "lblStraight": "直線距離",
+      "lblHoriz": "水平距離",
+      "lblDeltaH": "垂直高低差 ΔH",
+      "lblSlope": "勾配",
+      "lblSeg": "第 {idx} 区間",
+      "badgePolyline": "折れ線計測 · {count} 点",
+      "lblPolyTotal": "折れ線全長",
+      "tabArea": "面積モード",
+      "tabVolume": "体積モード",
+      "smartSnapAgain": "再スマートスナップ",
+      "smartSnapBtn": "自動スマートスナップ",
+      "snapHintMini": "{count} 頂点 · ドラッグ微調整可 · Ctrl+Z 取消",
+      "lblProjArea": "水平投影面積",
+      "lblSurfArea": "表面展開面積",
+      "lblFitArea": "近似平面面積",
+      "lblPerim": "閉合周長",
+      "lblEstVol": "推定体積",
+      "lblMaxH": "最大高さ",
+      "lblManualTag": "(手動)",
+      "lblMeanH": "平均高さ",
+      "lblBaseArea": "底面投影面積",
+      "secBasePlane": "基準底面（シアンひし形ドラッグで昇降）",
+      "lblOffset": "オフセット {val}",
+      "secPeakPole": "最高点ポール（上部黄球ドラッグで修正）",
+      "btnResetPeak": "自動へ戻す",
+      "chkNoiseFilter": "浮遊ノイズ除外（疎な半透明浮遊点を無視）",
+      "secVizModes": "体積検証ビュー（Esc で標準へ復帰）",
+      "emptyHint": "実体表面をクリックして計測を開始します。ピン留め結果は下に保持されます。",
+      "removePinTitle": "ピン留め結果を削除",
+      "pinnedHeader": "ピン留め計測 ({count})",
+      "clearPinsBtn": "すべてクリア",
+      "hoverStartVertexCloseHint": "ドラッグで計測点の位置を調整\nダブルクリックで現在の多角形を閉じる"
+    },
+    "align": {
+      "errCollinear": "選択された 3点がほぼ一直線上にあります。地面上で一直線にならない 3点を再選択してください。",
+      "errCoincident": "2点が重なっています。垂直エッジの下端と上端を順にクリックしてください。",
+      "errInsufficientPoints": "有効点数が不足しているため、自動整列を実行できません。",
+      "hoverGroundPt": "水平にする面上をクリック ({step}/3)",
+      "hoverVertPt1": "垂直エッジの下端をクリック (1/2)",
+      "hoverVertPt2": "垂直エッジの上端をクリック (2/2)"
+    },
+    "semantic": {
+      "legacyUnloaded": "未読込（VRAM 節約待機中）",
+      "legacyWebgpu": "ローカル SAM 2 (WebGPU 読込済)",
+      "legacyWasm": "ローカル SAM 2 (WASM 読込済)",
+      "legacyBuiltin": "内蔵 2D/3D セマンティックグラフカットエンジン (ローカル SAM2 取込可)",
+      "legacyLoading": "ローカル SAM 2 モデルを VRAM へオンデマンド読込中…",
+      "legacyReadFailed": "ローカル SAM 2 モデルファイルを読めません",
+      "samStandby": "{name}（省 VRAM 待機中）",
+      "samFallbackEngine": "内蔵エッジグラフカット予備エンジン",
+      "samExtractingBundled": "内蔵 SAM 2.1 モデルと推論エンジンを初回展開中…",
+      "samLoadingModel": "{name} を読込中…",
+      "samFallbackWasm": "利用可能な WebGPU が見つからないため、CPU (WASM) にフォールバックして読込中…",
+      "reasonDefault3dFewPixels": "既定 3D（対象ピクセルが少ない）",
+      "reasonDefault3dFewRing": "既定 3D（外周参照点が不足）",
+      "reasonCoplanar2d": "対象と周囲背景が厳密に同一平面で連続（平面局所）",
+      "reasonVolumetric3d": "対象が立体的厚みまたは背景との深度段差を持つ（立体物体）",
+      "aborted": "セマンティック分割をキャンセルしました",
+      "stageInitEngine": "セマンティック分割エンジンを初期化中…",
+      "cpuWasmNote": "現在 CPU (WASM) 推論中（左上「詳細設定 → ツール詳細オプション」で視点数削減や軽量モデル切替により高速化可能）",
+      "stagePrimaryTitle": "枠選択対象を認識中（主視点）…",
+      "stagePrimaryDesc": "主視点フレームを取得してセマンティック分割を実行中…",
+      "modeAuto3d": "自動判定・適用：3D セマンティック分割（立体物体）",
+      "modeAuto2d": "自動判定・適用：2D セマンティック分割（平面局所）",
+      "modeLocked3d": "固定モード適用：3D セマンティック分割",
+      "modeLocked2d": "固定モード適用：2D セマンティック分割",
+      "stageExtractSurface": "表面ガウス点を抽出中…",
+      "stageFilterDepth": "貫通深度でガウス点をフィルタリング中…",
+      "stagePrimaryAnchors": "主視点の基準アンカー点と 3D 空間包絡を抽出中…",
+      "stageScreenViews": "マルチスレッド並列で非遮蔽有効視点をスクリーニング中…",
+      "stageInferView": "有効視点を認識中 {current} / {total}（{mode}）…",
+      "viewModeSilent": "バックグラウンドサイレント",
+      "viewModeVisible": "可視視点切替",
+      "stageFuseViews": "{count} 個の有効視点を統合し支持面境界をクリーンアップ中…",
+      "prepAuto": "2D / 3D 分割モードを自動判定中…",
+      "prepLocked": "{mode} セマンティック分割を準備中…",
+      "initStage": "初期化中…",
+      "doneMsg": "{mode}完了：{count} 点を選択 · {reason}",
+      "doneSkippedSuffix": "（遮蔽のある {skipped} 視点を自動回避/除外）"
+    },
+    "inpaint": {
+      "stagePrepareOrt": "ONNX 推論ランタイムを準備中…",
+      "stageLoadLama": "LaMa 平面テクスチャ修復モデル (L2) を読込中…",
+      "stageLoadLamaWasm": "CPU (WASM) で LaMa モデルを読込中…",
+      "errLamaNotLoaded": "LaMa L2 モデルがまだ読み込まれていません",
+      "stageFitPlane": "欠損周囲の表面点をサンプリングして 3D 支持平面を近似中…",
+      "errInsufficientCollar": "欠損周囲で参照可能な平面ガウス点が不足しています。穴埋め枠を少し狭め、周囲に支持平面が含まれるようにしてください。",
+      "errPlaneFitFailed": "周囲の点から有効な支持平面を近似できませんでした。",
+      "errViewParallel": "現在の視点が対象平面とほぼ平行です。少し視点を上げて平面へ正対してから穴埋めを実行してください。",
+      "needDownloadL2": "L2 AI テクスチャ修復モデル (LaMa ONNX) が未ダウンロードです。先に一括ダウンロードするか、一時的に L1 高速幾何モードへ切り替えてください。",
+      "lamaUnavailable": "LaMa L2 モデルの読込が利用できません。再ダウンロードするか L1 モードへ切り替えてください。",
+      "cpuWasmNote": "現在 L2 は CPU (WASM) 推論のため約 1～3 秒かかります…",
+      "stageOrthoCapture": "支持平面法線に沿って高精細正投影ビューをオフスクリーン取得中…",
+      "stageRunLama": "LaMa フーリエテクスチャ修復を実行し 3D 支持平面へ逆投影中…",
+      "stageRunL1": "L1 高速平面ガウスと近傍テクスチャ合成を実行中…",
+      "errEmptyProjection": "穴埋め枠の投影領域が空です。欠損範囲を囲み直してください。",
+      "opTitleL2": "AI 平面穴埋め · L2 AI テクスチャ修復",
+      "opTitleL1": "AI 平面穴埋め · L1 高速幾何平面",
+      "stageSynth": "支持平面を近似し平面ガウスパッチを生成中…",
+      "opTitleL0": "平面補完 · L0 単色塗りつぶし",
+      "stageRunL0": "L0 単色平面ガウスを生成中..."
+    },
+    "volumes": {
+      "box": "ボックス",
+      "ellipsoid": "楕円体",
+      "cylinder": "円柱",
+      "plane": "遮蔽平面",
+      "fallback": "ボリューム",
+      "itemName": "{kind} #{num}",
+      "groupName": "ボリュームグループ #{num}"
+    },
+    "perfHud": {
+      "fps": {
+        "label": "現在 FPS",
+        "desc": "リアルタイムビューポートフレームレート（静止省電力時は直近アクティブ値を維持）"
+      },
+      "frameMs": {
+        "label": "フレーム時間 (ms)",
+        "desc": "1フレームあたりの JavaScript + WebGL 送信時間（ミリ秒）"
+      },
+      "gpuUsage": {
+        "label": "GPU 使用率 (%)",
+        "desc": "GPU 演算エンジンのリアルタイム負荷率"
+      },
+      "vram": {
+        "label": "GPU VRAM (GB)",
+        "desc": "専用ビデオメモリ使用量 / 総容量（Windows GB 基準）"
+      },
+      "gpuShared": {
+        "label": "GPU 共有メモリ (GB)",
+        "desc": "GPU がシステムメモリから借用している共有 VRAM 使用量"
+      },
+      "gpuTemp": {
+        "label": "GPU 温度 (°C)",
+        "desc": "独立 GPU コア温度（ハードウェアセンサー/NVML 対応が必要）"
+      },
+      "gpuPower": {
+        "label": "GPU 消費電力 (W)",
+        "desc": "独立 GPU リアルタイム全体電力（ハードウェアセンサー/NVML 対応が必要）"
+      },
+      "gpuName": {
+        "label": "GPU モデル名",
+        "desc": "現在のメイン描画 GPU デバイス名"
+      },
+      "cpuUsage": {
+        "label": "CPU 使用率 (%)",
+        "desc": "プロセッサー全体のリアルタイム使用率"
+      },
+      "ram": {
+        "label": "システムメモリ (GB)",
+        "desc": "物理メモリ使用量 / 総容量（Windows GB 基準）"
+      },
+      "appRam": {
+        "label": "アプリメモリ (MB)",
+        "desc": "現在のメインアプリプロセスの物理メモリ使用量"
+      },
+      "commit": {
+        "label": "利用可能コミット (GB)",
+        "desc": "システムが追加確保可能な仮想コミットメモリ残量"
+      },
+      "scenePoints": {
+        "label": "描画点数とモード",
+        "desc": "現在ビューポートのアクティブガウス点数と描画モード（スプラット/センター/リング）"
+      },
+      "sharedVram": "共有 {gb} GB",
+      "appRamFmt": "プロセス {mb}",
+      "commitFmt": "コミット残 {gb}",
+      "pointsFmt": "{mode} {pts}点",
+      "resetDefaults": "既定表示項目へ戻す (FPS + GPU + CPU)"
+    },
+    "advMenu": {
+      "bundledActive": "内蔵 · 使用中",
+      "bundledDefault": "内蔵既定",
+      "installedActive": "取得済 · 使用中",
+      "ready": "準備完了",
+      "notDownloaded": "未取得 · {mb}MB",
+      "connecting": "最適経路へ接続中…",
+      "probing": "最適経路を自動検出中…",
+      "sizeMeta": "{badge} · 約 {mb} MB",
+      "downloadBtn": "取得",
+      "switchUseBtn": "切替使用"
+    },
+    "watchdog": {
+      "contextLost": "WebGL2 コンテキストロスト（VRAM またはドライバー過負荷）",
+      "mainThreadHang": "メインスレッドが {sec} 秒間応答なし",
+      "noTelemetry": "リアルタイム監視データなし",
+      "defaultReason": "GPU またはメモリ性能不足",
+      "stressTestReason": "自動ストレステストによる発動"
+    },
+    "domain": {
+      "boxReplace": "矩形置換",
+      "boxAdd": "矩形追加",
+      "boxSubtract": "矩形減算",
+      "boxIntersect": "矩形交差",
+      "boxOpFallback": "矩形({op})",
+      "selectOpFallback": "選択({op})",
+      "softDelete": "ソフト削除",
+      "deselect": "選択解除",
+      "mismatchPointCount": "ソースアセット \"{name}\" の点数が変化しています（レシピ記録 {expected}、現在 {actual}）。古い点インデックスの誤適用を防止するため拒否しました。",
+      "mismatchFingerprint": "ソースアセット \"{name}\" の内容フィンガープリントが変化しています（並び替えまたは置換の可能性）。古い点インデックスの誤適用を防止するため拒否しました。",
+      "mismatchOrdering": "ソースアセット \"{name}\" の点順バージョンが変化しています（レシピ {expected}、現在 {actual}）。古い点インデックスの誤適用を防止するため拒否しました。",
+      "recipeInvalid": "レシピが空か、有効な JSON オブジェクトではありません。",
+      "recipeV3Extra": "v3 拡張フィールド ({keys}) を検出しました。保存時にそのまま保持されます。",
+      "recipeV4SubPalette": "3.2.2 部分選択変換パレット（paletteMatrices/transformIdxRle）を含みます。本 UI では点単位編集に未対応ですが、保存時は v4 のまま保持されます。",
+      "recipeV4PaintDelta": "3.2.2 スパースブラシペイントデータ（{count} 点の paintDelta）を含みます。保存時は破棄せず v4 のまま保持されます。",
+      "recipeV4OnlyIndices": "3.2.2 グループ包含マスク（onlyIndicesRle）を含みます。保存時は v4 のまま保持されます。",
+      "recipeV4UnknownField": "未知の v4 フィールド \"{field}\" を含みます。保存時はそのまま保持されます。",
+      "recipeV4Loaded": "3.2.2 (v4) レシピを読み込みました（削除マスク/全体変換/色調）。保存時も v3 へ暗黙ダウングレードせず v4 を維持します。",
+      "recipeUnsupportedVersion": "安全に解釈できないレシピバージョン (version={version}) です。原本を保持し、黙って上書きやフィールド破棄は行いません。",
+      "cameraTrackSidecarWarn": "形式 {label} ({suffix}) はカメラキーフレームの内蔵に非対応のため、公開シーンマニフェスト {sidecar} を併せて出力しカメラ軌道を保持します。",
+      "recipeUnsupportedCoord": "レシピの座標系（{coordSystem}）を認識できません。無断上書きを防ぐため読み取り専用で開き原本を保持しました。"
+    },
+    "status": {
+      "safeModeEntered": "緊急省電力モードを有効化：「センターモード」に固定し、基本選択と削除のみ残してフィルター・AI・高負荷ツールを凍結しました",
+      "safeModeExited": "緊急省電力モードを解除し、すべての抽出・色調・表示モードを復帰しました",
+      "boundsCenterOn": "「バウンディング中心を使用」をオン：ギズモを選択モデル境界の幾何中心へ自動配置しました",
+      "boundsCenterOff": "「バウンディング中心を使用」をオフ：ギズモを元の位置へ戻しました",
+      "pivotEditOn": "原点編集オン：移動矢印のドラッグでギズモ原点のみ移動し、オフ後に新原点基準でモデルを操作します",
+      "pivotEditOff": "原点編集オフ：以後の移動/回転/拡大縮小は新しいギズモ原点基準で実行されます",
+      "spaceLocal": "「ローカル座標系」に切り替えました",
+      "spaceWorld": "「ワールド座標系 (+Y 上向き)」に切り替えました",
+      "keepAtLeastOneObj": "少なくとも1つのシーンオブジェクトが必要なため、最後のオブジェクトは削除できません",
+      "keepAtLeastOneObjGroup": "少なくとも1つのシーンオブジェクトが必要なため、全オブジェクトを含むグループは削除できません",
+      "groupedVolumes": "{count} 個のボリューム/子グループをグループ化しました：{name}",
+      "groupedObjects": "{count} 個のシーンオブジェクトをグループ化しました：{name}",
+      "safeModeLockCenters": "フリーズ防止のため緊急省電力モードで「センターモード」固定中です（上部「フルモードへ復帰」で解除可能）",
+      "safeModeLockCentersCycle": "緊急省電力モードで「センターモード」に固定されています（上部「フルモードへ復帰」で切替可能）",
+      "flySpeedReset": "フライ速度をモデル既定推奨値 ({speed}) に戻しました",
+      "camFlySwitched": "フライカメラに切替（現在速度 {speed} · 左ドラッグ見回し · ホイール前後 · WASD/QE 飛行）",
+      "camOrbitSwitched": "オービットカメラに切替（左回転 · 右移動 · ホイール拡縮 · ダブルクリックで中心設定）",
+      "selectBeforeIsolate": "分離表示を実行する前にガウス点を選択してください",
+      "maxObjectsReached": "独立シーンオブジェクトは最大 {max} 個まで対応しています",
+      "maxObjectsInpaint": "独立シーンオブジェクトが上限 {max} 個に達しているため、穴埋めレイヤーを追加できません",
+      "selectBeforeSplit": "分割するガウス点を先に選択してください",
+      "selectBeforeDup": "複製するガウス点を先に選択してください",
+      "semanticCanceled": "セマンティック分割をキャンセルしました",
+      "semanticAborted": "セマンティック分割を中断しました",
+      "semanticFailed": "セマンティック分割に失敗：{error}",
+      "semanticEscCanceled": "Esc キーでセマンティック分割をキャンセルしました",
+      "wbPickEnabled": "ホワイトバランススポイト有効：画面上の無彩色グレーまたは白領域をクリックして自動補正（Esc で終了）",
+      "hslPickEnabled": "HSL 色抽出調整有効：画面上の対象色を左押下で左右ドラッグしてパラメーターを素早く調整（Esc で終了）",
+      "safeModeToolsFrozen": "緊急省電力モードでは基本選択と削除のみ利用でき、抽出・AI・高負荷ツールは凍結されています",
+      "exitedBrowse": "閲覧モードを終了しギズモを非表示にしました（1 キーまたは画面ダブルクリックで再有効化）",
+      "activatedBrowse": "閲覧モードを有効化しました",
+      "toolCanceledToBrowse": "現在のツールをキャンセルし、閲覧モード (1) へ戻りました",
+      "browseCoexistOn": "「閲覧モード」と「{tool}」を併用中：左ドラッグで自由に視点回転（1 再押しでツール操作へ戻る）",
+      "browseCoexistOff": "現在のツールのキャンバス操作モードへ戻りました",
+      "leftSemanticFreed": "AI 意味選択を終了し、ローカル分割モデルの VRAM を即座に解放しました",
+      "leftInpaintFreed": "平面穴埋めを終了し、LaMa モデルの VRAM を即座に解放しました",
+      "semanticReady": "AI 意味枠選択準備完了：{status} · Ctrl + 左ドラッグで対象を囲んでください",
+      "semanticDragHint": "Ctrl + 左ドラッグで対象物の範囲を囲んでセマンティック分割を実行してください",
+      "downloadL2Started": "最適経路の自動検出と LaMa L2 平面修復モデルのダウンロードを開始しました…",
+      "inpaintDone": "平面穴埋め ({mode}) 完了：支持平面に沿った {count} 個のガウス点を生成しました",
+      "inpaintFailed": "平面穴埋めに失敗：{error}",
+      "autoAlignDone": "自動整列完了：地面を Y=0（+Y 上向き）へ接地し、{detail}（Ctrl+Z で一括取消可）",
+      "autoAlignWall": "壁面を X/Z 軸に整列しました",
+      "autoAlignCentered": "原点上へ中央配置",
+      "autoAlignFailed": "自動整列に失敗：{error}",
+      "opencvZupDone": "モデルを OpenCV (-Y) から +Y 上向きに反転しました（Ctrl+Z で元に戻せます）",
+      "safeModeColorFrozen": "緊急省電力モード中は「プロ色調補正」が凍結されています（上部「フルモードへ復帰」で解除可能）",
+      "colorDefaultNoBake": "現在の色調パラメーターは既定値のためベイク不要です",
+      "noSceneHit": "シーンにヒットしませんでした。別の位置をお試しください",
+      "wbCalibrated": "クリックした点に基づきホワイトバランスを自動補正しました",
+      "semanticBoxMinPx": "対象物を含む矩形範囲をドラッグで描いてください（最小 8px）",
+      "inpaintBoxMinPx": "平面の欠損部を含む矩形範囲をドラッグで描いてください（最小 8px）",
+      "eyedropperPicked": "色を抽出しました。許容値を調整して下の「置換 / 追加 / 減算 / 交差」をクリックしてください",
+      "semanticUseCtrlDrag": "AI 意味枠選択：Ctrl + 左ドラッグで対象を囲んでください（通常左ドラッグで視点回転）",
+      "verticalAlignDone": "垂直補正が完了しました（+Y 上向き）。下で「上下反転 / 戻す / 再選択」を行えます",
+      "groundAlignDone": "水平補正が完了しました（Y=0 · +Y 上向き）。下で「上下反転 / 戻す / 再選択」を行えます",
+      "pivotSet": "回転中心を設定しました ({x}, {y}, {z}) · W/E/R でギズモ切替",
+      "gizmoHidden": "3D ギズモを非表示にしました（W/E/R またはガウス点ダブルクリックで再表示）",
+      "camOrthoSwitched": "平行投影カメラに切り替えました",
+      "camPerspSwitched": "透視投影カメラに切り替えました",
+      "eyedropperExited": "スポイト抽出モードを終了しました",
+      "viewImageRendered": "{w}×{h} ビュー画像をレンダリングしました",
+      "viewImageFailed": "ビュー画像の書き出しに失敗：{error}",
+      "viewImageSaved": "ビュー画像を {path} に保存しました",
+      "exportCanceled": "書き出しをキャンセルしました",
+      "selectOneObject": "少なくとも1つのシーンオブジェクトにチェックを入れてください",
+      "unsupportedRecipeKept": "未対応のレシピ形式を検出したため、原本を保持しました",
+      "restoreRecipeFailed": "既存レシピの復元に失敗：{error}（原本を保持し、無言上書きしませんでした）",
+      "journalReplayed": "自動ダウンサンプリング読込のうえ {count} 件の編集履歴を完全復元しました",
+      "modelLoadFailed": "モデルの読込に失敗：{error}",
+      "modelDownloading": "モデルをダウンロード中 ({percent}%)：{stage}",
+      "mergedObjects": "{count} 個のオブジェクトを「{name}」に結合しました（Ctrl+Z で元に戻せます）",
+      "mergedVolumes": "{count} 個のボリュームを「{name}」に結合しました（Ctrl+Z で元に戻せます）",
+      "semanticUseShiftDrag": "セマンティック選択：Shift + 左ドラッグで対象を囲んでください（Ctrl 追加 · Alt 減算、通常左ドラッグで視点回転）",
+      "colorWheelPickEnabled": "スポイト起動中：ビューポート上のモデルをクリックして色を取得（Esc で終了）",
+      "colorWheelPicked": "画面から色を取得しました"
+    },
+    "colorWheel": {
+      "title": "色を選択",
+      "eyedropper": "スポイト",
+      "recent": "最近使用した色",
+      "pickHoverHint": "クリックで取得 {hex}"
+    }
+  }
+}

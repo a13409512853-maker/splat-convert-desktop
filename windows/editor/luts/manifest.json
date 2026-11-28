@@ -1,0 +1,13 @@
+[
+  { "id": "默认.png", "label": "默认（无 LUT）" },
+  { "id": "自然.PNG", "label": "自然" },
+  { "id": "鲜艳.PNG", "label": "鲜艳" },
+  { "id": "温暖.PNG", "label": "温暖" },
+  { "id": "夕阳.PNG", "label": "夕阳" },
+  { "id": "胶片.PNG", "label": "胶片" },
+  { "id": "怀旧.PNG", "label": "怀旧" },
+  { "id": "日系.PNG", "label": "日系" },
+  { "id": "德系.PNG", "label": "德系" },
+  { "id": "卡通.PNG", "label": "卡通" },
+  { "id": "战戟片.PNG", "label": "战戟片" }
+]

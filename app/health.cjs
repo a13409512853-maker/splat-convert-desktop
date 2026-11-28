@@ -117,12 +117,12 @@ function assess(estimate, resources, device) {
 }
 function classify(error) {
   const text = String(error?.stack || error).toLowerCase();
-  if (/enospc|disk full|not enough space/.test(text)) return { code: 'disk', title: 'diskTitle', advice: 'diskAdvice' };
-  if (/gpu.*(out.of.memory|oom)|out.of.memory.*gpu|device.lost|no gpu adapter|webgpu|d3d12|vulkan|gpu device|maxstoragebufferbindingsize/.test(text)) return { code: 'gpu', title: 'gpuTitle', advice: 'gpuAdvice' };
-  if (/array buffer allocation failed|invalid array length|heap out of memory|allocation failed|bad_alloc|cannot allocate memory|enomem/.test(text)) return { code: 'memory', title: 'memoryTitle', detail: 'memoryDetail', advice: 'memoryAdvice' };
-  if (/eacces|eperm|permission denied|access.*denied|sharing violation/.test(text)) return { code: 'access', title: 'accessTitle', advice: 'accessAdvice' };
-  if (/no gaussians|no points|zero gaussians|remove every gaussian|after filtering/.test(text)) return { code: 'empty', title: 'emptyTitle', advice: 'emptyAdvice' };
-  if (/enoent|invalid.*(ply|header|file)|missing.*(property|column)|unexpected end|unsupported.*format/.test(text)) return { code: 'input', title: 'inputTitle', advice: 'inputAdvice' };
-  return { code: 'unknown', title: 'failed', advice: 'unknownAdvice' };
+  if (/enospc|disk full|not enough space/.test(text)) return { code: 'disk', title: 'app.errors.diskTitle', advice: 'app.errors.diskAdvice' };
+  if (/gpu.*(out.of.memory|oom)|out.of.memory.*gpu|device.lost|no gpu adapter|webgpu|d3d12|vulkan|gpu device|maxstoragebufferbindingsize/.test(text)) return { code: 'gpu', title: 'app.errors.gpuTitle', advice: 'app.dialogs.gpuAdvice' };
+  if (/array buffer allocation failed|invalid array length|heap out of memory|allocation failed|bad_alloc|cannot allocate memory|enomem/.test(text)) return { code: 'memory', title: 'app.errors.memoryTitle', detail: 'app.errors.memoryDetail', advice: 'app.dialogs.memoryAdvice' };
+  if (/eacces|eperm|permission denied|access.*denied|sharing violation/.test(text)) return { code: 'access', title: 'app.errors.accessTitle', advice: 'app.errors.accessAdvice' };
+  if (/no gaussians|no points|zero gaussians|remove every gaussian|after filtering/.test(text)) return { code: 'empty', title: 'app.errors.emptyTitle', advice: 'app.errors.emptyAdvice' };
+  if (/enoent|invalid.*(ply|header|file)|missing.*(property|column)|unexpected end|unsupported.*format/.test(text)) return { code: 'input', title: 'app.errors.inputTitle', advice: 'app.errors.inputAdvice' };
+  return { code: 'unknown', title: 'app.status.failed', advice: 'app.errors.unknownAdvice' };
 }
 module.exports = { sampleResources, estimateJob, metadata, fromCounts, assess, classify, GiB };

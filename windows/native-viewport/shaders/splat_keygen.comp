@@ -1,0 +1,55 @@
+#version 450
+layout(local_size_x = 256, local_size_y = 1, local_size_z = 1) in;
+
+struct PosRgba {
+  vec3 pos;
+  uint rgba;
+};
+
+layout(std430, binding = 0) readonly buffer PosBuf { PosRgba splats[]; };
+layout(std430, binding = 1) readonly buffer FlagBuf { uint packedFlags[]; };
+layout(std430, binding = 2) writeonly buffer KeysBuf { uint keysOut[]; };
+layout(std430, binding = 3) writeonly buffer ValsBuf { uint valsOut[]; };
+layout(std430, binding = 4) buffer IndirectBuf {
+  uint vertexCount;
+  uint instanceCount;
+  uint firstVertex;
+  uint firstInstance;
+} indirectCmd;
+
+layout(push_constant) uniform KeygenPC {
+  mat4 modelView;
+  mat4 proj;
+  uint totalCount;
+  float nearPlane;
+  float farPlane;
+  uint pad0;
+} pc;
+
+void main() {
+  uint idx = gl_GlobalInvocationID.x;
+  if (idx >= pc.totalCount) return;
+
+  // Check deleted (bit1) or hidden (bit2) flag
+  uint fWord = packedFlags[idx >> 2u];
+  uint flag = (fWord >> ((idx & 3u) * 8u)) & 0xFFu;
+  if ((flag & 0x06u) != 0u) return;
+
+  vec3 p = splats[idx].pos;
+  vec4 camPos = pc.modelView * vec4(p, 1.0);
+  float depth = -camPos.z; // Right-handed +Y-up camera looks down -Z
+  if (depth <= max(0.01, pc.nearPlane) || depth >= pc.farPlane) return;
+
+  vec4 clip = pc.proj * camPos;
+  if (clip.w <= 1e-5) return;
+  vec2 ndc = clip.xy / clip.w;
+  // Generous frustum guard (1.35) so large Gaussians near screen edges never pop out
+  if (abs(ndc.x) > 1.35 || abs(ndc.y) > 1.35) return;
+
+  // Back-to-front sortable 32-bit unsigned key:
+  // Larger positive depth -> smaller key -> sorted first -> drawn first (back)!
+  uint depthKey = ~floatBitsToUint(depth);
+  uint outSlot = atomicAdd(indirectCmd.instanceCount, 1u);
+  keysOut[outSlot] = depthKey;
+  valsOut[outSlot] = idx;
+}

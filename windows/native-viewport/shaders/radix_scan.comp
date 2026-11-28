@@ -1,0 +1,52 @@
+#version 450
+layout(local_size_x = 256, local_size_y = 1, local_size_z = 1) in;
+
+const uint NUM_BLOCKS = 512u;
+
+layout(std430, binding = 0) buffer BlockHist { uint blockHist[]; };
+layout(std430, binding = 1) writeonly buffer BinTotals { uint binTotals[]; };
+
+shared uint sData[512];
+
+void main() {
+  uint tid = gl_LocalInvocationID.x;
+  uint digit = gl_WorkGroupID.x; // 0..15
+  uint baseOff = digit * NUM_BLOCKS;
+
+  sData[tid] = blockHist[baseOff + tid];
+  sData[tid + 256u] = blockHist[baseOff + tid + 256u];
+
+  // Blelloch exclusive prefix sum over 512 block counts
+  uint offset = 1u;
+  for (uint n = 256u; n > 0u; n >>= 1u) {
+    barrier();
+    if (tid < n) {
+      uint ai = offset * (2u * tid + 1u) - 1u;
+      uint bi = offset * (2u * tid + 2u) - 1u;
+      sData[bi] += sData[ai];
+    }
+    offset <<= 1u;
+  }
+
+  barrier();
+  if (tid == 0u) {
+    binTotals[digit] = sData[511u];
+    sData[511u] = 0u;
+  }
+
+  for (uint n = 1u; n < 512u; n <<= 1u) {
+    offset >>= 1u;
+    barrier();
+    if (tid < n) {
+      uint ai = offset * (2u * tid + 1u) - 1u;
+      uint bi = offset * (2u * tid + 2u) - 1u;
+      uint t = sData[ai];
+      sData[ai] = sData[bi];
+      sData[bi] += t;
+    }
+  }
+
+  barrier();
+  blockHist[baseOff + tid] = sData[tid];
+  blockHist[baseOff + tid + 256u] = sData[tid + 256u];
+}

@@ -3,19 +3,24 @@ const assert = require('node:assert/strict');
 const fs = require('node:fs/promises');
 const path = require('node:path');
 const { fromCounts, assess, classify, estimateJob } = require('../app/health.cjs');
-const { catalog, codes } = require('../app/i18n.cjs');
+const { locales, codes, fallbackDict, translate } = require('../app/i18n.cjs');
 
-test('all seven languages have complete entries', () => {
+test('all seven languages have complete entries and zh-CN fallback works', () => {
   assert.equal(codes.length, 7);
-  for (const [key, values] of Object.entries(catalog)) {
-    assert.equal(values.length, codes.length, key);
-    assert.ok(values.every(x => typeof x === 'string' && x.trim()), key);
+  const baseKeys = Object.keys(fallbackDict);
+  assert.ok(baseKeys.length > 100);
+  for (const loc of locales) {
+    for (const key of baseKeys) {
+      assert.ok(typeof loc.dict[key] === 'string' && loc.dict[key].trim(), `${loc.code}:${key}`);
+    }
   }
+  assert.equal(translate('en-US', 'app.status.ready').length > 0, true);
+  assert.equal(translate('unknown-LOCALE', 'app.status.ready'), fallbackDict['app.status.ready']);
 });
 test('exact user error is classified without pretending to know hardware cause', () => {
   const diagnosis = classify(new Error('RangeError: Array buffer allocation failed\n at gatherSogLayers (cli.mjs:41448:20)'));
   assert.equal(diagnosis.code, 'memory');
-  assert.equal(diagnosis.detail, 'memoryDetail');
+  assert.equal(diagnosis.detail, 'app.errors.memoryDetail');
   assert.equal(classify(new Error('ENOSPC')).code, 'disk');
   assert.equal(classify(new Error('GPU device lost: out of memory')).code, 'gpu');
   assert.equal(classify(new Error('new unexpected error')).code, 'unknown');

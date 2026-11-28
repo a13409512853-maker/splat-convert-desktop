@@ -1,9 +1,22 @@
 'use strict';
 const $ = id => document.getElementById(id);
 let config, inputs = [], ops = [], selected = -1, busy = false, autoOutput = true, editing = -1;
-const languages = ['zh', 'en', 'ja', 'ko', 'de', 'fr', 'es'];
-let language = 'zh', lastState = 'ready', lastResources, resourceBusy = false;
-const t = key => config?.catalog?.[key]?.[Math.max(0, languages.indexOf(language))] || key;
+let language = 'zh-CN', lastState = 'app.status.ready', lastResources, resourceBusy = false;
+
+function t(key, vars) {
+  const dicts = config?.i18n?.dicts || {};
+  const defLang = config?.i18n?.defaultLang || 'zh-CN';
+  const active = dicts[language] || dicts[defLang] || {};
+  const fb = dicts[defLang] || {};
+  let val = active[key];
+  if (typeof val !== 'string' || !val.trim()) val = fb[key];
+  if (typeof val !== 'string' || !val.trim()) val = key;
+  if (vars) {
+    val = val.replace(/\{([a-zA-Z0-9_]+)\}/g, (m, k) => (vars[k] !== undefined && vars[k] !== null ? String(vars[k]) : m));
+  }
+  return val;
+}
+
 const formatBytes = n => n >= 2 ** 30 ? (n / 2 ** 30).toFixed(2) + ' GB' : n >= 2 ** 20 ? (n / 2 ** 20).toFixed(1) + ' MB' : (n / 1024).toFixed(1) + ' KB';
 function currentOps() { return $('scope').value === '-1' ? ops : inputs[Number($('scope').value)]?.ops || ops; }
 function status(text) { $('status').textContent = text; }
@@ -17,7 +30,7 @@ function suggestion() {
 }
 function renderFiles() {
   const previous = $('scope').value;
-  $('file-list').replaceChildren(); $('scope').replaceChildren(new Option(t('merged'), '-1'));
+  $('file-list').replaceChildren(); $('scope').replaceChildren(new Option(t('app.pipeline.merged'), '-1'));
   inputs.forEach((file, i) => {
     const row = document.createElement('tr'); row.classList.toggle('selected', i === selected); row.tabIndex = 0; row.title = file.path;
     const name = document.createElement('td'), size = document.createElement('td'); name.textContent = file.name; size.textContent = formatBytes(file.size);
@@ -27,12 +40,15 @@ function renderFiles() {
     $('file-list').append(row); $('scope').add(new Option(file.name, String(i)));
   });
   if ([...$('scope').options].some(o => o.value === previous)) $('scope').value = previous;
-  $('total').textContent = inputs.length + ' ' + t('files') + (inputs.length ? ' · ' + formatBytes(inputs.reduce((n, f) => n + f.size, 0)) : '');
+  const totalBytes = inputs.reduce((n, f) => n + f.size, 0);
+  $('total').textContent = inputs.length
+    ? t('app.inputs.fileCountWithSize', { count: inputs.length, size: formatBytes(totalBytes) })
+    : t('app.inputs.fileCount', { count: 0 });
   renderOps(); suggestion(); ready();
 }
 function renderOps() {
   const list = $('operations'); list.replaceChildren();
-  currentOps().forEach((op, i) => list.add(new Option(t(op.type) + (op.values.length ? '   ' + op.values.join(', ') : ''), String(i))));
+  currentOps().forEach((op, i) => list.add(new Option(t('app.ops.' + op.type) + (op.values.length ? '   ' + op.values.join(', ') : ''), String(i))));
 }
 function add(files) {
   if (busy) return;
@@ -55,21 +71,30 @@ function formatChanged() {
 }
 function fields(previous) {
   $('op-fields').replaceChildren(); $('op-error').textContent = '';
-  const spec = config.operations[$('op-type').value];
+  const type = $('op-type').value;
+  const spec = config.operations[type];
   spec.fields.forEach((field, i) => {
     const label = document.createElement('label'), text = document.createElement('span'), input = document.createElement('input');
-    const type = $('op-type').value;
-    text.textContent = type === 'scale' ? t('factor') : type === 'sphere' && i === 3 ? t('radius') : type === 'box' ? t(i < 3 ? 'min' : 'max') + ' ' + ['X','Y','Z'][i % 3] : ['X','Y','Z'][i] || field;
+    const axis = ['X', 'Y', 'Z'][i % 3];
+    text.textContent = type === 'scale' ? t('app.ops.factor')
+      : type === 'sphere' && i === 3 ? t('app.ops.radius')
+      : type === 'box' ? t(i < 3 ? 'app.ops.minAxis' : 'app.ops.maxAxis', { axis })
+      : ['X', 'Y', 'Z'][i] || field;
     input.value = previous?.[i] ?? spec.defaults[i]; input.required = true;
-    if (type === 'harmonics') { input.type = 'range'; input.min = '0'; input.max = '3'; input.step = '1'; const update = () => text.textContent = t('band') + ': ' + input.value; input.addEventListener('input', update); update(); }
-    else { input.type = 'number'; input.step = 'any'; }
+    if (type === 'harmonics') {
+      input.type = 'range'; input.min = '0'; input.max = '3'; input.step = '1';
+      const update = () => { text.textContent = t('app.ops.bandValue', { value: input.value }); };
+      input.addEventListener('input', update); update();
+    } else {
+      input.type = 'number'; input.step = 'any';
+    }
     label.append(text, input); $('op-fields').append(label);
   });
 }
 function editOperation(edit) {
   editing = edit ? $('operations').selectedIndex : -1;
   if (edit && editing < 0) return;
-  $('op-title').textContent = t(edit ? 'edit' : 'addOp');
+  $('op-title').textContent = t(edit ? 'app.pipeline.editOp' : 'app.pipeline.addOp');
   const op = editing >= 0 ? currentOps()[editing] : null;
   $('op-type').value = op?.type || 'translate'; fields(op?.values); $('operation-dialog').showModal();
 }
@@ -82,43 +107,42 @@ async function begin() {
   settings.device = $('device-field').hidden ? 'cpu' : $('device').value;
   const request = { format: $('format').value, output: $('output').value.trim(), inputs, ops, settings };
   busy = true; $('workspace').disabled = true; $('language').disabled = true; $('cancel').disabled = false; $('show-output').hidden = true;
-  $('progress').removeAttribute('value'); $('log').textContent = ''; ready(); state('preflight');
+  $('progress').removeAttribute('value'); $('log').textContent = ''; ready(); state('app.status.preflight');
   try {
     const result = await window.desktop.convert(request);
-    if (result.error) { state('failed'); $('log').textContent += result.error + '\n'; }
-    else if (result.canceled) state('canceled');
-    else { state('done'); status(t('done') + ' · ' + formatBytes(result.size)); $('show-output').hidden = false; $('progress').value = 100; }
-  } catch (error) { state('failed'); $('log').textContent += error.message + '\n'; }
+    if (result.error) { state('app.status.failed'); $('log').textContent += result.error + '\n'; }
+    else if (result.canceled) state('app.status.canceled');
+    else { state('app.status.done'); status(t('app.status.done') + ' · ' + formatBytes(result.size)); $('show-output').hidden = false; $('progress').value = 100; }
+  } catch (error) { state('app.status.failed'); $('log').textContent += error.message + '\n'; }
   finally { busy = false; $('workspace').disabled = false; $('language').disabled = false; $('cancel').disabled = true; if (!$('progress').hasAttribute('value')) $('progress').value = 0; ready(); }
 }
 function translate() {
   document.documentElement.lang = language;
-  document.querySelectorAll('[data-i18n]').forEach(el => el.textContent = t(el.dataset.i18n));
+  document.querySelectorAll('[data-i18n]').forEach(el => { el.textContent = t(el.dataset.i18n); });
+  document.querySelectorAll('[data-i18n-title]').forEach(el => { el.title = t(el.dataset.i18nTitle); });
+  document.querySelectorAll('[data-i18n-aria]').forEach(el => { el.setAttribute('aria-label', t(el.dataset.i18nAria)); });
   const format = $('format').value || 'sog', op = $('op-type').value || 'translate';
   $('format').replaceChildren(); $('op-type').replaceChildren();
-  for (const id of Object.keys(config.formats)) $('format').add(new Option(t(id === 'voxel' ? 'voxelFormat' : id), id));
-  for (const id of Object.keys(config.operations)) $('op-type').add(new Option(t(id), id));
+  for (const id of Object.keys(config.formats)) $('format').add(new Option(t('app.formats.' + id), id));
+  for (const id of Object.keys(config.operations)) $('op-type').add(new Option(t('app.ops.' + id), id));
   $('format').value = format; $('op-type').value = op;
-  for (const [id, key] of Object.entries({ 'remove-file':'remove', 'file-up':'up', 'file-down':'down', 'add-op':'addOp', 'edit-op':'edit', 'remove-op':'remove', 'op-up':'up', 'op-down':'down', 'browse-output':'browse' })) {
-    $(id).title = t(key); $(id).setAttribute('aria-label', t(key));
-  }
-  for (const id of ['keep','iterations','effort','workers','voxel','opacity']) $(id).dispatchEvent(new Event('input'));
+  for (const id of ['keep', 'iterations', 'effort', 'workers', 'voxel', 'opacity']) $(id).dispatchEvent(new Event('input'));
   renderFiles(); state(lastState); paintResources(lastResources);
 }
 function paintResources(r) {
-  const unavailable = t('unknown'), giB = n => (n / 2 ** 30).toFixed(1);
+  const unavailable = t('common.unknown'), giB = n => (n / 2 ** 30).toFixed(1);
   const cpu = $('metric-cpu'), ram = $('metric-memory'), gpu = $('metric-gpu'), vram = $('metric-vram');
   cpu.querySelector('span').textContent = 'CPU ' + (Number.isFinite(r?.cpu) ? Math.round(r.cpu) + '%' : unavailable);
-  ram.querySelector('span').textContent = t('memory') + ' ' + (r?.totalMemory > 0 && Number.isFinite(r.availableMemory) ? giB(r.totalMemory-r.availableMemory) + ' / ' + giB(r.totalMemory) + ' GiB' : unavailable);
+  ram.querySelector('span').textContent = t('app.metrics.memory') + ' ' + (r?.totalMemory > 0 && Number.isFinite(r.availableMemory) ? giB(r.totalMemory - r.availableMemory) + ' / ' + giB(r.totalMemory) + ' GB' : unavailable);
   const g = r?.gpus?.[0];
   gpu.querySelector('span').textContent = 'GPU ' + (Number.isFinite(g?.usage) ? Math.round(g.usage) + '%' : unavailable);
-  vram.querySelector('span').textContent = r?.unified ? t('unified') : t('vram') + ' ' + (g?.memoryTotal > 0 && Number.isFinite(g.memoryUsed) ? giB(g.memoryUsed)+' / '+giB(g.memoryTotal)+' GiB' : unavailable);
-  ram.classList.toggle('pressure', r?.totalMemory > 0 && Number.isFinite(r.availableMemory) && r.availableMemory/r.totalMemory < 0.1);
+  vram.querySelector('span').textContent = r?.unified ? t('app.metrics.unified') : t('app.metrics.vram') + ' ' + (g?.memoryTotal > 0 && Number.isFinite(g.memoryUsed) ? giB(g.memoryUsed) + ' / ' + giB(g.memoryTotal) + ' GB' : unavailable);
+  ram.classList.toggle('pressure', r?.totalMemory > 0 && Number.isFinite(r.availableMemory) && r.availableMemory / r.totalMemory < 0.1);
   if (!r) return;
-  const time = t('sample') + ': ' + new Date(r.sampled).toLocaleTimeString();
+  const time = t('app.metrics.sample') + ': ' + new Date(r.sampled).toLocaleTimeString();
   cpu.title = r.cpuName + '\n' + time;
-  ram.title = t('available') + ': ' + (Number.isFinite(r.availableMemory) ? giB(r.availableMemory)+' GiB' : unavailable) + '\n' + time;
-  gpu.title = vram.title = (r.gpus || []).map(g => g.name).join('\n') + '\n' + t('gpuUnknown') + '\n' + time;
+  ram.title = t('app.metrics.available') + ': ' + (Number.isFinite(r.availableMemory) ? giB(r.availableMemory) + ' GB' : unavailable) + '\n' + time;
+  gpu.title = vram.title = (r.gpus || []).map(g => g.name).join('\n') + '\n' + t('app.metrics.gpuUnknown') + '\n' + time;
 }
 async function refreshResources() {
   if (resourceBusy) return; resourceBusy = true;
@@ -127,8 +151,14 @@ async function refreshResources() {
 }
 async function init() {
   config = await window.desktop.config();
-  language = languages.includes(config.language) ? config.language : 'zh'; $('language').value = language;
-  $('language').addEventListener('change', () => { language = $('language').value; translate(); window.desktop.setLanguage(language); });
+  const langSelect = $('language');
+  langSelect.replaceChildren();
+  for (const l of (config.i18n?.languages || [])) {
+    langSelect.add(new Option(l.nativeName || l.name || l.code, l.code));
+  }
+  language = config.language || config.i18n?.defaultLang || 'zh-CN';
+  langSelect.value = language;
+  langSelect.addEventListener('change', () => { language = langSelect.value; translate(); window.desktop.setLanguage(language); });
   $('repository').href = config.repository;
   $('repository').addEventListener('click', e => { e.preventDefault(); window.desktop.openRepository(); });
   $('add-files').addEventListener('click', async () => add(await window.desktop.chooseInputs()));
@@ -145,26 +175,26 @@ async function init() {
   $('op-type').addEventListener('change', () => fields()); $('dismiss-op').addEventListener('click', () => $('operation-dialog').close());
   $('operation-form').addEventListener('submit', e => {
     e.preventDefault(); const type = $('op-type').value, values = [...$('op-fields').querySelectorAll('input')].map(x => Number(x.value));
-    let error = values.some(x => !Number.isFinite(x)) ? t('numeric') : '';
-    if (['scale', 'sphere'].includes(type) && values.at(-1) <= 0) error = t('numeric');
-    if (type === 'box' && values.slice(0, 3).some((v, i) => v > values[i + 3])) error = t('numeric');
+    let error = values.some(x => !Number.isFinite(x)) ? t('app.dialogs.numeric') : '';
+    if (['scale', 'sphere'].includes(type) && values.at(-1) <= 0) error = t('app.dialogs.numeric');
+    if (type === 'box' && values.slice(0, 3).some((v, i) => v > values[i + 3])) error = t('app.dialogs.numeric');
     if (error) { $('op-error').textContent = error; return; }
     const op = { type, values }; if (editing >= 0) currentOps()[editing] = op; else currentOps().push(op);
     renderOps(); $('operation-dialog').close();
   });
   for (const id of ['keep', 'iterations', 'effort', 'workers', 'voxel', 'opacity']) $(id).addEventListener('input', () => {
     let v = Number($(id).value); const output = document.querySelector('output[for=' + id + ']');
-    output.textContent = id === 'keep' ? v + '%' : id === 'effort' && v === -1 ? t('default') : id === 'workers' && v === 0 ? t('serial') : id === 'voxel' ? String(v / 1000) : id === 'opacity' ? String(v / 100) : String(v);
+    output.textContent = id === 'keep' ? v + '%' : id === 'effort' && v === -1 ? t('common.default') : id === 'workers' && v === 0 ? t('app.settings.serial') : id === 'voxel' ? String(v / 1000) : id === 'opacity' ? String(v / 100) : String(v);
   });
   $('start').addEventListener('click', begin);
-  $('cancel').addEventListener('click', () => { $('cancel').disabled = true; state('canceling'); window.desktop.cancel(); });
+  $('cancel').addEventListener('click', () => { $('cancel').disabled = true; state('app.status.canceling'); window.desktop.cancel(); });
   $('show-output').addEventListener('click', () => window.desktop.showOutput()); $('licenses').addEventListener('click', () => window.desktop.licenses());
   const drop = $('drop-zone');
   drop.addEventListener('dragover', e => { e.preventDefault(); if (!busy) drop.classList.add('dragging'); });
   drop.addEventListener('dragleave', () => drop.classList.remove('dragging'));
   drop.addEventListener('drop', async e => { e.preventDefault(); drop.classList.remove('dragging'); if (!busy) add(await window.desktop.droppedInputs([...e.dataTransfer.files])); });
   document.addEventListener('dragover', e => e.preventDefault()); document.addEventListener('drop', e => e.preventDefault());
-  window.desktop.onProgress(data => { if (data.kind === 'status') state(data.text); else if(data.kind === 'focus-log') $('log').focus(); else { const log = $('log'); log.textContent = (log.textContent + data.text + '\n').slice(-150000); log.scrollTop = log.scrollHeight; } });
+  window.desktop.onProgress(data => { if (data.kind === 'status') state(data.text); else if (data.kind === 'focus-log') $('log').focus(); else { const log = $('log'); log.textContent = (log.textContent + data.text + '\n').slice(-150000); log.scrollTop = log.scrollHeight; } });
   translate(); formatChanged(); refreshResources();
   const interval = setInterval(() => { if (!document.hidden) refreshResources(); }, 2000);
   window.addEventListener('beforeunload', () => clearInterval(interval));

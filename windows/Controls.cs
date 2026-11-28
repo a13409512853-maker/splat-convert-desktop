@@ -8,8 +8,9 @@ using System.Linq;
 using System.Windows.Forms;
 
 sealed class CardPanel : Panel {
-    internal int Radius = 11;
+    internal int Radius = Theme.RadiusCard;
     internal bool UseSubCard = false;
+    internal bool UseAccentSoft = false;
     internal CardPanel() {
         DoubleBuffered = true;
         SetStyle(ControlStyles.AllPaintingInWmPaint | ControlStyles.UserPaint | ControlStyles.OptimizedDoubleBuffer | ControlStyles.ResizeRedraw, true);
@@ -19,14 +20,56 @@ sealed class CardPanel : Panel {
         var p = Theme.Current;
         using (var bg = new SolidBrush(Parent != null ? Parent.BackColor : p.WindowBg))
             e.Graphics.FillRectangle(bg, ClientRectangle);
-        e.Graphics.SmoothingMode = SmoothingMode.AntiAlias;
+        e.Graphics.SmoothingMode = SmoothingMode.HighQuality;
         var rect = new Rectangle(0, 0, Width - 1, Height - 1);
+        Color fillColor = UseAccentSoft ? p.AccentSoft : (UseSubCard ? p.SubCardBg : p.CardBg);
+        Color borderColor = UseAccentSoft ? p.AccentBorder : p.Border;
         using (var path = Theme.RoundedRect(rect, Radius))
-        using (var fill = new SolidBrush(UseSubCard ? p.SubCardBg : p.CardBg))
-        using (var pen = new Pen(p.Border, 1f)) {
+        using (var fill = new SolidBrush(fillColor))
+        using (var pen = new Pen(borderColor, 1f)) {
             e.Graphics.FillPath(fill, path);
             e.Graphics.DrawPath(pen, path);
         }
+    }
+}
+
+/// <summary>
+/// Continuous-curvature rounded badge (replaces sharp 0px Labels like 01/02/03 &amp; version tags).
+/// </summary>
+sealed class FluentBadge : Control {
+    internal int Radius = Theme.RadiusBadge;
+    internal bool AccentStyle = true;
+    internal FluentBadge() {
+        DoubleBuffered = true;
+        SetStyle(ControlStyles.AllPaintingInWmPaint | ControlStyles.UserPaint | ControlStyles.OptimizedDoubleBuffer | ControlStyles.ResizeRedraw, true);
+        Padding = new Padding(7, 2, 7, 2);
+        Height = 22;
+    }
+    internal void FitWidth() {
+        var sz = TextRenderer.MeasureText(Text ?? "", Font, new Size(400, Height), TextFormatFlags.SingleLine | TextFormatFlags.NoPrefix);
+        Width = Math.Max(28, sz.Width + Padding.Horizontal + 2);
+        Invalidate();
+    }
+    protected override void OnTextChanged(EventArgs e) { base.OnTextChanged(e); FitWidth(); }
+    protected override void OnFontChanged(EventArgs e) { base.OnFontChanged(e); FitWidth(); }
+    protected override void OnPaint(PaintEventArgs e) {
+        var p = Theme.Current;
+        var g = e.Graphics;
+        using (var bg = new SolidBrush(Parent != null ? Parent.BackColor : p.CardBg))
+            g.FillRectangle(bg, ClientRectangle);
+        g.SmoothingMode = SmoothingMode.HighQuality;
+        var rect = new Rectangle(0, 0, Math.Max(1, Width - 1), Math.Max(1, Height - 1));
+        Color fill = AccentStyle ? p.AccentSoft : p.SubCardBg;
+        Color border = AccentStyle ? p.AccentBorder : p.Border;
+        Color fg = AccentStyle ? p.Accent : p.Muted;
+        using (var path = Theme.RoundedRect(rect, Radius))
+        using (var b = new SolidBrush(fill))
+        using (var pen = new Pen(border, 1f)) {
+            g.FillPath(b, path);
+            g.DrawPath(pen, path);
+        }
+        TextRenderer.DrawText(g, Text ?? "", Font, ClientRectangle, fg,
+            TextFormatFlags.HorizontalCenter | TextFormatFlags.VerticalCenter | TextFormatFlags.SingleLine | TextFormatFlags.NoPrefix);
     }
 }
 
@@ -66,7 +109,7 @@ sealed class FluentButton : Button {
     internal bool Pill;
     internal bool SoftAccent;
     internal string IconName;
-    internal int Radius = 7;
+    internal int Radius = Theme.RadiusControl;
     bool hovered, pressed;
 
     internal FluentButton() {
@@ -197,7 +240,7 @@ sealed class SegmentedControl : Control {
         g.SmoothingMode = SmoothingMode.AntiAlias;
 
         var outer = new Rectangle(0, 0, Width - 1, Height - 1);
-        using (var path = Theme.RoundedRect(outer, 7))
+        using (var path = Theme.RoundedRect(outer, Theme.RadiusControl))
         using (var fill = new SolidBrush(p.SubCardBg))
         using (var pen = new Pen(p.Border, 1f)) {
             g.FillPath(fill, path);
@@ -210,7 +253,7 @@ sealed class SegmentedControl : Control {
             for (int i = 0; i < items.Count; i++) {
                 var r = new Rectangle((int)Math.Round(2 + i * segW), 2, Math.Max(10, (int)Math.Round(segW)), Height - 5);
                 if (i == selectedIndex) {
-                    using (var sp = Theme.RoundedRect(r, 5))
+                    using (var sp = Theme.RoundedRect(r, Theme.RadiusBadge))
                     using (var sb = new SolidBrush(p.CardBg))
                     using (var spen = new Pen(p.AccentBorder, 1f)) {
                         g.FillPath(sb, sp);
@@ -333,9 +376,9 @@ sealed class FluentInputBox : Panel {
     }
     protected override void OnPaint(PaintEventArgs e) {
         var p = Theme.Current;
-        e.Graphics.SmoothingMode = SmoothingMode.AntiAlias;
+        e.Graphics.SmoothingMode = SmoothingMode.HighQuality;
         var rect = new Rectangle(0, 0, Width - 1, Height - 1);
-        using (var path = Theme.RoundedRect(rect, 6))
+        using (var path = Theme.RoundedRect(rect, Theme.RadiusControl))
         using (var bg = new SolidBrush(p.InputBg))
         using (var pen = new Pen(focused ? p.Accent : p.BorderStrong, focused ? 1.4f : 1f)) {
             e.Graphics.FillPath(bg, path);
@@ -366,10 +409,10 @@ sealed class FluentMetricTile : Control {
         var g = e.Graphics;
         using (var bg = new SolidBrush(Parent != null ? Parent.BackColor : p.TitleBarBg))
             g.FillRectangle(bg, ClientRectangle);
-        g.SmoothingMode = SmoothingMode.AntiAlias;
+        g.SmoothingMode = SmoothingMode.HighQuality;
 
         var rect = new Rectangle(0, 0, Width - 1, Height - 1);
-        using (var path = Theme.RoundedRect(rect, 8))
+        using (var path = Theme.RoundedRect(rect, 10))
         using (var fill = new SolidBrush(p.CardBg))
         using (var pen = new Pen(hovered ? p.AccentBorder : p.Border, 1f)) {
             g.FillPath(fill, path);
@@ -494,7 +537,7 @@ sealed class FluentFileList : Control {
     static string FormatSize(string path) {
         try {
             long sz = new FileInfo(path).Length;
-            return sz >= 1073741824 ? Budget.GB(sz) : (sz / 1048576d).ToString("0.0", CultureInfo.InvariantCulture) + " MiB";
+            return sz >= 1073741824 ? Budget.GB(sz) : (sz / 1048576d).ToString("0.0", CultureInfo.InvariantCulture) + " MB";
         } catch { return ""; }
     }
 
@@ -512,7 +555,7 @@ sealed class FluentFileList : Control {
                 g.FillPath(fill, path);
                 g.DrawPath(dash, path);
             }
-            TextRenderer.DrawText(g, I18n.T("emptyFiles"), Font, box, p.Muted, TextFormatFlags.HorizontalCenter | TextFormatFlags.VerticalCenter | TextFormatFlags.WordBreak);
+            TextRenderer.DrawText(g, I18n.T("app.inputs.emptyHint"), Font, box, p.Muted, TextFormatFlags.HorizontalCenter | TextFormatFlags.VerticalCenter | TextFormatFlags.WordBreak);
             return;
         }
 
@@ -633,11 +676,11 @@ sealed class FluentOpList : Control {
     }
 
     static string BadgeFor(string flag) {
-        if (flag == "--filter-nan") return "清理";
-        if (flag == "--filter-floaters" || flag == "--filter-cluster") return "3.12 新增";
-        if (flag == "--filter-harmonics") return "瘦身";
-        if (flag == "--filter-box" || flag == "--filter-sphere") return "裁剪";
-        return "变换";
+        if (flag == "--filter-nan") return I18n.T("app.pipeline.badgeClean");
+        if (flag == "--filter-floaters" || flag == "--filter-cluster") return I18n.T("app.pipeline.badgeNew312");
+        if (flag == "--filter-harmonics") return I18n.T("app.pipeline.badgeCompact");
+        if (flag == "--filter-box" || flag == "--filter-sphere") return I18n.T("app.pipeline.badgeCrop");
+        return I18n.T("app.pipeline.badgeTransform");
     }
 
     protected override void OnPaint(PaintEventArgs e) {
@@ -653,7 +696,7 @@ sealed class FluentOpList : Control {
             using (var pen = new Pen(p.Border, 1f)) {
                 g.FillPath(fill, path); g.DrawPath(pen, path);
             }
-            TextRenderer.DrawText(g, I18n.T("emptyOps"), Font, box, p.Muted, TextFormatFlags.HorizontalCenter | TextFormatFlags.VerticalCenter | TextFormatFlags.WordBreak);
+            TextRenderer.DrawText(g, I18n.T("app.pipeline.emptyHint"), Font, box, p.Muted, TextFormatFlags.HorizontalCenter | TextFormatFlags.VerticalCenter | TextFormatFlags.WordBreak);
             return;
         }
 
@@ -695,7 +738,7 @@ sealed class FluentOpList : Control {
                 var titleRect = new Rectangle(r.X + 34, r.Y + 7, Math.Max(40, badgeRect.Left - r.X - 38), 19);
                 TextRenderer.DrawText(g, op.Step.Name, fTitle, titleRect, op.Enabled ? p.Ink : p.Muted, TextFormatFlags.Left | TextFormatFlags.EndEllipsis | TextFormatFlags.NoPrefix);
 
-                string sub = String.IsNullOrEmpty(op.Value) ? "自动默认参数" : op.Value;
+                string sub = op.Step==Step.Scene ? I18n.T("app.pipeline.sceneEditSub") : String.IsNullOrEmpty(op.Value) ? I18n.T("app.pipeline.defaultAutoParam") : op.Value;
                 TextRenderer.DrawText(g, sub, fSub, new Rectangle(r.X + 34, r.Y + 28, r.Width - 44, 17), p.Muted, TextFormatFlags.Left | TextFormatFlags.EndEllipsis | TextFormatFlags.NoPrefix);
             }
         }
@@ -761,9 +804,9 @@ sealed class FluentDropdown : Control {
         var p = Theme.Current;
         var g = e.Graphics;
         using (var bg = new SolidBrush(Parent != null ? Parent.BackColor : p.CardBg)) g.FillRectangle(bg, ClientRectangle);
-        g.SmoothingMode = SmoothingMode.AntiAlias;
+        g.SmoothingMode = SmoothingMode.HighQuality;
         var rect = new Rectangle(0, 0, Width - 1, Height - 1);
-        using (var path = Theme.RoundedRect(rect, 7))
+        using (var path = Theme.RoundedRect(rect, Theme.RadiusControl))
         using (var fill = new SolidBrush(Enabled ? p.InputBg : p.SubCardBg))
         using (var pen = new Pen(open ? p.Accent : (hovered ? p.AccentBorder : p.BorderStrong), open ? 1.3f : 1f)) {
             g.FillPath(fill, path); g.DrawPath(pen, path);
@@ -786,8 +829,14 @@ sealed class FluentMenuRenderer : ToolStripProfessionalRenderer {
     }
     protected override void OnRenderMenuItemBackground(ToolStripItemRenderEventArgs e) {
         var p = Theme.Current;
-        var r = new Rectangle(3, 1, e.Item.Width - 6, e.Item.Height - 2);
-        using (var b = new SolidBrush(e.Item.Selected ? p.AccentSoft : p.CardBg)) e.Graphics.FillRectangle(b, r);
+        var r = new Rectangle(4, 1, Math.Max(1, e.Item.Width - 8), Math.Max(1, e.Item.Height - 2));
+        e.Graphics.SmoothingMode = SmoothingMode.HighQuality;
+        if (e.Item.Selected) {
+            using (var path = Theme.RoundedRect(r, Theme.RadiusBadge))
+            using (var b = new SolidBrush(p.AccentSoft)) e.Graphics.FillPath(b, path);
+        } else {
+            using (var b = new SolidBrush(p.CardBg)) e.Graphics.FillRectangle(b, e.Item.ContentRectangle);
+        }
     }
     protected override void OnRenderItemText(ToolStripItemTextRenderEventArgs e) {
         e.TextColor = e.Item.Selected ? Theme.Current.Accent : Theme.Current.Ink;

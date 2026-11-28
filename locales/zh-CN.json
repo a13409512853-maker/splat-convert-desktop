@@ -1,0 +1,2260 @@
+{
+  "_meta": {
+    "code": "zh-CN",
+    "legacyCode": "zh",
+    "name": "Chinese (Simplified)",
+    "nativeName": "简体中文",
+    "order": 1
+  },
+  "common": {
+    "ok": "确定",
+    "cancel": "取消",
+    "close": "关闭",
+    "default": "默认",
+    "unknown": "暂不可用",
+    "copied": "已复制 ✓",
+    "allFiles": "所有文件",
+    "on": "开启",
+    "off": "关闭"
+  },
+  "app": {
+    "header": {
+      "local": "本地转换",
+      "engineBadge": "引擎 v{version} · 镜像更新",
+      "themeLight": "浅色主题",
+      "themeDark": "深色主题",
+      "language": "语言",
+      "portableBadge": "v3.2 便携版"
+    },
+    "inputs": {
+      "title": "源文件",
+      "add": "添加文件",
+      "remove": "移除",
+      "up": "上移",
+      "down": "下移",
+      "fileName": "文件名",
+      "size": "大小",
+      "filesUnit": "个文件",
+      "emptyHint": "拖拽 PLY / SOG / SPZ / GLB 文件到此处\n或点击添加文件",
+      "batchMode": "批量独立转换",
+      "mergeMode": "合并为一个",
+      "inspectBtn": "体检",
+      "fileCount": "{count} 个文件",
+      "fileCountWithSize": "{count} 个文件 · {size}"
+    },
+    "pipeline": {
+      "title": "变换与筛选",
+      "merged": "合并后的结果",
+      "addOp": "添加操作",
+      "editOp": "编辑操作",
+      "previewBtn": "3D 编辑",
+      "emptyHint": "暂无自定义步骤\n点击上方「＋ 添加操作」添加清洗或变换",
+      "scopeLabel": "操作范围",
+      "opsListLabel": "按执行顺序排列的操作",
+      "sceneEditName": "三维选区与变换",
+      "sceneEditSub": "全量应用 · 双击编辑",
+      "defaultAutoParam": "自动默认参数",
+      "badgeClean": "清理",
+      "badgeNew312": "3.12 新增",
+      "badgeCompact": "瘦身",
+      "badgeCrop": "裁剪",
+      "badgeTransform": "变换",
+      "actionTypeLabel": "操作类型"
+    },
+    "ops": {
+      "translate": "平移",
+      "rotate": "旋转（度）",
+      "scale": "等比缩放",
+      "nan": "移除无效点",
+      "harmonics": "球谐阶数上限",
+      "box": "包围盒筛选",
+      "sphere": "球形范围筛选",
+      "floaters": "去除空中飞点（Filter Floaters）",
+      "cluster": "保留连通主体（Filter Cluster）",
+      "filterValue": "属性数值筛选",
+      "mortonOrder": "莫顿码空间重排",
+      "factor": "倍率",
+      "radius": "半径",
+      "band": "阶数",
+      "min": "最小",
+      "max": "最大",
+      "floaterParams": "体素大小,透明度,最小贡献",
+      "clusterParams": "网格精度,透明度,最小贡献",
+      "filterValueParams": "列名,比较符,阈值",
+      "quickFloaters": "一键去除空中飞点（GPU）",
+      "quickNan": "自动清理无效点（NaN）",
+      "quickSh": "球谐阶数限制",
+      "bandValue": "阶数: {value}",
+      "minAxis": "最小 {axis}",
+      "maxAxis": "最大 {axis}"
+    },
+    "settings": {
+      "title": "输出设置",
+      "format": "导出格式",
+      "output": "输出文件",
+      "outputFolder": "输出文件夹",
+      "browse": "选择输出位置",
+      "keep": "保留点数",
+      "adaptiveDecimate": "自适应抽稀（保护细节与天空）",
+      "uniformDecimate": "均匀抽稀（更快）",
+      "iterations": "球谐压缩迭代",
+      "effort": "WebP 打包强度",
+      "workers": "编码线程",
+      "serial": "串行",
+      "voxel": "体素边长",
+      "opacity": "不透明度阈值",
+      "device": "计算设备",
+      "estOutput": "预估输出体积",
+      "estUnknown": "添加 PLY/SOG/SPLAT 后自动预估",
+      "advBtn": "高级 / 体积",
+      "jobsBtn": "任务队列",
+      "licenses": "开源许可",
+      "estPending": "预估输出体积：{hint}",
+      "estRange": "预估输出体积：≈ {low} – {high}",
+      "estRangeSaved": "预估输出体积：≈ {low} – {high}  (-{pct}%)"
+    },
+    "presets": {
+      "fast": "快速转换",
+      "lite": "极致瘦身",
+      "balanced": "网页均衡",
+      "hq": "高质归档"
+    },
+    "devices": {
+      "auto": "自动选用显卡",
+      "cpu": "CPU（处理器）",
+      "vulkan": "Vulkan（兼容后端）",
+      "metal": "Metal（苹果图形后端）",
+      "shortAuto": "自动显卡",
+      "shortVulkan": "Vulkan",
+      "shortCpu": "纯 CPU"
+    },
+    "formats": {
+      "sog": "SOG / SuperSplat 优化包",
+      "ply": "PLY / 标准格式",
+      "compressed": "压缩 PLY",
+      "spz": "SPZ  /  Niantic 压缩格式",
+      "csv": "CSV / 表格数据",
+      "html": "HTML / 内嵌查看器",
+      "voxel": "体素 ZIP / 碰撞数据"
+    },
+    "actions": {
+      "start": "开始转换",
+      "openOutput": "打开输出目录",
+      "logs": "运行日志",
+      "toggleLogs": "运行日志",
+      "clearLogs": "清空",
+      "editOutput3d": "3D · 编辑导出结果…",
+      "openNativeVulkan": "原生 Vulkan 视口（实验旁路）…",
+      "progressAria": "转换进度",
+      "resourcesAria": "系统资源"
+    },
+    "status": {
+      "ready": "就绪",
+      "done": "已完成",
+      "canceled": "已取消",
+      "canceling": "正在取消…",
+      "preflight": "正在检查可用资源…",
+      "preparing": "准备本地转换引擎…",
+      "converting": "正在转换…",
+      "reducing": "阶段 1 / 2：精简高斯点…",
+      "encoding": "阶段 2 / 2：编码输出…",
+      "packing": "正在打包体素…",
+      "verifying": "正在校验成品...",
+      "failed": "转换失败",
+      "elapsed": "已用时",
+      "etaRemaining": "预计剩余",
+      "batchProgress": "批量进度",
+      "outputDoneSummary": "输出文件: {name} ({size})",
+      "batchDoneSummary": "批量独立转换 · {count} 个文件",
+      "outputLogLine": "输出文件: {path}"
+    },
+    "metrics": {
+      "memory": "内存",
+      "vram": "显存",
+      "cpu": "处理器",
+      "gpu": "显卡",
+      "available": "当前可用",
+      "commit": "系统内存提交余量",
+      "sample": "采样时间",
+      "gpuUnknown": "自动模式：实际使用的显卡由引擎选择。",
+      "unified": "统一内存",
+      "upperBound": "筛选前点数上限",
+      "baseMemory": "基础数据数组",
+      "estimatedMemory": "预计内存区间",
+      "estimateNote": "估算不等于峰值保证；筛选后的点数可能更少，其他程序也会改变可用资源。",
+      "chartIdle": "空闲期",
+      "chartActive": "压缩中",
+      "chartStartMark": "开始压缩",
+      "chartCurrent": "当前值",
+      "chartPeak": "压缩期峰值",
+      "chartIdleAvg": "空闲均值",
+      "historyCpu": "CPU 占用历史曲线",
+      "historyRam": "系统内存占用历史曲线",
+      "historyGpu": "GPU 计算引擎历史曲线",
+      "historyVram": "专用显存（VRAM）历史曲线",
+      "modeRecording": "0.5s 采样 · X轴自适应拉伸",
+      "modeFrozen": "上次压缩完整曲线已锁定 · 下次压缩刷新",
+      "modeIdle": "0.5s 高频采样 · 最近 60 秒"
+    },
+    "dialogs": {
+      "resourceWarning": "当前可用资源可能不足",
+      "warnSubtitle": "检测到本次任务可能超出当前可用内存或显存，请确认后再继续",
+      "warnNeed": "预计内存需求",
+      "warnAvail": "当前可用内存",
+      "warnVram": "显卡可用显存",
+      "memoryAdvice": "降低球谐阶数、保留点数或编码线程；关闭占内存程序，并检查系统分页文件。",
+      "gpuAdvice": "SOG / HTML 可切换处理器模式或降低球谐阶数。体素输出需要兼容显卡。",
+      "continue": "仍然转换",
+      "adjust": "返回调整",
+      "copy": "复制诊断信息",
+      "viewLog": "查看日志",
+      "failSubtitle": "转换未能完成，以下是自动定位的原因与建议排查方案",
+      "overwrite": "转换成功后覆盖已有文件？",
+      "invalid": "参数无效",
+      "numeric": "请输入有效数字，倍率和半径应大于零，范围最小值不能大于最大值。",
+      "cleanup": "临时文件清理未完成，请查看日志中的路径。"
+    },
+    "errors": {
+      "memoryTitle": "无法分配所需内存",
+      "memoryDetail": "引擎申请数据数组失败。可能与可用内存、提交额度或运行时分配限制有关。",
+      "gpuTitle": "显卡资源不足或设备不可用",
+      "diskTitle": "磁盘空间不足",
+      "diskAdvice": "检查输出盘和系统临时目录所在盘，释放空间后重试。",
+      "accessTitle": "无法读取或写入文件",
+      "accessAdvice": "检查文件权限、更换输出目录，并关闭可能占用文件的程序。",
+      "inputTitle": "源文件或文件数据无效",
+      "inputAdvice": "确认源文件仍存在且包含高斯属性；必要时从原软件重新导出。",
+      "emptyTitle": "筛选后没有可转换的点",
+      "emptyAdvice": "检查范围筛选和保留比例，放宽条件后重试。",
+      "unknownAdvice": "原因尚未确定。查看日志，或复制诊断信息提交到项目仓库。"
+    },
+    "star": {
+      "title": "转换成功，感谢使用",
+      "message": "第一次转换已完成！如果这个工具帮到了你，欢迎到 GitHub 为项目点一个 Star（赞）。",
+      "openProject": "打开项目",
+      "congrats": "首次转换大功告成！",
+      "subDefault": "你的 3D 高斯场景已成功处理并保存到本地。",
+      "body": "Splat Convert Desktop 是免费开源的本地桌面工具；核心 3D 高斯压缩、格式转换与清洗能力由 PlayCanvas 开源引擎 @playcanvas/splat-transform 提供。\n\n衷心感谢 PlayCanvas 原作者及社区贡献者的杰出工作！如果本工具帮到了你，欢迎分别为本桌面端项目与上游引擎项目点亮 Star 支持开源（本提示仅出现一次）。",
+      "btn": "去 GitHub 点 Star 支持",
+      "later": "下次再说",
+      "upstreamLink": "上游压缩引擎项目："
+    },
+    "licenses": {
+      "engineCredit": "本软件是 @playcanvas/splat-transform 的非官方本地桌面界面，底层压缩与转换能力完全由上游开源引擎提供，衷心感谢 PlayCanvas 原作者及社区贡献者！",
+      "subtitle": "核心开源项目致谢与第三方组件许可摘要",
+      "coreTitle": "核心项目与致谢",
+      "depsTitle": "内置第三方开源组件",
+      "showRaw": "查看完整第三方许可原文",
+      "hideRaw": "收起许可原文",
+      "depsList": "• PlayCanvas Engine & Splat Transform 3.12.0   [MIT]\n• ReSplat Editor (Re祁, 环绕式模式/调色/选区/SAM2 方案借鉴)   [CC BY 4.0]\n• SuperSplat (PlayCanvas Ltd., 3DGS 编辑器范式与球谐旋转)   [MIT]\n• Spirula Studio (harry7557558, 六面包裹体控点与自动对齐设计参考)   [GPL-3.0]\n• GaussianSplatEditor (TimChen1383, 透明度/尺寸选择参考)   [MIT]\n• Three.js [MIT] · Meta SAM 2 [Apache-2.0] · ONNX Runtime Web [MIT]\n• Node.js 22.23.2 [MIT] · WebGPU/Dawn [BSD-3/Apache-2.0] · @adobe/spz [MIT] · Lucide [ISC]"
+    },
+    "engine": {
+      "updateTitle": "引擎更新",
+      "checkUpdates": "检查更新",
+      "pullUpdate": "立即拉取更新",
+      "rollback": "恢复内置版本",
+      "mirrorsLabel": "镜像源（国内直连优先）",
+      "mirrorNpmmirror": "阿里云 npmmirror（国内直连首选）",
+      "mirrorTencent": "腾讯云 NPM 镜像（国内备用）",
+      "mirrorHuawei": "华为云 NPM 镜像（国内备用）",
+      "mirrorNpmjs": "官方 npmjs 源（海外兜底）",
+      "decoupledHint": "引擎已解耦存放于便携数据目录，支持多镜像直连拉取新版 @playcanvas/splat-transform。",
+      "activeStatusBundled": "当前运行引擎：v{active}（内置兜底版）   ·   内置版本：v{bundled}",
+      "activeStatusUpdated": "当前运行引擎：v{active}（在线更新版）   ·   内置版本：v{bundled}",
+      "checkingMirrors": "正在测速并检查镜像最新版本...",
+      "connectingMirror": "正在连接镜像源（首选：{mirrorId}）...",
+      "mirrorResult": "镜像：{mirror}（{latency} ms），最新版本：v{version}",
+      "pullingVersion": "正在拉取并校验 v{version}...",
+      "updatedSuccess": "更新成功！已切换至引擎 v{version}",
+      "restoredBundled": "已恢复至内置引擎 v{version}",
+      "rolledBackLog": "已回滚至内置版本 v{version}",
+      "errLog": "错误：{error}",
+      "failLog": "失败：{error}",
+      "prepRuntime": "准备基础运行环境...",
+      "downloading": "正在从 {mirror} 下载 v{version} ...",
+      "verifyingSha": "正在校验 SHA-512 完整性...",
+      "shaMismatch": "SHA-512 校验失败，已中止更新。",
+      "assemblingDir": "正在组装隔离运行目录...",
+      "extractingPkg": "正在解压新版引擎包...",
+      "selfChecking": "正在执行新版引擎自检 (--version)...",
+      "selfCheckOk": "自检通过：@playcanvas/splat-transform {version}",
+      "selfCheckTimeout": "引擎自检超时。",
+      "selfCheckFailed": "引擎自检失败：{error}",
+      "allMirrorsUnreachable": "所有镜像源均不可达。"
+    },
+    "inspector": {
+      "title": "场景体检与体积拆解 — {name}",
+      "readingMeta": "正在后台读取容器与头部元数据...",
+      "readFailed": "读取失败：{error}",
+      "deepBtn": "深度引擎体检 (--stats)",
+      "deepRunning": "正在执行深度体检...",
+      "deepEmpty": "(引擎未返回统计输出)",
+      "nonGaussianTag": " · 非高斯点云",
+      "headerSummary": "{name}  |  {format} ({version})  |  {count} 点  |  SH {bands} 阶  |  {size}{tags}\n指纹 ({algo}): {fp}",
+      "storageBreakdown": "体积结构拆解",
+      "nonSogSummary": "非 SOG 容器：总文件大小 {size}，平均每点 {bpp} B",
+      "extraColumns": "额外属性列：{cols}",
+      "compatTitle": "目标格式兼容性差异",
+      "compatSogSh": "SOG v3 支持 0–4 阶球谐压缩",
+      "compatSog2dgs": "SOG v3 meta.json 保留 2dgs 标记",
+      "compatSogBlind": "SOG v3 保留逐点 blind 纹理通道",
+      "compatSpzShClamped": "SPZ 最高仅支持 3 阶，第 4 阶将被裁剪",
+      "compatSpzShOk": "完整支持 0–3 阶球谐",
+      "compatSpz2dgs": "SPZ 格式头不支持 2DGS 标记",
+      "compatSpzBlind": "SPZ 不支持自定义 blind 属性",
+      "compatPlySh": "标准 PLY 完整无损保留全部属性",
+      "compatPlyOpacity": "默认写 opacity_linear；旧查看器需开启 --ply-logit-opacity 钳制",
+      "compatCompressed": "位置与属性量化压缩以缩小体积",
+      "compatVoxel": "体素格式仅保留空间占用与碰撞结构，不含颜色与球谐"
+    },
+    "advanced": {
+      "title": "高级选项、全局提示配置与 3.12.0 全量能力清单",
+      "targetCapLabel": "目标体积硬上限 (MB，0=不限):",
+      "minKeepLabel": "最低保留点数 %:",
+      "targetCapNote": "(仅 SOG/HTML 生效，默认最多 3 次尝试)",
+      "sogVersionLabel": "SOG 版本:",
+      "sogV3Rec": "v3 (推荐)",
+      "sogV2Legacy": "v2 (旧版)",
+      "shErrorLabel": "SH 色差目标:",
+      "spzVersionLabel": "SPZ 版本:",
+      "spzV4Default": "v4 (默认)",
+      "plyLogitCheck": "PLY 兼容 Logit 透明度 (--ply-logit-opacity)",
+      "htmlUnbundledCheck": "分离式 HTML 输出 (--unbundled)",
+      "extFillCheck": "室内密封",
+      "floorFillCheck": "室外地面填充",
+      "carveCheck": "可行走雕刻",
+      "seedPosLabel": "种子点:",
+      "collisionMeshLabel": "碰撞网格:",
+      "tipDelayLabel": "全局提示悬停延时 (ms):",
+      "maxHistoryLabel": "三维编辑历史步数上限:",
+      "autoSaveNote": "(自动保存至便携设置，全界面生效)",
+      "tipRegionMainLabel": "老手提示开关(主端):",
+      "tipRegionInput": "主界面·输入区",
+      "tipRegionPipeline": "主界面·管线区",
+      "tipRegionOutput": "主界面·输出区",
+      "tipRegionDialog": "外部弹窗页面",
+      "tipRegionEditorLabel": "老手提示开关(三维):",
+      "tipRegionEdTool": "工具栏与底部上下文",
+      "tipRegionEdScene": "场景管理与变换",
+      "tipRegionEdColor": "调色与直方图",
+      "tipRegionEdModal": "导出与保存弹窗",
+      "capNotApplicable": " · 当前格式不适用"
+    },
+    "jobs": {
+      "title": "可恢复任务清单 (data/jobs)",
+      "resumeBtn": "恢复 / 重试失败项",
+      "emptyList": "暂无已保存的任务清单（执行转换后自动记录在 data/jobs/ 中）",
+      "itemSummary": "{id}  |  {mode}  |  完成 {ok}/{total}",
+      "itemFailedSuffix": " (失败/中断 {fail})",
+      "missingInput": "{path} (文件不存在，需重定位)",
+      "conflictDuplicate": "输出路径冲突（重复目标）：{path}",
+      "conflictExists": "目标文件已存在（默认拒绝覆盖）：{path}"
+    },
+    "converter": {
+      "targetExistsNoOverwrite": "目标文件已存在且未授权覆盖：{path}",
+      "targetSizeAttemptLog": "[目标体积] 第 {attempt}/{max} 次全量尝试 (Keep={keep}%, Effort={effort}, 上限={limit})",
+      "targetSizeAttemptDetail": "目标体积尝试 {attempt}/{max} · {detail}",
+      "targetSizeActualLog": "[目标体积] 实测成品大小：{bytes} bytes ({gb})",
+      "targetSizeExceeded": "未能达到目标体积硬上限（上限 {limit} bytes，最低实测 {smallest} bytes，超出 {excess} bytes；已遵守质量下限且未替换旧文件）。",
+      "verifyFailed": "导出后校验失败：{message}",
+      "badExtension": "输出扩展名不正确。",
+      "overwriteSourceDenied": "不能将输出写回源文件，请另选文件名。",
+      "outputExists": "输出已存在，请确认覆盖或另选文件名。",
+      "sharedBakeReuseLog": "[公共烘焙复用] 复用冻结快照烘焙中间体 ({key})",
+      "losslessDirectCopyLog": "[无损直通] 保留烘焙后标准 PLY 原始列布局与位精确属性",
+      "verifyLog": "[校验] {message} ({level})",
+      "engineExited": "引擎退出（{code}）。\n{tail}"
+    },
+    "portable": {
+      "notWritable": "便携目录不可写（严格便携模式禁止回退到系统 AppData 或 TEMP 目录）：\n{dir}\n原因：{error}",
+      "emptyPath": "路径不能为空。",
+      "outsideRoot": "拒绝访问便携根之外的路径：{path}",
+      "reparseBlocked": "检测到符号链接或联接点逃逸风险，已拒绝：{path}",
+      "onlyManagedCleanup": "仅允许清理 data/ 下的受管目录。",
+      "deleteParentDenied": "禁止删除受管父目录本身。"
+    },
+    "sceneRecipe": {
+      "invalid": "无效的三维编辑记录",
+      "missingObjects": "无效的三维编辑记录 (v3 缺少场景物体定义)"
+    },
+    "editorHost": {
+      "initNote": "正在初始化三维高斯编辑器（+Y 朝上）…",
+      "windowTitle": "三维高斯编辑 (+Y 朝上) · {name}",
+      "lowMemory": "当前可用内存不足，已关闭三维编辑。普通转换仍然可用。",
+      "previewUnavailable": "预览不可用 · {error}",
+      "webviewNotReady": "WebView2 内核未就绪。",
+      "initTimeout": "三维视口初始化超时，请检查 WebGL2 支持。",
+      "stageBootWorker": "正在启动本地点云解码引擎…",
+      "stageOpenAsset": "正在打开源资产文件…",
+      "stageDecode": "正在解码高斯点云数据…",
+      "stageBuildSgc3": "正在生成无损 SGC3 内存数据块…",
+      "processFailed": "WebView2 渲染/GPU 进程异常中断 ({kind})",
+      "recoveryFailed": "降级恢复失败：{error}",
+      "safeModeDefaultReason": "显卡渲染过载或上下文丢失",
+      "safeModeReloadFailed": "应急节能模式重载失败：{error}",
+      "sam2ImportTitle": "选择本地 SAM 2 ONNX 模型文件（sam2_hiera_tiny.encoder.onnx / decoder.onnx / ort.webgpu.min.mjs）",
+      "sam2ImportFilter": "SAM 2 模型与运行时 (*.onnx;*.mjs;*.wasm)|*.onnx;*.mjs;*.wasm|所有文件|*.*",
+      "sam2Imported": "已导入 {count} 个文件至 data/models/sam2/",
+      "sam2ImportFailed": "导入 SAM 2 文件失败：{error}",
+      "exportImageFilter": "PNG 图片 (*.png)|*.png",
+      "exportImageCanceled": "已取消保存",
+      "exportImageFailed": "导出当前视图图片失败：{error}",
+      "exportImageTitle": "导出图片",
+      "saveAsFolderDesc": "选择导出目标文件夹（另存为绝不修改原始源文件）",
+      "saveAsCanceledFolder": "已取消选择文件夹",
+      "saveAsNoObjects": "没有可导出的物体",
+      "saveAsInitEngine": "正在初始化编码引擎…",
+      "saveAsSuccess": "已成功导出 {count} 个文件至 {dir}",
+      "saveAsCanceled": "导出已取消，您的所有编辑数据完好保留，可随时重试。",
+      "saveAsFailed": "导出中断（编辑数据未丢失，可直接重试）：{error}",
+      "nativeTitle": "原生 Vulkan 1.3 旁路视口 (+Y 朝上) · {name}",
+      "nativeFallbackBtn": "回退至 WebView2 编辑器",
+      "nativeSaveBtn": "保存编辑配方",
+      "nativeOrbitTool": "视角旋转",
+      "nativeBoxSelectTool": "框选工具",
+      "nativeDeleteBtn": "软删除选中",
+      "nativeUndoBtn": "撤销",
+      "nativeRedoBtn": "重做",
+      "nativeSphereEnable": "可调包裹球",
+      "nativeSphereInvert": "反选球外",
+      "nativeSphereSelectBtn": "选中球内点",
+      "nativeUnavailable": "原生 Vulkan 视口不可用，将回退到默认 WebView2 编辑器：{reason}"
+    },
+    "models": {
+      "sam21TinyName": "SAM 2.1 Hiera Tiny (FP16)",
+      "sam21TinyBadge": "内置默认",
+      "sam21TinyTooltip": "【内置默认 · 推荐】SAM 2.1 Hiera Tiny 半精度版（约 74 MB）。全内置单文件离线可用，在速度、显存占用、抗遮挡与小物体框选精度之间达到最佳平衡。",
+      "mobileSamName": "MobileSAM (轻量极速)",
+      "mobileSamBadge": "极速轻量",
+      "mobileSamTooltip": "【极速轻量 · 约 43 MB】显著降低显存占用并大幅加速核显/CPU (WASM) 推理；适合低配机器或简单清晰物体，但复杂模糊边缘与遮挡精度略低于 SAM 2.1。",
+      "sam21SmallName": "SAM 2.1 Hiera Small (高精度)",
+      "sam21SmallBadge": "高精度",
+      "sam21SmallTooltip": "【高精度增强 · 约 88 MB】比 Tiny 主干更深，细长手柄、植物枝叶与复杂重叠物体的边缘分割更细腻；单视角推理耗时与显存占用略高于 Tiny。",
+      "lamaName": "LaMa 平面纹理修复 (L2)",
+      "lamaBadge": "智能补洞",
+      "lamaTooltip": "【平面补洞 L2 默认引擎 · 约 198 MB】基于快速傅里叶卷积（非扩散），可在 1～2 秒内高质量续接木纹、瓷砖缝、桌布花纹并反投影至拟合平面。",
+      "missingBundle": "当前可执行文件未内嵌默认模型包（bundled_models.zip）。",
+      "integrityFailed": "内置模型完整性校验失败：{path}",
+      "extractFailed": "解压内置模型失败：{error}",
+      "downloadingMb": "正在下载 {done} / {total} MB…",
+      "verifyingSha256": "正在校验 SHA-256 完整性…",
+      "sha256Mismatch": "文件 SHA-256 校验不匹配（下载可能损坏）",
+      "unknownModel": "未知模型：{id}",
+      "alreadyReady": "模型已就绪",
+      "alreadyDownloading": "该模型正在下载中，请稍候",
+      "probingMirrors": "正在自动测试最佳下载线路…",
+      "switchingBackupMirror": "主线路不可用，已自动切换备用线路下载…",
+      "allMirrorsFailed": "所有镜像线路均下载失败：{error}",
+      "networkError": "网络错误",
+      "downloadVerified": "下载与校验完成",
+      "downloadedModel": "已下载并校验：{name}",
+      "downloadCanceled": "已取消下载",
+      "downloadFailed": "下载失败：{error}"
+    },
+    "electron": {
+      "invalidFormat": "格式无效",
+      "jobRunning": "已有转换任务在运行",
+      "reselectInputs": "请重新选择源文件",
+      "invalidOpCount": "操作数量无效",
+      "invalidOpParams": "操作参数无效",
+      "positiveScaleRadius": "倍率或半径必须大于零",
+      "shRange03": "球谐阶数必须在 0 到 3 之间",
+      "invalidBoxRange": "包围盒最小值大于最大值",
+      "sliderOutOfRange": "滑块参数超出范围",
+      "invalidOutputFormat": "输出格式无效",
+      "selectInputs": "请选择源文件",
+      "invalidInputFormat": "源文件格式无效",
+      "invalidOutputPath": "输出路径或扩展名无效",
+      "deviceUnsupported": "计算设备不支持此输出",
+      "invalidVoxelParams": "体素参数无效",
+      "engineFailed": "引擎转换失败：\n{tail}",
+      "cannotOverwriteSource": "不能覆盖源文件，请另选输出文件名",
+      "outputExists": "输出已存在",
+      "emptyOutput": "未生成有效输出"
+    },
+    "tips": {
+      "upPrefix": "调大/开启：",
+      "downPrefix": "调小/关闭：",
+      "recPrefix": "新手建议：",
+      "mode": {
+        "title": "处理模式：批量独立 vs 合并",
+        "tag": "工作流",
+        "summary": "决定拖入多个文件时，是逐个分别输出，还是拼成一个大场景。",
+        "up": "批量独立转换：一次拖入 10 个模型，自动按原名输出 10 个文件。",
+        "down": "合并为一个：将多个局部扫描叠加合并成单个场景文件。",
+        "recommend": "日常批量转格式请保持默认的「批量独立转换」。"
+      },
+      "format": {
+        "title": "导出格式",
+        "tag": "核心设置",
+        "summary": "决定输出文件能在什么软件/网页中打开以及最终体积。",
+        "up": "SOG / HTML 压缩率最高（缩小 10–20 倍）；SPZ 适合轻量跨平台存储。",
+        "down": "标准 PLY 体积最大但兼容性最广，适合导入编辑器继续精修。",
+        "recommend": "网页发布选 SOG，发给别人直接看选 HTML，留底编辑选 PLY。"
+      },
+      "preset": {
+        "title": "四档快捷预设",
+        "tag": "一键配置",
+        "summary": "自动协同设置保留点数、球谐阶数、迭代次数与打包强度。",
+        "up": "快速转换：最快速度直出预览；高质归档：保留 100% 点数与完整反光。",
+        "down": "极致瘦身：最小体积适合手机；网页均衡：画质/体积/速度最佳平衡。",
+        "recommend": "多数网页发布选「网页均衡」，只想极速转格式选「快速转换」。"
+      },
+      "keep": {
+        "title": "保留点数比例（抽稀减面）",
+        "tag": "瘦身核心",
+        "summary": "智能合并冗余高斯点缩小场景规模，让手机与网页流畅加载。",
+        "up": "100% 完整保留所有点，画质最原汁原味但体积和显存占用大。",
+        "down": "调低（如 45%–75%）显著瘦身提速，配合自适应抽稀可保护主体边缘。",
+        "recommend": "超过 200 万点的场景建议降到 50%–75% 并开启自适应抽稀。"
+      },
+      "adaptive": {
+        "title": "自适应抽稀（--decimate-adaptive）",
+        "tag": "3.12 新增",
+        "summary": "按局部视觉误差决定删点位置，避免均匀删点毁掉天空或细节。",
+        "up": "开启后对混合尺度场景（室外/天空+近景）画质明显更好。",
+        "down": "关闭（均匀抽稀）速度稍快且内存占用更低。",
+        "recommend": "保留点数低于 100% 时建议开启。"
+      },
+      "iterations": {
+        "title": "球谐压缩迭代（SH Iterations）",
+        "tag": "SOG 专属",
+        "summary": "控制表面反光与视角变色细节的聚类压缩精细度。",
+        "up": "调高（15–25）反光过渡更细腻，但转换时间明显增加。",
+        "down": "调低（3–8）转换极快，适合快速预览。",
+        "recommend": "快速预览用 3–6，均衡用 10，精品归档用 20–25。"
+      },
+      "effort": {
+        "title": "WebP 打包强度（Effort 0–9）",
+        "tag": "SOG 专属",
+        "summary": "SOG 使用无损 WebP 纹理存数据，此项决定压缩压榨程度。",
+        "up": "数值越高（最高 9）文件越小且画质完全无损，但 CPU 打包耗时更久。",
+        "down": "设为 0 打包飞快，文件仅略大一点。",
+        "recommend": "快速转换选 0，均衡选默认，极致瘦身/归档选 8–9。"
+      },
+      "workers": {
+        "title": "编码线程数（Max Workers）",
+        "tag": "性能",
+        "summary": "同时调用多少个 CPU 线程做纹理压缩与编码。",
+        "up": "调大可缩短打包耗时，但 CPU 与内存峰值同步升高。",
+        "down": "调小（或 0 串行）更省内存、电脑不易卡顿。",
+        "recommend": "默认 4 稳妥；32GB 以上大内存可调至 6–8。"
+      },
+      "voxel": {
+        "title": "体素分辨率（Voxel Size）",
+        "tag": "Voxel 专属",
+        "summary": "导出游戏引擎碰撞体素时，每个小方块的边长（单位：米）。",
+        "up": "数值越大（0.1–0.2）网格越粗、体积小、速度快。",
+        "down": "数值越小（0.03–0.05）贴合家具墙面更精细，但更耗显存。",
+        "recommend": "室内用 0.05，室外大场景用 0.1。"
+      },
+      "opacity": {
+        "title": "体素透明度阈值",
+        "tag": "Voxel 专属",
+        "summary": "决定多实心的点云才会被算作碰撞障碍物。",
+        "up": "调高可过滤空气薄雾，避免角色撞上空气墙。",
+        "down": "调低保留更多细小半透明结构。",
+        "recommend": "默认 0.1 适用绝大多数场景。"
+      },
+      "device": {
+        "title": "计算设备与后端（含 Vulkan）",
+        "tag": "Windows 关键",
+        "summary": "SOG 压缩、去飞点与体素计算默认调用显卡（比 CPU 快 5–10 倍）。",
+        "up": "Vulkan：官方推荐绕过 Windows 默认 D3D12 驱动偶发崩溃问题。",
+        "down": "纯 CPU：不占显存的最稳兜底，但耗时慢 5–10 倍。",
+        "recommend": "首选自动显卡；若显卡报错请切「Vulkan」。"
+      },
+      "floaters": {
+        "title": "去除空中飞点（--filter-floaters）",
+        "tag": "3.12 新增",
+        "summary": "利用 GPU 体素化自动清除漂浮在空中的零散噪点与雾团。",
+        "up": "勾选后画面更干净且顺带缩小体积。",
+        "down": "不勾选则保留全部原始点云，速度略快。",
+        "recommend": "手机或无人机扫描场景强烈建议勾选。"
+      },
+      "cluster": {
+        "title": "保留连通主体（--filter-cluster）",
+        "tag": "3.12 新增",
+        "summary": "只保留与中心种子点连通的主场景，剥离远处孤立杂物。",
+        "up": "适合室内房间或单体雕塑去除背景干扰。",
+        "down": "不勾选则保留全部区域。",
+        "recommend": "需要强力去背景孤岛时使用。"
+      },
+      "nan": {
+        "title": "移除无效点（NaN / Inf）",
+        "tag": "数据清洗",
+        "summary": "剔除坐标损坏、无穷大或旋转异常的坏点，防止渲染黑块或闪烁。",
+        "up": "几乎零画质损失且提升后续兼容性。",
+        "down": "取消勾选则跳过坏点检查。",
+        "recommend": "建议始终保持勾选。"
+      },
+      "sh": {
+        "title": "球谐阶数上限（SH Bands）",
+        "tag": "体积优化",
+        "summary": "控制随视角变化的光泽反光数据，高阶 SH 常占文件一半以上体积。",
+        "up": "3 阶保留完整反光，但文件最大。",
+        "down": "降到 0 阶（仅基础色）或 1 阶，文件直接减半。",
+        "recommend": "网页展示推荐 1 阶，极致瘦身推荐 0 阶。"
+      },
+      "translate": {
+        "title": "平移（Translate）",
+        "tag": "空间变换",
+        "summary": "沿 +Y 朝上坐标系的 X / Y / Z 轴整体移动场景位置。",
+        "up": "常用于把偏移原点很远的场景拉回坐标中心 (0,0,0)。",
+        "down": "设为 0,0,0 不移动。",
+        "recommend": "多文件合并对齐位置时常用。"
+      },
+      "rotate": {
+        "title": "旋转校正（Rotate）",
+        "tag": "空间变换",
+        "summary": "按 X / Y / Z 轴旋转场景（单位：度）。",
+        "up": "用于把倒置或歪斜的扫描模型扶正到 +Y 朝上。",
+        "down": "设为 0,0,0 不旋转。",
+        "recommend": "推荐直接在「三维预览」中使用自动对齐或三点地面摆正。"
+      },
+      "scale": {
+        "title": "等比缩放（Scale）",
+        "tag": "空间变换",
+        "summary": "按统一倍率放大或缩小整个场景尺寸。",
+        "up": "大于 1 放大，小于 1 缩小（如 0.5 缩小一半）。",
+        "down": "设为 1 保持原始尺寸。",
+        "recommend": "匹配游戏引擎单位尺度时使用。"
+      },
+      "box": {
+        "title": "包围盒筛选（Filter Box）",
+        "tag": "区域裁剪",
+        "summary": "只保留最小/最大 XYZ 立方体范围内的点云，裁掉外部杂乱背景。",
+        "up": "放大范围保留更多环境。",
+        "down": "缩小范围精准切出主体区域。",
+        "recommend": "适合规则房间或矩形场地裁剪。"
+      },
+      "sphere": {
+        "title": "球形范围筛选（Filter Sphere）",
+        "tag": "区域裁剪",
+        "summary": "只保留以中心点为球心、指定半径内的点云。",
+        "up": "增大半径保留更远处景物。",
+        "down": "减小半径快速去掉远处天空和杂边。",
+        "recommend": "适合航拍或 360° 环拍场景。"
+      },
+      "estOutput": {
+        "title": "预估输出体积",
+        "tag": "实时估算",
+        "summary": "根据输入文件头读取的真实点数、目标格式、保留比例与球谐阶数实时推算。",
+        "up": "帮助你不用实际跑完就能预判最终体积与瘦身幅度。",
+        "down": "实际体积受场景纹理复杂度影响，结果仅供参考区间。",
+        "recommend": "拖动保留点数或切换预设即可即时观察体积变化。"
+      },
+      "engine": {
+        "title": "引擎独立更新（国内多镜像）",
+        "tag": "解耦架构",
+        "summary": "内置 v3.12.0 断网可用，联网可从国内镜像拉取新版 @playcanvas/splat-transform。",
+        "up": "支持阿里云 / 腾讯云 / 华为云 / 官方源自动切换与 SHA-512 校验。",
+        "down": "更新异常随时一键回滚到内置版本。",
+        "recommend": "点击即可测速检查新版并查看上游原项目致谢。"
+      },
+      "preview3d": {
+        "title": "三维高斯编辑（+Y 朝上 · 无损工作流）",
+        "tag": "核心编辑",
+        "summary": "打开全功能三维高斯编辑器：支持 100% 泼溅/彩点/环绕式显示、六面包裹体与遮挡平面、特殊/语义选区、专业调色与自动摆正。",
+        "up": "覆盖保存仅替换当前工作流文件，绝不修改磁盘原始源文件。",
+        "down": "亦可在编辑器内直接「另存为」合并/按物体/按组导出。",
+        "recommend": "选中任意输入文件后点击即可开始无损精修。"
+      },
+      "advTargetCap": {
+        "title": "目标体积硬上限 (MB)",
+        "tag": "自动达标",
+        "summary": "为 SOG / HTML 输出设定体积红线（0 表示不限制），超出时自动调低保留比例重试。",
+        "up": "严格控制线上发布包体大小，避免超出平台限制。",
+        "down": "设为 0 仅按当前参数编码一次，速度最快。",
+        "recommend": "移动端分享可设 15–30 MB，桌面展示设为 0。"
+      },
+      "advMinKeep": {
+        "title": "自动达标最低保留点数 %",
+        "tag": "保底画质",
+        "summary": "启用目标体积硬上限时，允许自动抽稀降到的最低保留比例。",
+        "up": "调高可防止过度压缩导致模型模糊。",
+        "down": "调低可赋予自动达标更大的瘦身空间。",
+        "recommend": "默认 20% 兼顾达标率与可辨认度。"
+      },
+      "advSogVer": {
+        "title": "SOG 封装版本 (v3 / v2)",
+        "tag": "SOG 编码",
+        "summary": "选择 SuperSplat SOG 容器协议版本。",
+        "up": "v3 采用改进的四元数与透明度量化，画质更稳且体积更小。",
+        "down": "v2 仅用于兼容极老版本网页播放器。",
+        "recommend": "无特殊兼容要求请保持默认 v3。"
+      },
+      "advShErr": {
+        "title": "SH 球谐色差目标",
+        "tag": "精细调优",
+        "summary": "指定球谐聚类压缩可接受的最大色差阈值（留空使用引擎默认）。",
+        "up": "数值越小反光越精准，但编码更慢且体积增大。",
+        "down": "数值越大压缩率越高。",
+        "recommend": "一般用户留空即可。"
+      },
+      "advSpzVer": {
+        "title": "SPZ 压缩版本 (v4 / v3)",
+        "tag": "SPZ 编码",
+        "summary": "选择 Niantic/Adobe SPZ 格式协议版本。",
+        "up": "v4 压缩效率更高并支持新版解码器。",
+        "down": "v3 兼容旧版 SPZ 生态插件。",
+        "recommend": "默认选择 v4。"
+      },
+      "advPlyLogit": {
+        "title": "PLY 兼容 Logit 透明度",
+        "tag": "格式兼容",
+        "summary": "导出标准 PLY 时按经典 3DGS Logit 空间存储 opacity 字段。",
+        "up": "开启后确保与传统 3DGS / SuperSplat / Blender 插件兼容。",
+        "down": "关闭按引擎默认方式输出。",
+        "recommend": "需要跨软件编辑时建议按需开启。"
+      },
+      "advHtmlUnbundled": {
+        "title": "分离式 HTML 输出",
+        "tag": "网页部署",
+        "summary": "将网页播放器脚本与高斯数据分离输出，而非打包进单个 HTML 文件。",
+        "up": "适合部署到静态网站服务器并利用浏览器缓存。",
+        "down": "关闭（单文件）更适合直接发微信/邮件离线打开。",
+        "recommend": "单发预览请保持关闭，网站部署可开启。"
+      },
+      "advVoxelFlags": {
+        "title": "体素碰撞高级填充选项",
+        "tag": "碰撞体素",
+        "summary": "控制室内密封、室外地面补全、可行走区域雕刻及碰撞网格生成策略。",
+        "up": "开启相应选项可修补扫描孔洞，防止游戏角色穿墙或掉落。",
+        "down": "关闭保持原始扫描占据体素。",
+        "recommend": "仅在导出 Voxel 碰撞包时按场景类型勾选。"
+      },
+      "advTipDelay": {
+        "title": "全局悬停讲解延时 (ms)",
+        "tag": "全局提示",
+        "summary": "唯一全局延时常量：鼠标悬停停留达到该毫秒数后才弹出讲解，快速划过不打扰。",
+        "up": "调大（如 800–1200ms）更安静，适合熟练操作。",
+        "down": "调小（如 300–500ms）查阅讲解更敏捷。",
+        "recommend": "默认 500ms 兼顾防误触与响应速度，主界面、弹窗与三维编辑器同步生效。"
+      },
+      "advHistoryLimit": {
+        "title": "三维编辑器最大历史步数",
+        "tag": "无损撤销",
+        "summary": "控制三维编辑模块 Undo/Redo 增量历史栈的最大步数上限。",
+        "up": "调大（如 80–200）可回溯更长编辑轨迹，略增内存占用。",
+        "down": "调小更省内存。",
+        "recommend": "默认 50 步足够绝大多数精修任务。"
+      },
+      "advVeteranTips": {
+        "title": "老手分区域提示开关",
+        "tag": "防打扰",
+        "summary": "按 UI 区域独立开关悬停文字讲解，老手可关闭熟悉区域的提示。",
+        "up": "勾选则在该区域悬停停留时弹出详细说明。",
+        "down": "取消勾选后该区域不再弹出提示，配置自动持久化保存。",
+        "recommend": "可只保留尚不熟悉的区域提示，随时在此恢复。"
+      },
+      "inspectDeep": {
+        "title": "深度引擎体检 (--stats)",
+        "tag": "诊断",
+        "summary": "调用底层引擎扫描全部高斯点，输出完整的坐标范围、尺度、透明度与异常值分布。",
+        "up": "精准定位超大飞点或异常数值。",
+        "down": "超大文件（>200万点）扫描需耗时数秒。",
+        "recommend": "排查画面发糊或异常漂浮物时使用。"
+      },
+      "jobsResume": {
+        "title": "恢复 / 重试历史任务清单",
+        "tag": "断点续传",
+        "summary": "从 data/jobs/ 读取历史任务清单并将源文件重新载入工作流。",
+        "up": "批量任务中断后可快速恢复，不丢失文件列表。",
+        "down": "不会修改历史磁盘文件。",
+        "recommend": "处理大批次导出中断后使用。"
+      }
+    },
+    "capability": {
+      "translate": {
+        "label": "平移坐标",
+        "desc": "沿 X/Y/Z 轴平移高斯点"
+      },
+      "rotate": {
+        "label": "旋转（度）",
+        "desc": "按欧拉角旋转场景"
+      },
+      "scale": {
+        "label": "等比缩放",
+        "desc": "按统一倍率缩放场景"
+      },
+      "morton": {
+        "label": "莫顿码空间重排",
+        "desc": "按 Z 阶数曲线重排高斯点以提升缓存命中与压缩率"
+      },
+      "filter_nan": {
+        "label": "清理无效点 (NaN/Inf)",
+        "desc": "移除坐标异常或旋转为零的坏点"
+      },
+      "filter_sh": {
+        "label": "球谐阶数上限 (0–4)",
+        "desc": "裁剪高于指定阶数的球谐系数（支持四阶 SH）"
+      },
+      "filter_box": {
+        "label": "包围盒筛选",
+        "desc": "保留轴对齐立方体范围内的点云"
+      },
+      "filter_sphere": {
+        "label": "球形范围筛选",
+        "desc": "保留指定球心与半径范围内的点云"
+      },
+      "filter_value": {
+        "label": "属性数值筛选",
+        "desc": "按 opacity / scale / color 等列条件过滤高斯点"
+      },
+      "filter_floaters": {
+        "label": "GPU 去除空中飞点",
+        "desc": "通过 GPU 体素化清除飘浮噪点"
+      },
+      "filter_cluster": {
+        "label": "GPU 保留连通主体",
+        "desc": "仅保留与种子点连通的主体场景"
+      },
+      "decimate_uniform": {
+        "label": "均匀抽稀",
+        "desc": "全局均匀合并简化点数"
+      },
+      "decimate_adaptive": {
+        "label": "自适应误差抽稀",
+        "desc": "按局部误差分配简化，更好保护天空与细节"
+      },
+      "scratch_dir": {
+        "label": "抽稀暂存目录",
+        "desc": "由 PortablePaths 自动指向包内 data/tmp"
+      },
+      "sh_iterations": {
+        "label": "SH 聚类迭代次数",
+        "desc": "球谐调色板 K-Means 迭代次数"
+      },
+      "sh_color_error": {
+        "label": "SH 视觉色差目标",
+        "desc": "按 8-bit 视觉色差自动确定最小 SH 调色板"
+      },
+      "sh_palette_size": {
+        "label": "固定 SH 调色板大小",
+        "desc": "显式指定 SH 调色板条目数（0 为自动）"
+      },
+      "sog_version": {
+        "label": "SOG 格式版本",
+        "desc": "v3 支持 4 阶 SH、>1 透明度与 blind 数据；v2 兼容旧查看器"
+      },
+      "webp_effort": {
+        "label": "WebP 无损打包强度",
+        "desc": "无损 WebP 压缩耗时/体积权衡（0–9）"
+      },
+      "html_unbundled": {
+        "label": "分离式 HTML 输出",
+        "desc": "将 CSS/JS/SOG 拆分为独立文件而非单 HTML"
+      },
+      "viewer_settings": {
+        "label": "查看器配置 JSON",
+        "desc": "自定义内嵌 SuperSplat Viewer 初始相机与参数"
+      },
+      "spz_version": {
+        "label": "SPZ 格式版本",
+        "desc": "指定输出的 Niantic SPZ 版本（默认 4）"
+      },
+      "ply_logit": {
+        "label": "兼容模式写入 Logit 透明度",
+        "desc": "将抽稀后 >1 的线性透明度钳制回标准 logit，兼容旧工具"
+      },
+      "voxel_size": {
+        "label": "体素分辨率 (m)",
+        "desc": "碰撞体素方块边长"
+      },
+      "voxel_opacity": {
+        "label": "体素透明度阈值",
+        "desc": "判定为实心障碍物的最小透明度"
+      },
+      "voxel_ext_fill": {
+        "label": "室内外部空洞密封",
+        "desc": "从边界泛洪密封室内场景外部空洞"
+      },
+      "voxel_floor_fill": {
+        "label": "室外地面向下填充",
+        "desc": "从底部向上填充室外地形下方空间"
+      },
+      "voxel_carve": {
+        "label": "胶囊体可行走区域雕刻",
+        "desc": "从种子点雕刻可行走胶囊空间"
+      },
+      "seed_pos": {
+        "label": "种子点坐标",
+        "desc": "用于连通簇筛选与体素填充/雕刻的起点"
+      },
+      "collision_mesh": {
+        "label": "同步生成碰撞网格 (.glb)",
+        "desc": "从体素网格导出平滑或方块表面碰撞体"
+      },
+      "lod_select": {
+        "label": "选择输入 LOD 层",
+        "desc": "从 Streamed SOG/LCC 中选择特定 LOD 级别"
+      },
+      "lod_chunk": {
+        "label": "LOD 分块点数 (K)",
+        "desc": "每个流式 LOD 块的目标高斯数（千）"
+      },
+      "gpu": {
+        "label": "计算设备",
+        "desc": "选择 GPU 或纯 CPU 执行压缩与体素计算"
+      },
+      "gpu_backend": {
+        "label": "图形后端 (Vulkan/D3D12)",
+        "desc": "Windows 推荐 Vulkan 绕过 D3D12 驱动异常"
+      },
+      "max_workers": {
+        "label": "编码线程数",
+        "desc": "并行编码线程数（0=串行）"
+      },
+      "info_stats": {
+        "label": "深层体检与统计",
+        "desc": "输出完整结构元数据与每列直方图统计"
+      },
+      "mjs_generator": {
+        "label": "JS 程序化生成脚本",
+        "desc": "涉及任意本地 JS 执行",
+        "reason": "安全门控：默认禁用未授权本地脚本执行，防止恶意代码。"
+      },
+      "remote_url": {
+        "label": "远程 URL 输入",
+        "desc": "从外部网络拉取场景",
+        "reason": "安全门控：默认严格离线模式，禁用未授权网络输入。"
+      },
+      "camera_render": {
+        "label": "离线相机动画渲染",
+        "desc": "批量渲染 WebP 序列帧与景深/运动模糊",
+        "reason": "将在后续渲染工作流迭代开放独立 UI，当前已通过能力清单登记。"
+      }
+    }
+  },
+  "editor": {
+    "window": {
+      "title": "三维高斯编辑 (+Y 朝上) · Splat Convert Desktop 3.2.3"
+    },
+    "banners": {
+      "autoAlignTitle": "检测到倾斜实拍场景",
+      "autoAlignDescDefault": "地面倾斜明显，是否执行一键自动摆正？矫正后如不满意可随时按 Ctrl+Z 一键撤回。",
+      "autoAlignDescDeg": "检测到该实拍场景地面倾斜约 {deg}°，是否一键自动摆正地面？矫正后如不满意可随时按 Ctrl+Z 一键撤回。",
+      "autoAlignAccept": "自动矫正",
+      "autoAlignDismiss": "暂不需要",
+      "splitHandle": "原图 ◀ ▶ 调色",
+      "gotIt": "知道了",
+      "safeModeText": "性能应急保护已启用：已切换至「中心模式」并冻结筛选与调色等高耗能工具，保留基础选区、软删与矫正功能以完成粗略编辑。",
+      "exitSafeMode": "恢复完整模式",
+      "semanticModeDefault": "正在自动判别分割模式…",
+      "preparing": "准备中…",
+      "cancelBtn": "取消"
+    },
+    "loading": {
+      "title": "正在加载高斯点云模型…",
+      "preparing": "准备中…",
+      "interrupted": "加载中断",
+      "readError": "读取高斯点云时发生错误",
+      "errorHint": "请检查文件完整性或显存占用后重试",
+      "etaMinSec": "{min} 分 {sec} 秒",
+      "etaSec": "{sec} 秒",
+      "etaRemaining": "已用时 {elapsed} 秒 · 预计剩余约 {eta}",
+      "etaProcessing": "已用时 {elapsed} 秒 · 正在处理超大规模点云，程序运行正常…",
+      "buildingWebgl": "正在构建 WebGL2 高斯数据结构…",
+      "rebuildingContextLost": "检测到图形上下文丢失，正在以中心应急模式重建视口并恢复进度…",
+      "transferringBinary": "正在传输点云二进制数据…",
+      "loadBinaryHttpErr": "加载二进制点云失败 HTTP {status}",
+      "decodingMassive": "正在解码超大规模高斯点云数据…",
+      "loadFailed": "加载高斯点云失败"
+    },
+    "menu": {
+      "file": "文件",
+      "saveOverwrite": "覆盖保存（无损工作流）",
+      "saveAs": "另存为导出到文件夹…",
+      "cancelClose": "取消并关闭",
+      "edit": "编辑",
+      "undo": "↶ 撤回上一步",
+      "redo": "↷ 重做",
+      "autoAlign": "⊞ 自动对齐 (+Y 朝上)",
+      "verticalAlign": "┃ 垂线摆正",
+      "groundAlign": "⊿ 平面摆正",
+      "scaleCalib": "📐 比例尺校准",
+      "smartMeasure": "📏 智能测量笔",
+      "select": "选择",
+      "selAll": "全选",
+      "selNone": "取消选择",
+      "selInvert": "反选",
+      "selIsolate": "隔离显示（仅显示选中点）",
+      "selHide": "临时隐藏选中点",
+      "selShowAll": "全部显示",
+      "selSplit": "分割为独立对象",
+      "selDup": "复制为局部副本",
+      "selDelete": "软删除选中点",
+      "render": "渲染",
+      "exportView": "导出当前视图图片…",
+      "toggleGrid": "切换无限地面网格 (+Y 朝上)",
+      "toggleBounds": "切换模型边界边角框",
+      "fitView": "聚焦居中主体",
+      "advanced": "高级选项",
+      "secPerfDisplay": "性能与显示辅助",
+      "showBoundsTitle": "显示高斯模型边角框",
+      "showBoundsDesc": "在模型三维边界八角显示细框指示范围 (B)",
+      "showGridTitle": "显示无限延伸地面网格",
+      "showGridDesc": "在 Y=0 平面显示抗锯齿无限地面参考网格 (G)",
+      "secToolMonitor": "工具与监控三级设置",
+      "toolAdvOptions": "工具高级选项",
+      "secSemantic3dAdv": "3D 语义分割高级选项",
+      "silent3dTitle": "3D 语义无感选择",
+      "silent3dDesc": "后台离屏截图识别，不抢占主视口画面（关闭后仅展示有效视角切换）",
+      "semanticViewsLabel": "3D 语义采样视角数",
+      "viewsFast4": "极速 4",
+      "viewsBal6": "均衡 6",
+      "viewsFine8": "精细 8",
+      "viewsUltra12": "极致 12",
+      "semanticModelsLabel": "3D 语义模型（悬停查看区别）",
+      "inpaintModelsLabel": "智能平面补洞模型 (L2)",
+      "perfHudSettings": "性能监控显示设置",
+      "secPerfFields": "右下角参数显示项",
+      "secCamCoord": "视角与坐标高级工具",
+      "toggleProj": "切换透视 / 正交相机",
+      "toggleCamMode": "切换轨道 / 漫游摄像机",
+      "opencvZup": "一键翻转 OpenCV (-Y) → +Y 朝上",
+      "secHelpAbout": "帮助与关于",
+      "showShortcuts": "快捷键一览表",
+      "showCredits": "开源鸣谢与关于",
+      "saveOverwriteShort": "覆盖保存",
+      "saveAsShort": "另存为"
+    },
+    "topBar": {
+      "colorPanel": "专业调色",
+      "isolate": "隔离显示",
+      "hide": "临时隐藏",
+      "showAll": "全部显示",
+      "bounds": "模型边角框",
+      "grid": "无限地面网格",
+      "exportImg": "导出当前视图图片",
+      "displayMode": "显示模式",
+      "camOrbit": "轨道相机",
+      "camFly": "漫游相机",
+      "flySpeed": "速度",
+      "flySpeedAria": "漫游移动速度",
+      "gizmoTranslateAria": "移动 (W)",
+      "gizmoRotateAria": "旋转 (E)",
+      "gizmoScaleAria": "缩放 (R)",
+      "axisGizmoAria": "+Y 朝上坐标轴导航"
+    },
+    "rail": {
+      "orbit": "浏览",
+      "rect": "框选",
+      "lasso": "套索",
+      "ellipse": "椭圆",
+      "poly": "多边形",
+      "brush": "画笔",
+      "filter": "筛选",
+      "filterHead": "智能筛选选区",
+      "eyedropperFull": "吸管选择",
+      "opacitySelFull": "透明度选择",
+      "sizeSelFull": "尺寸选择",
+      "semanticSelFull": "语义选择",
+      "floaterSelFull": "悬浮点选择",
+      "eyedropper": "吸管",
+      "opacitySel": "透明",
+      "sizeSel": "尺寸",
+      "semanticSel": "语义",
+      "floaterSel": "悬浮",
+      "smart": "智能",
+      "smartHead": "智能修复与生成",
+      "planeInpaintFull": "平面补洞",
+      "planeInpaint": "补洞",
+      "align": "矫正",
+      "alignHead": "姿态矫正 (+Y)",
+      "autoAlignFull": "自动对齐",
+      "autoAlign": "自对齐",
+      "verticalAlignFull": "垂线摆正",
+      "verticalAlign": "垂线",
+      "groundAlignFull": "平面摆正",
+      "groundAlign": "平面",
+      "measure": "测量",
+      "measureHead": "空间测量",
+      "scaleCalibFull": "比例尺校准",
+      "scaleCalib": "比例尺",
+      "smartMeasureFull": "智能测量笔",
+      "smartMeasure": "测量笔",
+      "localSpace": "局部",
+      "localSpaceAria": "使用局部坐标系 (X)",
+      "boundsCenter": "中心",
+      "boundsCenterAria": "使用边界中心 (Z)"
+    },
+    "boolOps": {
+      "replace": {
+        "label": "替换",
+        "desc": "以本次选区替换现有选区"
+      },
+      "add": {
+        "label": "加选",
+        "desc": "将本次选区叠加到现有选区（选择时按住 Shift 临时加选）"
+      },
+      "subtract": {
+        "label": "减选",
+        "desc": "从现有选区中减去本次选区（选择时按住 Alt 临时减选）"
+      },
+      "intersect": {
+        "label": "交集",
+        "desc": "仅保留本次选区与现有选区的重叠部分（Shift+Alt 临时交集）"
+      }
+    },
+    "volBoolOps": {
+      "union": {
+        "label": "相加（并集）",
+        "short": "相加"
+      },
+      "subtract": {
+        "label": "挖去（差集）",
+        "short": "挖去"
+      },
+      "intersect": {
+        "label": "交叠（交集）",
+        "short": "交叠"
+      }
+    },
+    "displayModes": {
+      "splat": "泼溅模式",
+      "centers": "中心模式",
+      "rings": "环模式",
+      "splatShort": "泼溅",
+      "centersShort": "中心",
+      "ringsShort": "环"
+    },
+    "guides": {
+      "orbit": "【浏览模式】左键旋转、右键/中键平移、滚轮缩放；双击视口任意高斯点设置旋转中心并弹出 3D 坐标轴（W/E/R 切换）；右键弹出包裹体与快捷菜单。",
+      "rect": "【框选】左键拖拽绘制矩形选区（默认替换 · Ctrl 临时加选 · Alt 临时减选 · Ctrl+Alt 交集）；右键拖动旋转视角、中键平移、滚轮缩放。",
+      "lasso": "【套索选择】按住左键自由勾勒闭合选区（默认替换 · Ctrl 临时加选 · Alt 临时减选）；支持下方切换「只选可见点」与「整个高斯点」。",
+      "ellipse": "【椭圆选择】左键拖拽绘制椭圆选区（默认替换 · Ctrl 临时加选 · Alt 临时减选）；右键可随时旋转视角。",
+      "poly": "【多边形选择】逐点点击绘制顶点，双击或按 Enter / 点击起点闭合确认；按 Esc 取消绘制。",
+      "brush": "【画笔选择】按住左键涂抹选择（默认替换 · Ctrl 临时加选 · Alt 临时减选）；按 [ / ] 键或拖动下方滑块调节画笔半径（最大 360px）。",
+      "eyedropper": "【吸管选择】左键点击模型采样目标色并立即按容差选中相近颜色高斯点（默认替换 · Ctrl 临时加选 · Alt 临时减选）；按 1 可临时切换浏览视角。",
+      "opacitySel": "【透明度选择】拖动下方透明度区间，实时预览命中范围，点击 替换/加选/减选/交集 确认。",
+      "sizeSel": "【尺寸选择】按高斯最大轴、平均尺度或拉长比筛选超大针状/过小噪点，点击下方布尔按钮确认。",
+      "semanticSel": "【语义框选】按住 Shift + 鼠标左键拖拽框选物品范围（直接左键自由旋转视角；默认替换 · Ctrl 临时加选 · Alt 临时减选）；支持底部切换 自动/2D/3D 与 2D 穿透深度调节；再按 M 可取消工具。",
+      "planeInpaint": "【平面补洞】按住 Shift + 鼠标左键拖拽框选空洞范围（直接左键自由旋转视角，或点击「沿用上次空洞」）；支持 L0 纯色补洞、L1 极速几何与 L2 智能修复；再按 J 可取消工具。",
+      "floaterSel": "【悬浮点选择】基于三维体素邻域密度检测空中孤立飞点，在下方调整体素尺度与邻域阈值后点击应用。",
+      "volume": "【包裹体控点】拖动彩色面控点只推拉该面；按住 Shift 拖动则对面同步对称伸缩；亦可用 W/E/R 坐标轴或右上角精确变换。启用后其他选区默认仅在包裹体范围内生效。",
+      "plane": "【无限遮挡平面】仅在平面与当前摄像机之间的一侧生效；旋转绕到平面背面时生效侧自动瞬间翻转。与包裹体同时启用时自动取交集。",
+      "autoAlign": "【自动对齐 (+Y 朝上)】自动检测地面落至 Y=0 网格平面、旋转墙面对齐 X/Z 轴并将主体居中至原点上方；整体计为单步操作，按一次 Ctrl+Z 即可完整撤销。",
+      "verticalAlign": "【垂线摆正 (+Y 朝上)】依次点击真实竖直边的下端与上端，点完第 2 点立即平滑阻尼摆正至 +Y；支持下方「上下翻转 / 撤销 / 重新点选」。",
+      "groundAlign": "【平面摆正 (+Y 朝上)】在要放平的面上依次点击 3 个不共线的点，点完第 3 点立即平滑阻尼摆平至 Y=0；支持下方「上下翻转 / 撤销 / 重新点选」。",
+      "scaleCalib": "【比例尺校准】在真实模型表面点击 2 个已知距离的点，输入实际长度与单位（m/cm/mm）即可非破坏性校准全局测量比例；不修改底层高斯点。",
+      "smartMeasure": "【智能测量笔】左键点选实面测距/折线（≥3点双击起点或点击底部按钮闭合测面积/堆体）；按住顶点可拖拽调整，Backspace 撤销上一测点，再按 T 退出。"
+    },
+    "scene": {
+      "title": "场景管理器",
+      "groupBtn": "打组",
+      "ungroupBtn": "解组",
+      "addVolBtn": "+ 包裹体",
+      "objectsHead": "场景物体（Ctrl 多选 · 双击重命名）",
+      "clearSel": "清除选择",
+      "expand": "展开",
+      "collapse": "收起",
+      "volumesHead": "包裹体与遮挡平面（拖拽排序 · 组内布尔）",
+      "mainCloud": "主场景点云",
+      "mainSceneShort": "主场景",
+      "volumeDefault": "包裹体",
+      "objectGroupDefault": "物体组",
+      "allScene": "全部场景",
+      "sceneObjectDefault": "场景物体",
+      "selectedCount": "已选 {count} 个物体",
+      "objectGroupName": "物体组 #{num}",
+      "splitObjectName": "拆分对象 #{num}",
+      "dupObjectName": "局部副本 #{num}",
+      "inpaintObjectName": "平面补洞 {mode} #{num}",
+      "objectFallbackName": "对象 #{id}",
+      "emptyVolumesHint": "右键视口或点击上方「+ 包裹体」创建包裹盒/椭球/柱体/遮挡平面",
+      "expandObjGroup": "展开物体组",
+      "collapseObjGroup": "折叠物体组",
+      "collapseObjGroupTitle": "一键收纳物体组",
+      "collapseObjGroupTip": "折叠或展开组内所有场景物体。",
+      "renameObjGroupPrompt": "重命名物体组：",
+      "soloObjGroupTitle": "独显该物体组",
+      "soloObjGroupTip": "仅显示此物体组内的高斯模型，临时隐藏其他场景物体；再次点击恢复。",
+      "hideObjGroupTitle": "隐藏物体组",
+      "showObjGroupTitle": "显示物体组",
+      "toggleObjGroupTip": "一键切换该物体组内所有成员的可见性。",
+      "deleteObjGroupTitle": "删除物体组",
+      "deleteObjGroupTip": "删除该物体组及组内全部场景物体（支持 Ctrl+Z 撤销）。",
+      "deleteObjGroupDisabledTip": "至少保留一个场景物体，无法删除包含全部物体的组。",
+      "renameObjectPrompt": "重命名场景物体：",
+      "soloObjectTitle": "独显该模型",
+      "soloObjectTip": "仅显示此高斯物体，隐藏其他场景物体；再次点击恢复先前可见状态。",
+      "hideObjectTitle": "隐藏模型",
+      "showObjectTitle": "显示模型",
+      "toggleObjectTip": "切换此场景物体在视口中的显示/隐藏状态。",
+      "deleteObjectTitle": "删除场景物体",
+      "deleteObjectTip": "删除该场景物体及其高斯点（支持 Ctrl+Z 撤销）。",
+      "deleteObjectDisabledTip": "至少保留一个场景物体",
+      "expandVolGroup": "展开包裹体组",
+      "collapseVolGroup": "折叠包裹体组",
+      "collapseVolGroupTitle": "一键收纳包裹体组",
+      "collapseVolGroupTip": "折叠或展开此包裹体组内的成员与嵌套子组。",
+      "renameVolGroupPrompt": "重命名包裹体组：",
+      "disableVolGroupTitle": "停用包裹体组",
+      "enableVolGroupTitle": "启用包裹体组",
+      "enableVolGroupTip": "通过启用键控制该包裹体组是否约束选区并显示交并补半透明范围模型（与选中状态独立）。",
+      "toggleWireTitle": "显示/隐藏线框",
+      "toggleWireTip": "仅控制视口线框及示意模型可见性，不影响启用约束状态。",
+      "deleteVolGroupTitle": "删除整个包裹体组",
+      "deleteVolGroupTip": "一键移除该包裹体组及其包含的所有成员（支持撤回）。",
+      "volFlowArrow": "↓ 依次执行：{symbol} {label}",
+      "renameVolPrompt": "重命名包裹体：",
+      "disableVolTitle": "停用包裹体",
+      "enableVolTitle": "启用包裹体",
+      "enableVolTip": "通过启用键控制该包裹体/遮挡平面是否生效并显示黄色范围示意（与选中高亮独立）。",
+      "hideVolTitle": "隐藏包裹体",
+      "showVolTitle": "显示包裹体",
+      "toggleVolTip": "仅隐藏或显示视口线框，不影响范围启用状态。",
+      "deleteVolTitle": "删除包裹体",
+      "deleteVolTip": "移除此包裹体（支持 Ctrl+Z 撤销）。",
+      "planeScopeInfo": "无限遮挡平面：仅平面与当前相机之间生效（绕至背面瞬间翻转）",
+      "axisBtn": "坐标轴",
+      "toggleAxisTitle": "切换 3D 变换坐标轴",
+      "toggleAxisTip": "显示或隐藏该包裹体的 3D 移动/旋转/缩放坐标轴；关闭时可专注推拉六面彩色控点。",
+      "copySuffix": " 副本",
+      "ctxDelete": "删除",
+      "ctxGroup": "打组",
+      "ctxMerge": "合并",
+      "ctxUngroup": "解组",
+      "mergedVolumeName": "合并包裹体 #{num}"
+    },
+    "transform": {
+      "title": "变换（+Y 朝上）",
+      "position": "位置",
+      "rotation": "旋转",
+      "scale": "缩放",
+      "pivotEditAria": "编辑坐标原点",
+      "resetPos": "重置位置",
+      "resetRot": "重置旋转",
+      "resetScale": "重置缩放",
+      "resetAll": "重置变换",
+      "scaleLockAria": "锁定等比例缩放",
+      "modeTranslate": "移动",
+      "modeRotate": "旋转",
+      "modeScale": "缩放"
+    },
+    "color": {
+      "title": "专业调色",
+      "scopeDefault": "当前物体",
+      "scopeSelection": "局部选区 ({count} 点)",
+      "scopeObjects": "当前部件 ({count} 物体)",
+      "levelsInTitle": "拖动三角调节输入色阶（黑场 / 中间调伽马 / 白场），双击重置",
+      "lvlInBlackAria": "输入黑场",
+      "lvlInMidAria": "输入中间调伽马",
+      "lvlInWhiteAria": "输入白场",
+      "outputLevels": "输出色阶",
+      "levelsOutTitle": "拖动左右滑块调节输出色阶，双击重置",
+      "lvlOutBlackAria": "输出黑场",
+      "lvlOutWhiteAria": "输出白场",
+      "compareHold": "对比原图",
+      "compareSplit": "分屏",
+      "resetAll": "一键重置",
+      "secLight": "亮",
+      "eyeLightAria": "开关亮度调色",
+      "secColor": "颜色",
+      "eyeColorAria": "开关颜色调色",
+      "whiteBalance": "白平衡",
+      "wbEyedropperAria": "白平衡吸管",
+      "wbCustom": "自定",
+      "secHsl": "HSL混色器",
+      "eyeHslAria": "开关 HSL 混色器",
+      "hslEyedropper": "吸色调节",
+      "chanHue": "色相",
+      "chanSatShort": "饱和",
+      "chanSat": "饱和度",
+      "chanLight": "明度",
+      "pickRange": "吸色范围",
+      "rangePreview": "范围预览",
+      "resetShort": "重置",
+      "eyeLutAria": "开关 3D LUT",
+      "lutIntensity": "强度",
+      "lutDefault": "默认（无 3D LUT）",
+      "applyBake": "应用（烘焙至球谐 SH）",
+      "dblClickReset": "双击恢复默认值",
+      "clickEditVal": "点击直接输入数值",
+      "sliders": {
+        "exposure": "曝光",
+        "contrast": "对比度",
+        "highlights": "高光",
+        "shadows": "阴影",
+        "whites": "白色",
+        "blacks": "黑色",
+        "transparency": "透明度",
+        "temperature": "色温",
+        "tintShift": "色调",
+        "vibrance": "自然饱和度",
+        "saturation": "饱和度",
+        "tolerance": "容差",
+        "colorRange": "颜色范围",
+        "pcHue": "吸色色相",
+        "pcSat": "吸色饱和",
+        "pcLight": "吸色明度",
+        "hue": "色相",
+        "light": "明度"
+      },
+      "hslBands": {
+        "red": "红",
+        "orange": "橙",
+        "yellow": "黄",
+        "green": "绿",
+        "aqua": "青",
+        "blue": "蓝",
+        "purple": "紫",
+        "magenta": "洋红"
+      },
+      "wbPresets": {
+        "asis": "原样",
+        "daylight": "日光",
+        "cloudy": "阴天",
+        "shade": "阴影",
+        "tungsten": "钨丝灯",
+        "fluorescent": "荧光灯"
+      },
+      "histZones": {
+        "blacks": "黑色",
+        "shadows": "阴影",
+        "exposure": "曝光",
+        "highlights": "高光",
+        "whites": "白色"
+      },
+      "pickedColorFallback": "吸取色",
+      "wbHintHover": "点击中性灰/白区域校准白平衡",
+      "hslHintHover": "{band} · 按住滑动调节{chan}",
+      "wbLabel": "白平衡"
+    },
+    "history": {
+      "title": "历史操作",
+      "initialState": "初始打开状态",
+      "stepFallback": "操作 #{step}",
+      "lastOpStatus": "最近操作：{label}（撤销栈 {count}/{max}）",
+      "transformMode": "变换 ({mode})",
+      "preciseTransform": "精确变换",
+      "deleteObject": "删除物体 ({name})",
+      "deleteObjectGroup": "删除物体组 ({name})",
+      "reorderVolumes": "调整包裹体层级与顺序",
+      "reorderVolumesDrag": "拖拽调整包裹体顺序",
+      "reorderVolGroupDrag": "拖拽调整包裹体组",
+      "changeBoolOp": "调整布尔运算 ({op})",
+      "enableNode": "启用 {name}",
+      "disableNode": "停用 {name}",
+      "deleteVolGroup": "删除包裹体组 ({name})",
+      "deleteVol": "删除 {name}",
+      "createVol": "创建 {name}",
+      "dragVolHandles": "推拉包裹体 ({name})",
+      "groupVolumes": "包裹体打组 ({name})",
+      "ungroupVolumes": "解散包裹体组 ({name})",
+      "volumeSelect": "包裹体{op}",
+      "flagDelta": "{label} ({count} 点)",
+      "selectAll": "全选",
+      "clearSelAutoBake": "清空选区自动烘焙调色",
+      "deselectAll": "取消选择",
+      "invertSel": "反选",
+      "softDelete": "软删除",
+      "isolate": "隔离显示",
+      "hide": "临时隐藏",
+      "showAll": "全部显示",
+      "splitObject": "分割独立对象 ({name}, {count} 点)",
+      "dupObject": "复制局部副本 ({name}, {count} 点)",
+      "switchToolAutoBake": "切换工具自动烘焙调色",
+      "eyedropperSel": "吸管选择({space})",
+      "opacitySel": "透明度选择",
+      "sizeSel": "尺寸选择",
+      "floaterSel": "悬浮点选择",
+      "semantic2dDepth": "2D 语义深度({depth})",
+      "semantic2d": "2D 语义",
+      "semantic3d": "3D 语义({views}视角)",
+      "planeInpaint": "平面补洞 {mode} (+{count} 点)",
+      "autoAlign": "自动对齐 (+Y 朝上)",
+      "opencvZup": "OpenCV (-Y) 转 +Y 朝上",
+      "flip180": "上下翻转 (180°)",
+      "verticalAlign": "垂线摆正 (+Y 朝上)",
+      "verticalFlip": "垂线摆正 · 上下翻转 (180°)",
+      "groundAlign": "平面摆正 (+Y 朝上)",
+      "groundFlip": "平面摆正 · 上下翻转 (180°)",
+      "colorBakeDefault": "调色烘焙 (SH)",
+      "colorCloseAutoBake": "关闭调色面板自动烘焙",
+      "colorApplyBake": "应用调色烘焙至 SH",
+      "colorSaveAutoBake": "保存前自动烘焙调色",
+      "selectOp": "选区{op}",
+      "restoreTransform": "恢复变换",
+      "restoreVolumes": "恢复包裹体",
+      "restoreDelete": "恢复删除",
+      "restoreColor": "恢复调色",
+      "lassoTest": "套索测试",
+      "depthAdjust2d": "2D 深度调节",
+      "colorStep": "调色调整",
+      "colorStepDetail": "调色：{detail}",
+      "deleteObjectsMulti": "删除 {count} 个场景物体",
+      "deleteVolsMulti": "删除 {count} 个包裹体",
+      "dupMoveObj": "复制并移动 {name}",
+      "dupMoveVol": "复制并移动包裹体 {name}",
+      "groupColor": "调色调整",
+      "groupCountBadge": "{count} 次",
+      "groupEditVis": "显隐与删除",
+      "groupRotate": "旋转变换",
+      "groupScale": "缩放变换",
+      "groupSelect": "选区调整",
+      "groupTransform": "精确变换",
+      "groupTranslate": "移动变换",
+      "groupVolDrag": "包裹体控点调整",
+      "mergeObjects": "合并 {count} 个物体至 {name}",
+      "mergeVolumes": "合并包裹体：{name}"
+    },
+    "contextMenu": {
+      "recallTool": "↺ 切回上次工具：{ico} {label}",
+      "undo": "↶ 撤回上一步",
+      "redo": "↷ 重做",
+      "secQuick": "高频快捷",
+      "cycleMode": "切换显示模式（彩点/泼溅/环绕）",
+      "colorPanel": "专业调色面板",
+      "fitView": "聚焦居中主体",
+      "autoAlign": "自动对齐 (+Y 朝上)",
+      "secVolumes": "包裹体与遮挡平面",
+      "volBox": "+ 创建包裹盒（立方体）",
+      "volEllipsoid": "+ 创建包裹椭球",
+      "volCylinder": "+ 创建包裹柱体（+Y 轴向）",
+      "volPlane": "+ 创建遮挡平面（无限大）",
+      "secSelection": "选区与对象",
+      "isolate": "隔离显示选中点",
+      "hide": "临时隐藏选中点",
+      "showAll": "全部显示",
+      "split": "分割为独立对象",
+      "dup": "复制为局部副本",
+      "delete": "软删除选中点"
+    },
+    "statusBar": {
+      "coordBadge": "+Y 朝上",
+      "ready": "就绪",
+      "totalPoints": "场景总点数",
+      "selectedPoints": "已选择点数",
+      "deletedPoints": "已删除点数",
+      "totalWithRendered": "{total}（渲染 {rendered}）"
+    },
+    "contextBar": {
+      "selectionFallback": "选区",
+      "brushRadius": "半径",
+      "onlyVisible": "只选可见点",
+      "onlyVisibleTip": "基于 GPU 实时 ID 深度拾取，仅选中当前镜头未被遮挡的前景表面高斯点。",
+      "wholeGaussian": "整个高斯点",
+      "wholeGaussianTip": "只要高斯点的椭球范围有任意部分落入选区即选中，判定边界与「环绕式模式」环轮廓完全一致。",
+      "tolerance": "容差",
+      "colorSpace": "颜色空间模式",
+      "colorSpaceRgb": "RGB 欧氏容差",
+      "colorSpaceHsv": "HSV 色相/饱和容差",
+      "minBound": "下限",
+      "maxBound": "上限",
+      "minVal": "最小",
+      "maxVal": "最大",
+      "sizeMetric": "尺寸度量方式",
+      "sizeMetricMax": "最大主轴尺度",
+      "sizeMetricMean": "三轴平均尺度",
+      "sizeMetricRatio": "针状纵横比 (最大/最小)",
+      "semModeAuto": "自动",
+      "semModeAutoTip": "首视角分割后根据 3D 共面连续性与边缘深度断层自动判别 2D（平面局部）或 3D（立体物品，优先）。",
+      "semMode2d": "2D",
+      "semMode2dTip": "锁定 2D 平面分割（支持表面选择与可调深度/无限穿透）；若有上次选框将立即沿用原框重算。",
+      "semMode3d": "3D",
+      "semMode3dTip": "锁定 3D 多视角立体物品分割（水平环绕 + 上半球补充 + 多线程遮挡过滤）；若有上次选框将立即沿用原框重算。",
+      "semModeTitle": "分割模式：{mode}",
+      "depthSurface": "表面",
+      "depthThrough": "穿透",
+      "depthInfinite": "无限深度",
+      "depthInfiniteShort": "无限穿透",
+      "voxelSize": "体素尺度",
+      "maxNeighbors": "最大邻域数",
+      "maxOpacityFilter": "仅筛选透明度 ≤",
+      "advancedUp": "高级选项 ▴",
+      "inpaintL1": "L1 极速几何",
+      "inpaintL1Tip": "零 AI 模型离线极速补洞（<0.5s）：RANSAC 拟合支撑平面 + 扁平平面高斯 + 邻域纹理合成，适合纯色桌面/墙面。",
+      "inpaintL2": "L2 智能修复",
+      "inpaintL2Tip": "默认推荐：LaMa 非扩散傅里叶纹理修复 + 精确支撑平面反投影，可高质量续接木纹、瓷砖缝与花纹。",
+      "edgeFeather": "边缘羽化",
+      "downloadL2": "下载 L2 模型",
+      "downloadL2Title": "一键下载 L2 模型",
+      "downloadL2Tip": "自动选择最佳镜像线路下载 LaMa ONNX（约 198 MB，中文优先国内镜像、失败自动切国际源）。下载前可随时切换 L1 立即使用。",
+      "reuseLastHole": "一键补上次空洞",
+      "verticalDone": "已完成垂线摆正 (+Y 朝上)",
+      "verticalStep0": "已选 0/2 点：请先点击竖直边下端（点完第 2 点自动平滑摆正）",
+      "verticalStep1": "已选 1/2 点：请再点击竖直边上端（点击后立即平滑摆正）",
+      "groundDone": "已完成平面摆正 (Y=0 · +Y 朝上)",
+      "groundStep0": "已选 0/3 点：在要放平的面上点击第 1 点（点完第 3 点自动平滑摆平）",
+      "groundStep1": "已选 1/3 点：在同一平面点击第 2 点",
+      "groundStep2": "已选 2/3 点：点击不共线的第 3 点立即平滑摆平",
+      "flipVertical": "上下翻转",
+      "undoShort": "撤销",
+      "repick": "重新点选",
+      "repickPoints": "重新选点",
+      "calibTagCalibrated": "已校准 (1u={factor}m · {unit})",
+      "calibTagDefault": "默认 1:1 ({unit})",
+      "calibStep0": "{tag} · 请点击已知长度第 1 点",
+      "calibStep1": "{tag} · 已选起点，请点击第 2 点",
+      "calibStep2": "{tag} · 已选 2 点，请在上方确认真实长度",
+      "resetScale1to1": "重置 1:1",
+      "toMeasurePen": "前往测量笔 (T)",
+      "measureBasePick": "3 点重定底面：已选 {count}/3 个参考点（Esc 取消）",
+      "measureVolumeMode": "堆体模式 ({count} 点) · 可拖拽顶点/底面菱形/最高点黄球",
+      "measureAreaMode": "面积模式 ({count} 点) · 可拖拽边界顶点或点击「一键智能贴边」",
+      "measureStep0": "点击实体表面打点（2 点测距 · 3 点+折线 · 闭合测面积/堆体）",
+      "measureStep1": "已选起点 · 点击第 2 点输出距离/高差/坡度（Backspace 撤销）",
+      "measureStep2": "已输出距离/高差/坡度 · 继续点击测折线（Backspace 撤销）",
+      "measureStepPoly": "折线已 {count} 点 · 双击起点或点击右侧「闭合多边形」切入面积/堆体",
+      "closePolygon": "闭合多边形",
+      "undoLastPt": "撤销上一点",
+      "cancelBasePick": "取消重定底面",
+      "remeasure": "重新测量",
+      "scaleCalibFactor": "比例尺 ×{factor}",
+      "eyedropSwatchTitle": "当前吸取的目标颜色",
+      "eyedropSwatchTipEmpty": "显示吸管采样到的目标颜色（尚未取色）。\n左键点击模型表面采样颜色，并按当前容差自动选中相近颜色的高斯点。",
+      "eyedropSwatchTipPicked": "当前目标色：{hex}（RGB {r}, {g}, {b}）。\n左键点击模型可重新采样，拖动右侧容差可控制颜色匹配宽容度。",
+      "voxelSizeTip": "空间体素网格边长（场景单位）：数值越小越精细保守，数值越大可捕获离主体更远的成团悬浮噪点。",
+      "maxNeighborsTip": "周围 3×3×3 相邻体素内允许的最大邻居点数：若某点邻域内总点数 ≤ 该值，即判定为孤立悬浮点并选中。",
+      "inpaintL0": "L0 纯色",
+      "inpaintL0Tip": "零模型极速纯色补洞：在拟合支撑平面上填充指定纯色扁平高斯；点击后向上弹出色相环与取色面板。",
+      "inpaintL0ColorTitle": "L0 纯色补洞颜色",
+      "inpaintL0ColorTip": "点击打开色相环与色彩面板，支持取色器吸取画面颜色及最近使用颜色记录。"
+    },
+    "modals": {
+      "exportImgTitle": "导出当前视图图片",
+      "resCurrent": "当前窗口",
+      "widthPx": "宽度 (px)",
+      "heightPx": "高度 (px)",
+      "pngTransparent": "PNG 透明背景（无损直通 Alpha）",
+      "hideHelpers": "自动隐藏辅助元素（网格线、包裹体线框与控点、选中高亮、坐标轴等）",
+      "confirmExportPng": "渲染并导出 PNG",
+      "overwriteTitle": "覆盖保存（接入主工作流）",
+      "overwriteNoticeHtml": "<strong>无损编辑说明：</strong>仅以新结果替换当前工作流中的文件，不会修改原始源文件（无损编辑）。所有已软删除的高斯点将自动剔除；最终导出时再按主界面编码设置执行重编码。",
+      "overwriteSelectLabel": "选择要输出回工作流的场景物体（多选时默认合并为一个文件）：",
+      "overwriteObjItem": "{name} ({count} 点)",
+      "overwriteConfirm": "确认替换工作流文件",
+      "compatProtectUnsupported": "兼容性保护：{warnings} 确认保存将保留原始配方，不会静默覆盖或丢弃字段。",
+      "compatProtectV4": "v4 兼容保护：{warnings}",
+      "saveAsTitle": "另存为（直接导出到指定文件夹）",
+      "saveAsModeLabel": "多物体导出模式（已自动剔除软删除点）：",
+      "saveAsMerged": "全部合并导出（输出单个文件）",
+      "saveAsPerObject": "按物体分开导出（每个物体输出独立文件）",
+      "saveAsPerGroup": "按组导出（组内合并，组间分别导出）",
+      "saveAsFormatLabel": "目标编码格式：",
+      "fmtPly": "标准 PLY（无损保留完整球谐）",
+      "fmtCompressedPly": "压缩 PLY",
+      "fmtSog": "SOG（SuperSplat 高压缩包）",
+      "fmtSpz": "SPZ（轻量跨平台压缩）",
+      "fmtHtml": "独立交互 HTML",
+      "saveAsUseMainParams": "沿用主界面当前编码参数（保留点数、球谐迭代、打包强度、设备后端等）",
+      "saveAsSummary": "主界面参数：保留 {keep}% · 迭代 {iterations} · 设备 {device} · SOG v{sogVersion} · SPZ v{spzVersion}",
+      "saveAsSummaryDefault": "主界面参数：保留 100% · 默认编码器配置",
+      "saveAsNoticeHtml": "<strong>防丢失容错保护：</strong>导出前自动写入恢复检查点。若重编码中断或失败，您的所有编辑数据与历史记录绝不丢失，可直接重试导出。",
+      "saveAsConfirm": "选择文件夹并导出…",
+      "saveAsNoActiveObjects": "没有可导出的非空场景物体",
+      "saveAsWaitingFolder": "等待选择目标文件夹并准备编码…",
+      "saveAsProgress": "正在编码导出 ({percent}%) · {detail}",
+      "saveAsDone": "导出完成",
+      "saveAsFailed": "导出失败",
+      "infoTitle": "信息",
+      "crashTitle": "性能不足自动节能保护",
+      "crashHeading": "检测到渲染负载过高或显存不足，已自动切换至「中心模式」节约性能。",
+      "crashDesc": "为防止继续卡死，已临时冻结智能筛选、专业调色及高耗能显示模式，仅保留基础选择、软删、包裹体、变换与矫正工具以便完成粗略删减编辑。您的编辑历史记录已完整保留。",
+      "crashTelemetryLabel": "触发瞬间性能监控数据：",
+      "crashTelemetryFmt": "触发原因：{reason}\n{telemetry}",
+      "crashContinue": "以中心模式继续编辑"
+    },
+    "shortcuts": {
+      "title": "快捷键一览表（全部外显于对应按钮）",
+      "gizmo": "移动 / 旋转 / 缩放坐标轴",
+      "spaceBounds": "局部坐标系 / 使用边界中心",
+      "undoRedo": "撤回 / 重做",
+      "softDelete": "软删除选中高斯点",
+      "boolMods": "框选/套索临时 加选 / 减选 / 交集",
+      "basicTools": "浏览 / 框选 / 套索 / 椭圆 / 多边形 / 画笔",
+      "brushRadius": "画笔半径缩放",
+      "filterTools": "吸管 / 透明度 / 尺寸 / 语义 / 悬浮点",
+      "alignTools": "自动对齐 / 垂线摆正 / 平面摆正",
+      "measureTools": "智能测量笔 / 比例尺校准（打点中 Backspace 撤上一点）",
+      "ctrlDragTools": "语义框选 / 平面补洞画框（浏览同时可用）",
+      "ctrlLeftDrag": "Ctrl + 左键拖拽",
+      "displayMode": "切换 泼溅 / 中心 / 环 显示模式",
+      "cameraMode": "切换 轨道相机 / 漫游相机",
+      "colorPanel": "打开/关闭专业调色面板",
+      "compareColor": "按住对比原图 / 分屏对比",
+      "visibility": "隔离显示 / 临时隐藏 / 全部显示",
+      "selOps": "全选 / 取消选择 / 反选",
+      "splitDup": "分割为独立对象 / 复制为局部副本",
+      "groupUngroup": "打组 / 解组",
+      "viewHelpers": "无限网格 / 边角框 / 透视正交 / 聚焦居中",
+      "exportView": "导出当前视图图片",
+      "saveOps": "覆盖保存（无损）/ 另存为导出",
+      "shiftLeftDrag": "Shift + 左键拖拽"
+    },
+    "credits": {
+      "title": "开源鸣谢与版权声明",
+      "resplat": "借鉴参考环绕式模式渲染参数与轮廓边界、全套调色（8 段 HSL / 3D LUT / 球谐烘焙）、特殊选区、本地 SAM 2 语义分割方案、位精确 PNG 导出及深色专业界面排布设计。",
+      "supersplat": "ReSplat 上游 3D 高斯编辑器范式与球谐（SH Band 1–3）旋转矩阵算法（基于 Andrew Willmott sh-lib）。",
+      "spirula": "借鉴参考六面推拉包裹体控点交互（Shift 对称伸缩）、+Y 朝上自动地面与墙面对齐算法思路及选区工作流设计（净室重写实现）。",
+      "splatTransform": "核心 3D 高斯编解码、SOG/SPZ/PLY/HTML 格式转换与抽稀引擎。",
+      "gse": "透明度选择与尺寸选择工具交互参考。"
+    },
+    "tips": {
+      "saveOverwrite": {
+        "title": "覆盖保存（无损）",
+        "tip": "仅替换主工作流中的该文件，绝不修改磁盘原始源文件，最终导出时统一重编码。"
+      },
+      "saveAs": {
+        "title": "另存为导出",
+        "tip": "直接将当前编辑结果导出至指定文件夹，支持全部合并、按物体或按组导出，并调用主界面编码配置。"
+      },
+      "menuBounds": {
+        "title": "模型边界边角框",
+        "tip": "在当前高斯模型三维外包围盒的八个顶角显示细白边角框，快速判断空间边界范围。"
+      },
+      "menuGrid": {
+        "title": "无限延伸地面网格",
+        "tip": "在 +Y 朝上坐标系的 Y=0 水平面绘制抗锯齿无限延伸参考网格（含红 X / 蓝 Z 原点主轴）。"
+      },
+      "colorPanel": {
+        "title": "专业调色面板",
+        "tip": "无选区时对选中物体整体调色，有选区时仅局部调色；支持直方图、8 段 HSL、3D LUT 与 SH 烘焙。"
+      },
+      "isolate": {
+        "title": "隔离显示",
+        "tip": "仅显示当前选中的高斯点，临时隐藏其余部分。"
+      },
+      "hide": {
+        "title": "临时隐藏",
+        "tip": "隐藏当前选中的高斯点，便于编辑内部遮挡结构。"
+      },
+      "showAll": {
+        "title": "全部显示",
+        "tip": "取消所有临时隐藏与隔离，恢复显示所有未删除高斯点。"
+      },
+      "boundsTop": {
+        "title": "高斯模型边角框",
+        "tip": "开关模型边界八角 L 型框线，清晰标识高斯点云三维边界。"
+      },
+      "gridTop": {
+        "title": "无限地面网格",
+        "tip": "开关 Y=0 平面无限延伸参考网格与原点 X/Z 轴线。"
+      },
+      "exportImgTop": {
+        "title": "导出当前视图图片",
+        "tip": "按自定义分辨率渲染导出当前镜头 PNG（支持透明背景与自动隐藏辅助线）。"
+      },
+      "displayMode": {
+        "title": "显示模式",
+        "tip": "全量加载并精准控制单个高斯点：泼溅模式（真实 3D 高斯）、中心模式（菱形中心极速定位）、环模式（高斯外轮廓环定位浮云杂点）。"
+      },
+      "camOrbit": {
+        "title": "轨道相机",
+        "tip": "围绕中心焦点旋转查看模型：左键旋转、右键/中键平移、滚轮缩放；双击视口任意高斯点可设为新旋转中心并唤出 3D 坐标轴。"
+      },
+      "camFly": {
+        "title": "漫游相机",
+        "tip": "第一人称自由穿行视角（适合大型室内外实拍场景）：左键拖拽原地环顾，滚轮前后推进，W/A/S/D 移动、Q/E 沿 +Y 升降（Shift 加速 / Alt 精细慢速）。"
+      },
+      "flySpeed": {
+        "title": "漫游移动速度",
+        "tip": "默认速度与最大速度已根据刚载入模型的尺寸自动校准；拖动滑块实时调节速度，双击数值恢复默认推荐速度（飞行时仍可按住 Shift 2.8× 加速 / Alt 0.3× 慢速）。"
+      },
+      "orbit": {
+        "title": "浏览与对象选择",
+        "tip": "左键旋转、右键平移；双击高斯点设旋转中心并弹出 3D 坐标轴。"
+      },
+      "rect": {
+        "title": "框选",
+        "tip": "拖拽矩形框选高斯点（默认替换 · Ctrl 临时加选 / Alt 临时减选）。"
+      },
+      "lasso": {
+        "title": "套索选择",
+        "tip": "自由勾勒任意闭合形状选区。"
+      },
+      "ellipse": {
+        "title": "椭圆选择",
+        "tip": "拖拽绘制椭圆选区。"
+      },
+      "poly": {
+        "title": "多边形选择",
+        "tip": "逐点点击绘制多边形，双击或按 Enter 闭合。"
+      },
+      "brush": {
+        "title": "画笔选择",
+        "tip": "按住涂抹选择高斯点，[ / ] 调节半径。"
+      },
+      "eyedropper": {
+        "title": "吸管选择",
+        "tip": "点击取色后按 RGB/HSV 容差选中相似颜色高斯点。"
+      },
+      "opacitySel": {
+        "title": "透明度选择",
+        "tip": "按透明度区间筛选半透明雾团或残影。"
+      },
+      "sizeSel": {
+        "title": "尺寸选择",
+        "tip": "按高斯轴长或针状拉长比筛选异常超大高斯点。"
+      },
+      "semanticSel": {
+        "title": "语义选择",
+        "tip": "按住 Shift + 左键拖拽框选物品，自动判别 2D/3D 语义分割（Ctrl 临时加选 / Alt 临时减选；直接左键可旋转视角；再按 M 取消）。"
+      },
+      "floaterSel": {
+        "title": "悬浮点选择",
+        "tip": "基于三维体素邻域密度检测空中孤立飞点。"
+      },
+      "autoAlign": {
+        "title": "自动对齐 (+Y 朝上)",
+        "tip": "自动识别地面落至 Y=0、墙面对齐 X/Z 并居中至原点上方（一步撤销）。"
+      },
+      "verticalAlign": {
+        "title": "垂线摆正",
+        "tip": "先点竖直边下端再点上端，末点即平滑摆正至 +Y，支持上下翻转与撤销。"
+      },
+      "groundAlign": {
+        "title": "平面摆正",
+        "tip": "在要放平的面上依次点击三点，末点即平滑摆平至 Y=0，支持上下翻转与撤销。"
+      },
+      "scaleCalib": {
+        "title": "比例尺校准",
+        "tip": "点击已知距离两点并输入真实长度（m/cm/mm），非破坏性全局换算测量比例。"
+      },
+      "smartMeasure": {
+        "title": "智能测量笔",
+        "tip": "2点测距/高差/坡度 · 3点+折线 · 闭合测面积/堆体（智能贴边 + 4种堆体检查视图）。"
+      },
+      "flyoutFilter": {
+        "title": "智能筛选二级菜单",
+        "tip": "收纳吸管(Y)、透明(O)、尺寸(K)、语义(M)、悬浮点(F)等高级筛选工具。"
+      },
+      "flyoutAlign": {
+        "title": "姿态矫正二级菜单",
+        "tip": "收纳自动对齐(A)、垂线摆正(U)、平面摆正(L)。"
+      },
+      "flyoutMeasure": {
+        "title": "空间测量二级菜单",
+        "tip": "收纳比例尺校准(Shift+T)与智能测量笔(T)。"
+      },
+      "undo": {
+        "title": "撤回",
+        "tip": "非破坏性增量撤回上一步操作。"
+      },
+      "redo": {
+        "title": "重做",
+        "tip": "恢复已撤回的操作。"
+      },
+      "gizmoTranslate": {
+        "title": "移动坐标轴",
+        "tip": "以 3D 坐标轴沿 X/Y/Z 轴精确平移所选物体或包裹体。"
+      },
+      "gizmoRotate": {
+        "title": "旋转坐标轴",
+        "tip": "围绕中心点旋转所选物体或包裹体。"
+      },
+      "gizmoScale": {
+        "title": "缩放坐标轴",
+        "tip": "按轴向或等比例缩放所选物体或包裹体。"
+      },
+      "flyoutSmart": {
+        "title": "智能工具",
+        "tip": "展开智能修复与生成工具（当前包含平面补洞 L0 纯色 / L1 / L2）。"
+      },
+      "planeInpaint": {
+        "title": "平面补洞",
+        "tip": "按住 Shift + 左键拖拽框选桌面或墙面空洞（直接左键可旋转视角），支持 L0 纯色 / L1 / L2 补洞。"
+      },
+      "localSpace": {
+        "title": "使用局部坐标系",
+        "tip": "在局部坐标系与世界坐标系 (+Y 朝上) 之间切换 3D 变换坐标轴朝向。"
+      },
+      "boundsCenter": {
+        "title": "使用边界中心",
+        "tip": "开启后坐标轴自动吸附至当前选中模型边界框几何中心；关闭恢复原位置；浏览模式双击重设轴心或开启原点编辑时自动关闭。"
+      },
+      "pivotEdit": {
+        "title": "编辑坐标原点（轴心）",
+        "tip": "开启后坐标轴切至平移箭头并仅调整轴心位置（不移动模型）；关闭后基于新轴心继续旋转/缩放/平移模型。"
+      },
+      "scaleLock": {
+        "title": "等比例缩放锁",
+        "tip": "锁定后修改 X/Y/Z 任意缩放值将同步等比例缩放三轴。"
+      },
+      "resetPos": {
+        "title": "重置位置",
+        "tip": "模型恢复默认 (0, 0, 0)，包裹体恢复创建时的初始位置（支持撤销）。"
+      },
+      "resetRot": {
+        "title": "重置旋转",
+        "tip": "模型恢复默认 (0, 0, 0)，包裹体恢复创建时的初始朝向（支持撤销）。"
+      },
+      "resetScale": {
+        "title": "重置缩放",
+        "tip": "模型恢复默认 (1, 1, 1)，包裹体恢复创建时的初始尺寸（支持撤销）。"
+      },
+      "clearObjSel": {
+        "title": "清除物体选择",
+        "tip": "取消当前选中模型，使模型最外层边角框恢复包裹整个场景所有活动点。"
+      },
+      "expandObjects": {
+        "title": "一键展开/收起物体列表",
+        "tip": "展开全部场景物体列表，无需在窄框内滚动。"
+      },
+      "expandVolumes": {
+        "title": "一键展开/收起包裹体列表",
+        "tip": "展开全部包裹体与嵌套组列表。"
+      },
+      "historyToggle": {
+        "title": "展开/折叠历史记录",
+        "tip": "默认折叠外显最近 3 步；点击任意步数无损快速跳转，仅产生新更改时覆盖分叉后步骤。"
+      },
+      "groupBtn": {
+        "title": "打组",
+        "tip": "将多选的场景物体或包裹体/包裹体组合并为组（快捷键 Ctrl+G）；包裹体组支持嵌套与从上到下依次布尔运算。"
+      },
+      "ungroupBtn": {
+        "title": "解组",
+        "tip": "解散当前选中的物体组或包裹体组。"
+      },
+      "addVolBtn": {
+        "title": "创建包裹体 / 遮挡平面",
+        "tip": "支持创建包裹盒、包裹椭球、包裹柱体及无限遮挡平面。"
+      },
+      "transformCard": {
+        "title": "精确变换 (+Y 朝上)",
+        "tip": "直接精确调整当前选中物体、包裹体或大组的位置、旋转角度与缩放比例。"
+      },
+      "histogram": {
+        "title": "RGB 与亮度直方图",
+        "tip": "实时反映当前作用范围的色彩与曝光分布；左上蓝点提示欠曝，右上红点提示过曝。"
+      },
+      "compareHold": {
+        "title": "按住对比原图",
+        "tip": "按住按钮或反斜杠键 \\ 瞬间切换调色前原图，松开恢复调色效果。"
+      },
+      "compareSplit": {
+        "title": "分屏对比",
+        "tip": "开启可左右拖拽的像素级分屏对比（左原图 / 右调色）。"
+      },
+      "colorApply": {
+        "title": "应用并烘焙至 SH",
+        "tip": "将当前实时调色结果烘焙写入选区或物体的球谐系数（SH）并记为单步历史。"
+      },
+      "imgTransparent": {
+        "title": "PNG 透明背景",
+        "tip": "使用无损直通 Alpha 编码导出透明背景 PNG，便于后期视频/平面合成。"
+      },
+      "imgHideHelpers": {
+        "title": "自动隐藏辅助元素",
+        "tip": "渲染截图时自动隐藏网格线、包裹体线框与控点、坐标轴及选中高亮。"
+      }
+    },
+    "measure": {
+      "cardAria": "智能测量结果",
+      "calibCardAria": "比例尺校准",
+      "cardTitle": "智能测量",
+      "dragTitle": "按住标题栏自由拖动面板",
+      "copyBtn": "复制",
+      "copiedBtn": "已复制",
+      "copyTip": "一键复制测量结果",
+      "pinBtn": "钉住",
+      "pinTip": "钉住当前测量结果并开始新测量",
+      "clearBtn": "清空",
+      "clearTip": "清空当前测量",
+      "vizStandard": {
+        "label": "标准",
+        "tip": "正常显示高斯点云与测量覆盖物"
+      },
+      "vizTranslucent": {
+        "label": "半透明透视",
+        "tip": "压低多边形内高斯球不透明度，清晰透视底面与最高点标杆"
+      },
+      "vizHeatmap": {
+        "label": "高度热力图",
+        "tip": "按距基准底面高度以蓝→红渐变着色，一眼揪出上方浮空噪点"
+      },
+      "vizGrid": {
+        "label": "网格对比",
+        "tip": "淡化内部点云并高亮 2.5D 表面网格与基准底面，核验贴合度"
+      },
+      "baseFit": "拟合底面",
+      "baseLowest": "贴合最低点",
+      "baseHorizontal": "水平面",
+      "baseThreePoint": "3点重定",
+      "baseFitHist": "拟合基准底面",
+      "baseLowestHist": "底面贴合最低点",
+      "baseHorizontalHist": "水平基准底面",
+      "baseSwitchHist": "切换基准底面",
+      "baseThreePointHist": "3点重定基准底面",
+      "errPointsTooClose": "两点间距过小，无法校准比例尺",
+      "errInvalidLength": "请输入大于 0 的真实长度",
+      "calibHist": "比例尺校准 ({val} {unit})",
+      "calibDone": "比例尺已非破坏性校准（1 虚拟单位 = {factor} m，所有测量已自动换算）",
+      "calibAlreadyDefault": "当前已是默认 1:1 比例尺",
+      "calibResetHist": "重置比例尺 (1:1)",
+      "calibResetDone": "已重置全局测量比例尺为默认 1:1",
+      "basePickCanceled": "已取消 3 点重定底面",
+      "vizExited": "已退出堆体临时视图，恢复标准视图",
+      "calibUndoFirst": "已撤销比例尺起点，请重新点击第 1 点",
+      "calibUndoSecond": "已撤销第 2 点，请重新点击第 2 点",
+      "baseUndoPt": "已撤销底面参考点（当前 {count}/3）",
+      "undoAllPts": "已撤销所有测点",
+      "undoPrevPt": "已撤销上一个测点（剩余 {count} 点）",
+      "polyClosed": "已闭合多边形：可在悬浮面板切换「面积模式 / 堆体模式」或点击「一键智能贴边」",
+      "smartSnapHist": "智能贴边拟合",
+      "smartSnapDone": "智能贴边完成（已重采样拟合 {count} 个边缘点，按 Ctrl+Z 可一键撤回）",
+      "basePickStart": "3 点重定底面：请在场景底面实体上依次点击 3 个参考点（按 Esc 取消）",
+      "baseSwitched": "基准底面已切换为「{mode}」",
+      "baseHeightHist": "调整基准底面高度",
+      "noiseFilterOnHist": "开启过滤浮空噪点",
+      "noiseFilterOffHist": "关闭过滤浮空噪点",
+      "resetPeakHist": "恢复自动最高点",
+      "kindDistance": "测距",
+      "kindPolyline": "折线",
+      "kindArea": "面积",
+      "kindVolume": "堆体",
+      "pinName": "{kind} #{id}",
+      "pinnedStatus": "已钉住「{name}」，可继续开展下一次测量",
+      "reportCalib": "[比例尺已校准: 1u = {factor} m · 单位 {unit}]",
+      "reportStraight": "直线距离: {val}",
+      "reportHoriz": "水平距离: {val}",
+      "reportDeltaH": "垂直高差 (ΔH): {val}",
+      "reportSlope": "坡度: {deg}° ({pct})",
+      "reportPolyTotal": "折线总长 ({segs} 段): {val}",
+      "reportSeg": "  第 {idx} 段: {val}",
+      "reportAreaHead": "【面积测量结果】",
+      "reportProjArea": "水平投影面积: {val}",
+      "reportSurfArea": "表面展开面积: {val}",
+      "reportFitArea": "拟合平面面积: {val}",
+      "reportPerim": "闭合周长: {val}",
+      "reportVolHead": "【堆体测量结果】",
+      "reportVolume": "估算体积: {val}",
+      "reportMaxH": "最大高度: {val}",
+      "reportMeanH": "平均高度: {val}",
+      "reportBaseArea": "底面投影面积: {val}",
+      "copiedStatus": "测量结果已复制到剪贴板",
+      "softDeformNote": "（软选弹性变形）",
+      "dragVertexHint": "拖拽调整边界点{note}",
+      "dragBaseHint": "基准底面偏移 {offset}",
+      "dragPeakHint": "最高点高度 {height}",
+      "hoverBaseHint": "按住上下拖拽调整基准底面高度",
+      "hoverPeakHint": "按住拖拽修正堆体最高点",
+      "hoverVertexSoftHint": "按住拖拽边界（自动软选平滑调整）",
+      "hoverVertexHint": "按住拖拽调整测点位置",
+      "hoverClosePoly": "双击起点闭合多边形（面积 / 堆体）",
+      "hoverCalib1": "点击已知长度的起点 (1/2)",
+      "hoverCalib2": "点击已知长度的终点 (2/2)",
+      "hoverBasePt": "点击底面参考点 ({step}/3)",
+      "hoverPt1": "点击实体表面拾取第 1 点（自动过滤浮空噪点）",
+      "hoverPt2": "点击第 2 点（输出直线/水平距离 · 高差 · 坡度）",
+      "hoverPtMore": "继续点击折线（已 {count} 点）· 点起点或下方闭合",
+      "noSolidHit": "未命中实体表面，换个位置",
+      "dragVertexHist": "拖拽测量边界点",
+      "manualPeakHist": "手动修正最高点",
+      "base3PtDone": "已根据 3 个实体参考点重新拟合基准底面",
+      "base3PtProgress": "已选第 {count}/3 个底面参考点",
+      "pinBadgeTotal": "📌 总长 {val}",
+      "pinBadgeArea": "📌 面积 {val}",
+      "pinBadgeVol": "📌 体积 {vol} · 高 {height}",
+      "virtualBadge": "虚拟 {dist} u",
+      "peakBadge": "▲ 最大高 {height}",
+      "calibTitle": "比例尺校准",
+      "calibVirtualDist": "虚拟间距",
+      "calibCurrentScaled": "当前换算 {val} {unit}",
+      "calibPlaceholder": "输入真实长度",
+      "calibNote": "非破坏性校准：仅更新全局测量比例系数，不修改底层高斯球数据。",
+      "calibConfirm": "确认校准",
+      "badgeTwoPt": "两点测距",
+      "badgeCalibPill": "已校准 ×{factor}",
+      "lblStraight": "直线距离",
+      "lblHoriz": "水平距离",
+      "lblDeltaH": "垂直高差 ΔH",
+      "lblSlope": "坡度",
+      "lblSeg": "第 {idx} 段",
+      "badgePolyline": "折线测量 · {count} 点",
+      "lblPolyTotal": "折线总长度",
+      "tabArea": "面积模式",
+      "tabVolume": "堆体模式",
+      "smartSnapAgain": "再次智能贴边",
+      "smartSnapBtn": "一键智能贴边",
+      "snapHintMini": "{count} 顶点 · 可拖拽微调 · Ctrl+Z 撤回",
+      "lblProjArea": "水平投影面积",
+      "lblSurfArea": "表面展开面积",
+      "lblFitArea": "拟合平面面积",
+      "lblPerim": "闭合周长",
+      "lblEstVol": "估算堆体体积",
+      "lblMaxH": "最大高度",
+      "lblManualTag": "(手动)",
+      "lblMeanH": "平均高度",
+      "lblBaseArea": "底面投影面积",
+      "secBasePlane": "基准底面（拖拽青色菱形升降）",
+      "lblOffset": "偏移 {val}",
+      "secPeakPole": "最高点标杆（拖拽顶部黄球修正）",
+      "btnResetPeak": "恢复自动",
+      "chkNoiseFilter": "过滤浮空噪点（忽略稀疏半透明飞点）",
+      "secVizModes": "堆体检查视图（Esc 恢复标准）",
+      "emptyHint": "点击实体表面继续打点测量；已钉住结果保留在下方。",
+      "removePinTitle": "移除钉住结果",
+      "pinnedHeader": "已钉住测量 ({count})",
+      "clearPinsBtn": "全部清除",
+      "hoverStartVertexCloseHint": "按住拖拽调整测点位置\n双击即闭合当前多边形"
+    },
+    "align": {
+      "errCollinear": "所选三点几乎共线，请在地面上重新选择三个不共线的点。",
+      "errCoincident": "两点重合，请沿竖直边缘依次点击下端与上端。",
+      "errInsufficientPoints": "有效点数不足，无法执行自动对齐。",
+      "hoverGroundPt": "点在要放平的面上 ({step}/3)",
+      "hoverVertPt1": "点在竖直边下端 (1/2)",
+      "hoverVertPt2": "点在竖直边上端 (2/2)"
+    },
+    "semantic": {
+      "legacyUnloaded": "未加载（省显存待机）",
+      "legacyWebgpu": "本地 SAM 2 (WebGPU 已载入)",
+      "legacyWasm": "本地 SAM 2 (WASM 已载入)",
+      "legacyBuiltin": "内置 2D/3D 语义图割引擎 (可导入本地 SAM2)",
+      "legacyLoading": "正在按需加载本地 SAM 2 模型至显存…",
+      "legacyReadFailed": "无法读取本地 SAM 2 模型文件",
+      "samStandby": "{name}（待机省显存）",
+      "samFallbackEngine": "内置边缘图割兜底引擎",
+      "samExtractingBundled": "正在首次解压内置 SAM 2.1 模型与推理引擎…",
+      "samLoadingModel": "正在加载 {name}…",
+      "samFallbackWasm": "未检测到可用 WebGPU，正在回退 CPU (WASM) 加载模型…",
+      "reasonDefault3dFewPixels": "默认 3D（目标像素较少）",
+      "reasonDefault3dFewRing": "默认 3D（外围参考点不足）",
+      "reasonCoplanar2d": "目标与周边背景严格共面连续（平面局部）",
+      "reasonVolumetric3d": "目标具有立体几何厚度或背景深度断层（立体物品）",
+      "aborted": "已取消语义分割",
+      "stageInitEngine": "正在初始化语义分割引擎…",
+      "cpuWasmNote": "当前为 CPU (WASM) 推理（可在左上角「高级选项 → 工具高级选项」调低采样视角数或切换轻量模型提速）",
+      "stagePrimaryTitle": "正在识别框选目标（主视角）…",
+      "stagePrimaryDesc": "正在捕获主视角画面并运行语义分割…",
+      "modeAuto3d": "已自动判别并应用：3D 语义分割（立体物品）",
+      "modeAuto2d": "已自动判别并应用：2D 语义分割（平面局部）",
+      "modeLocked3d": "已应用锁定模式：3D 语义分割",
+      "modeLocked2d": "已应用锁定模式：2D 语义分割",
+      "stageExtractSurface": "正在提取表面高斯点…",
+      "stageFilterDepth": "正在按穿透深度筛选高斯点…",
+      "stagePrimaryAnchors": "正在提取主视角基础标识点与 3D 空间包络…",
+      "stageScreenViews": "正在多线程并行筛选无遮挡有效视角…",
+      "stageInferView": "正在识别有效视角 {current} / {total}（{mode}）…",
+      "viewModeSilent": "后台无感",
+      "viewModeVisible": "可视化视角切换",
+      "stageFuseViews": "正在融合 {count} 个有效视角并清理支撑面边界…",
+      "prepAuto": "正在自动判别 2D / 3D 分割模式…",
+      "prepLocked": "正在准备 {mode} 语义分割…",
+      "initStage": "初始化中…",
+      "doneMsg": "{mode}完成：选中 {count} 点 · {reason}",
+      "doneSkippedSuffix": "（已自动规避/舍弃 {skipped} 个遮挡视角）"
+    },
+    "inpaint": {
+      "stagePrepareOrt": "正在准备 ONNX 推理运行时…",
+      "stageLoadLama": "正在加载 LaMa 平面纹理修复模型 (L2)…",
+      "stageLoadLamaWasm": "正在使用 CPU (WASM) 加载 LaMa 模型…",
+      "errLamaNotLoaded": "LaMa L2 模型尚未加载",
+      "stageFitPlane": "正在采集缺口周边表面点并拟合 3D 支撑平面…",
+      "errInsufficientCollar": "缺口周边可参考的平面高斯点不足，请稍微缩小补洞框并确保四周存在支撑平面。",
+      "errPlaneFitFailed": "无法从周边点拟合有效支撑平面。",
+      "errViewParallel": "当前视角与目标平面近乎平行，请稍微抬高视角正对平面后再执行补洞。",
+      "needDownloadL2": "尚未下载 L2 智能纹理修复模型 (LaMa ONNX)，请先一键下载或临时切换至 L1 极速几何模式。",
+      "lamaUnavailable": "LaMa L2 模型加载不可用，请重新下载或切换至 L1 模式。",
+      "cpuWasmNote": "当前 L2 为 CPU (WASM) 推理，约需 1～3 秒…",
+      "stageOrthoCapture": "正在沿支撑平面法向离屏截取高清正视图…",
+      "stageRunLama": "正在运行 LaMa 傅里叶纹理修复并反投影至 3D 支撑平面…",
+      "stageRunL1": "正在执行 L1 极速平面高斯与邻域纹理合成…",
+      "errEmptyProjection": "补洞框投影区域为空，请重新框选缺口范围。",
+      "opTitleL2": "智能平面补洞 · L2 智能纹理修复",
+      "opTitleL1": "智能平面补洞 · L1 极速几何平面",
+      "stageSynth": "正在拟合支撑平面并生成平面高斯补片…",
+      "opTitleL0": "智能平面补洞 · L0 纯色填充",
+      "stageRunL0": "正在填充 L0 纯色平面高斯..."
+    },
+    "volumes": {
+      "box": "包裹盒",
+      "ellipsoid": "包裹椭球",
+      "cylinder": "包裹柱体",
+      "plane": "遮挡平面",
+      "fallback": "包裹体",
+      "itemName": "{kind} #{num}",
+      "groupName": "包裹体组 #{num}"
+    },
+    "perfHud": {
+      "fps": {
+        "label": "当前帧率 (FPS)",
+        "desc": "实时视口渲染帧率（静帧休眠时保持最近活跃帧率）"
+      },
+      "frameMs": {
+        "label": "单帧耗时 (ms)",
+        "desc": "单帧 JavaScript + WebGL 提交耗时（毫秒）"
+      },
+      "gpuUsage": {
+        "label": "GPU 利用率 (%)",
+        "desc": "显卡计算引擎实时负载百分比"
+      },
+      "vram": {
+        "label": "GPU 显存 (GB)",
+        "desc": "独立显存已用 / 总量（Windows GB 口径）"
+      },
+      "gpuShared": {
+        "label": "GPU 共享显存 (GB)",
+        "desc": "显卡借用系统内存的共享显存用量"
+      },
+      "gpuTemp": {
+        "label": "GPU 温度 (°C)",
+        "desc": "独立显卡核心温度（需硬件传感器/NVML 支持）"
+      },
+      "gpuPower": {
+        "label": "GPU 功耗 (W)",
+        "desc": "独立显卡实时整卡功耗（需硬件传感器/NVML 支持）"
+      },
+      "gpuName": {
+        "label": "显卡型号",
+        "desc": "当前主渲染显卡设备名称"
+      },
+      "cpuUsage": {
+        "label": "CPU 利用率 (%)",
+        "desc": "处理器整体实时占用率"
+      },
+      "ram": {
+        "label": "系统内存 (GB)",
+        "desc": "物理内存已用 / 总量（Windows GB 口径）"
+      },
+      "appRam": {
+        "label": "软件进程内存 (MB)",
+        "desc": "当前主程序进程物理内存占用"
+      },
+      "commit": {
+        "label": "可用提交内存 (GB)",
+        "desc": "系统剩余可分配虚拟提交内存余量"
+      },
+      "scenePoints": {
+        "label": "渲染点数与模式",
+        "desc": "当前视口活跃高斯点数与渲染模式（泼溅/中心/环）"
+      },
+      "sharedVram": "共享 {gb} GB",
+      "appRamFmt": "进程 {mb}",
+      "commitFmt": "提交余量 {gb}",
+      "pointsFmt": "{mode} {pts}点",
+      "resetDefaults": "恢复默认显示项 (FPS + GPU + CPU)"
+    },
+    "advMenu": {
+      "bundledActive": "内置 · 使用中",
+      "bundledDefault": "内置默认",
+      "installedActive": "已下载 · 使用中",
+      "ready": "已就绪",
+      "notDownloaded": "未下载 · {mb}MB",
+      "connecting": "正在连接最佳线路…",
+      "probing": "正在自动探测最佳线路…",
+      "sizeMeta": "{badge} · 约 {mb} MB",
+      "downloadBtn": "下载",
+      "switchUseBtn": "切换使用"
+    },
+    "watchdog": {
+      "contextLost": "WebGL2 图形上下文丢失（显存或驱动过载）",
+      "mainThreadHang": "主线程卡顿无响应 {sec} 秒",
+      "noTelemetry": "暂无实时监控数据",
+      "defaultReason": "显卡或内存性能不足",
+      "stressTestReason": "自动化压力测试触发"
+    },
+    "domain": {
+      "boxReplace": "框选替换",
+      "boxAdd": "框选加选",
+      "boxSubtract": "框选减选",
+      "boxIntersect": "框选交集",
+      "boxOpFallback": "框选({op})",
+      "selectOpFallback": "选区({op})",
+      "softDelete": "软删除",
+      "deselect": "取消选择",
+      "mismatchPointCount": "源资产 \"{name}\" 点数已变化（配方记录 {expected}，当前 {actual}），已拒绝盲套旧点编号。",
+      "mismatchFingerprint": "源资产 \"{name}\" 内容指纹已变化，可能已被重排或替换，已拒绝盲套旧点编号。",
+      "mismatchOrdering": "源资产 \"{name}\" 点序版本已变化（配方 {expected}，当前 {actual}），已拒绝盲套旧点编号。",
+      "recipeInvalid": "配方为空或不是有效 JSON 对象。",
+      "recipeV3Extra": "检测到 v3 扩展字段 ({keys})，保存时将原样保留。",
+      "recipeV4SubPalette": "包含 3.2.2 局部子选区变换调色板（paletteMatrices/transformIdxRle），自有界面暂不支持逐点编辑该字段，保存时将按 v4 原样保留。",
+      "recipeV4PaintDelta": "包含 3.2.2 稀疏笔刷上色数据（{count} 点 paintDelta），保存时将按 v4 原样保留，不静默丢弃。",
+      "recipeV4OnlyIndices": "包含 3.2.2 分组包含掩膜（onlyIndicesRle），保存时将按 v4 原样保留。",
+      "recipeV4UnknownField": "包含未知 v4 字段 \"{field}\"，保存时将原样保留。",
+      "recipeV4Loaded": "已加载 3.2.2 (v4) 配方（删除掩膜/整体变换/调色）；保存时将保持 v4 版本，不隐式降级为 v3。",
+      "recipeUnsupportedVersion": "无法安全解释的配方版本 (version={version})；已保留原件，不会静默覆盖或丢弃字段。",
+      "cameraTrackSidecarWarn": "格式 {label} ({suffix}) 不支持内嵌相机关键帧；将随同发布场景清单 {sidecar}，不会静默丢失镜头轨。",
+      "recipeUnsupportedCoord": "无法识别的配方坐标系（{coordSystem}）；已按只读模式打开并保留原件，阻止静默覆盖。"
+    },
+    "status": {
+      "safeModeEntered": "已启用性能应急节能模式：锁定「中心模式」，仅保留基础选择与删除，冻结所有筛选、智能与高耗能工具",
+      "safeModeExited": "已退出应急节能模式，所有筛选、调色与显示模式已恢复可用",
+      "boundsCenterOn": "已开启「使用边界中心」：坐标轴已自动定位至当前选中模型边界几何中心",
+      "boundsCenterOff": "已关闭「使用边界中心」，坐标轴已恢复原位置",
+      "pivotEditOn": "原点编辑已开启：拖拽平移箭头仅移动坐标轴位置，关闭后基于新原点操作模型",
+      "pivotEditOff": "原点编辑已关闭：后续平移/旋转/缩放将基于新定位的坐标轴执行",
+      "spaceLocal": "已切换至「局部坐标系」",
+      "spaceWorld": "已切换至「世界坐标系 (+Y 朝上)」",
+      "keepAtLeastOneObj": "至少保留一个场景物体，无法删除最后一个物体",
+      "keepAtLeastOneObjGroup": "至少保留一个场景物体，无法删除包含全部物体的物体组",
+      "groupedVolumes": "已将 {count} 个包裹体/子组打组：{name}",
+      "groupedObjects": "已将 {count} 个场景物体打组：{name}",
+      "safeModeLockCenters": "应急节能模式已锁定「中心模式」防止卡死（可点击顶部「恢复完整模式」解锁）",
+      "safeModeLockCentersCycle": "应急节能模式已锁定「中心模式」（点击顶部「恢复完整模式」可切换）",
+      "flySpeedReset": "漫游速度已恢复模型默认推荐值 ({speed})",
+      "camFlySwitched": "已切换至漫游相机（当前速度 {speed} · 左键环顾 · 滚轮前进/后退 · WASD/QE 飞行）",
+      "camOrbitSwitched": "已切换至轨道相机（左键旋转 · 右键平移 · 滚轮缩放 · 双击设中心）",
+      "selectBeforeIsolate": "请先选择高斯点再执行隔离显示",
+      "maxObjectsReached": "最多支持 {max} 个独立场景物体",
+      "maxObjectsInpaint": "最多支持 {max} 个独立场景物体，无法新增补洞图层",
+      "selectBeforeSplit": "请先选择要分割的高斯点",
+      "selectBeforeDup": "请先选择要复制的高斯点",
+      "semanticCanceled": "已取消语义分割操作",
+      "semanticAborted": "已中断语义分割操作",
+      "semanticFailed": "语义分割失败：{error}",
+      "semanticEscCanceled": "已按 Esc 取消语义分割",
+      "wbPickEnabled": "白平衡吸管已启用：点击画面中性灰或白色区域自动校准白平衡（按 Esc 退出）",
+      "hslPickEnabled": "HSL 吸色调节已启用：在画面目标颜色上按住左键左右滑动，即可快捷调节对应颜色参数（按 Esc 退出）",
+      "safeModeToolsFrozen": "应急节能模式下仅保留基础选择与删除，已冻结筛选、智能与高耗能工具",
+      "exitedBrowse": "已退出浏览模式并隐藏坐标轴（再按 1 或双击画面重新激活浏览）",
+      "activatedBrowse": "已激活浏览模式",
+      "toolCanceledToBrowse": "已取消当前工具，返回浏览模式 (1)",
+      "browseCoexistOn": "已同时开启「浏览模式」与「{tool}」：左键自由旋转视角（再按 1 切回工具点击模式）",
+      "browseCoexistOff": "已切回当前工具画布操作模式",
+      "leftSemanticFreed": "已切出语义选择，本地分割模型显存已立即释放",
+      "leftInpaintFreed": "已切出平面补洞，LaMa 模型显存已立即释放",
+      "semanticReady": "语义框选已就绪：{status} · 按住 Ctrl + 左键拖拽框选物品范围",
+      "semanticDragHint": "请按住 Ctrl + 鼠标左键拖拽框选物品范围以执行语义分割",
+      "downloadL2Started": "已开始自动探测最佳线路并下载 LaMa L2 平面修复模型…",
+      "inpaintDone": "平面补洞 ({mode}) 完成：已生成 {count} 个贴合支撑平面的高斯点",
+      "inpaintFailed": "平面补洞失败：{error}",
+      "autoAlignDone": "自动对齐完成：地面已落至 Y=0（+Y 朝上），{detail}（按 Ctrl+Z 一步撤销）",
+      "autoAlignWall": "已对齐墙面至 X/Z 轴",
+      "autoAlignCentered": "已居中至原点上方",
+      "autoAlignFailed": "自动对齐失败：{error}",
+      "opencvZupDone": "已将模型从 OpenCV (-Y) 翻转至 +Y 朝上（按 Ctrl+Z 可撤销）",
+      "safeModeColorFrozen": "应急节能模式下已冻结「专业调色」，可点击顶部「恢复完整模式」解锁",
+      "colorDefaultNoBake": "当前调色参数为默认值，无需烘焙",
+      "noSceneHit": "点不到场景，换个位置",
+      "wbCalibrated": "白平衡已根据点击点自动校准",
+      "semanticBoxMinPx": "请拖拽绘制包含物品的矩形范围（至少 8px）",
+      "inpaintBoxMinPx": "请拖拽绘制包含平面缺口的矩形范围（至少 8px）",
+      "eyedropperPicked": "已取色，请调整容差并点击下方「替换 / 加选 / 减选 / 交集」",
+      "semanticUseCtrlDrag": "语义框选：请按住 Ctrl + 鼠标左键拖拽框选物品范围（直接左键可旋转视角）",
+      "verticalAlignDone": "已完成垂线摆正（+Y 朝上），可在下方点击「上下翻转 / 撤销 / 重新点选」",
+      "groundAlignDone": "已完成平面摆正（Y=0 · +Y 朝上），可在下方点击「上下翻转 / 撤销 / 重新点选」",
+      "pivotSet": "已设旋转中心 ({x}, {y}, {z}) · W/E/R 切换坐标轴",
+      "gizmoHidden": "已隐藏 3D 坐标轴（再次按 W/E/R 或双击高斯点可重新唤出）",
+      "camOrthoSwitched": "已切换至正交投影相机",
+      "camPerspSwitched": "已切换至透视投影相机",
+      "eyedropperExited": "已退出吸管取色模式",
+      "viewImageRendered": "已渲染 {w}×{h} 视图图片",
+      "viewImageFailed": "导出视图图片失败：{error}",
+      "viewImageSaved": "视图图片已保存至 {path}",
+      "exportCanceled": "已取消导出",
+      "selectOneObject": "请至少勾选一个场景物体",
+      "unsupportedRecipeKept": "检测到不支持的配方格式，已保留原件",
+      "restoreRecipeFailed": "恢复已有配方失败：{error}（已保留原件，未静默覆盖）",
+      "journalReplayed": "已自动降点加载并完整恢复 {count} 条编辑历史",
+      "modelLoadFailed": "模型加载失败：{error}",
+      "modelDownloading": "模型下载中 ({percent}%)：{stage}",
+      "mergedObjects": "已将 {count} 个场景物体合并至「{name}」（支持 Ctrl+Z 撤销）",
+      "mergedVolumes": "已合并 {count} 个包裹体为「{name}」（支持 Ctrl+Z 撤销）",
+      "semanticUseShiftDrag": "语义框选：请按住 Shift + 鼠标左键拖拽框选物品范围（Ctrl 加选 · Alt 减选，直接左键可旋转视角）",
+      "colorWheelPickEnabled": "取色器已开启：点击画面中的模型采样颜色（Esc 退出）",
+      "colorWheelPicked": "已从画面吸取颜色"
+    },
+    "colorWheel": {
+      "title": "拾取颜色",
+      "eyedropper": "取色器",
+      "recent": "最近使用的颜色",
+      "pickHoverHint": "点击采样 {hex}"
+    }
+  }
+}

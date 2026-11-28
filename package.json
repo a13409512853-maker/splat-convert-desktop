@@ -1,9 +1,9 @@
 {
   "name": "splat-convert-desktop",
-  "version": "2.0.0",
+  "version": "3.2.3",
   "private": true,
-  "description": "Unofficial Windows and macOS GUI for PlayCanvas Splat Transform",
-  "license": "MIT",
+  "description": "Local 3D Gaussian Splatting workflow desktop tool with +Y-up 3D editor, multi-core lossless baking, and multi-format compression",
+  "license": "Apache-2.0",
   "author": "a13409512853-maker",
   "repository": {
     "type": "git",
@@ -14,6 +14,7 @@
   },
   "scripts": {
     "test": "node --test tests/*.test.cjs",
+    "i18n:check": "node scripts/i18n-check.mjs --scan-code --strict",
     "prepare:engine": "node scripts/prepare.cjs",
     "build:win": "node scripts/build.cjs win32 x64",
     "build:mac:arm64": "node scripts/build.cjs darwin arm64",

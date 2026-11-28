@@ -13,9 +13,10 @@ using System.Threading;
 using System.Web.Script.Serialization;
 
 sealed class EngineMirror {
-    public readonly string Id, Name, MetadataUrl;
-    public EngineMirror(string id, string name, string metadataUrl) {
-        Id = id; Name = name; MetadataUrl = metadataUrl;
+    public readonly string Id, NameKey, MetadataUrl;
+    public string Name { get { return I18n.T(NameKey); } }
+    public EngineMirror(string id, string nameKey, string metadataUrl) {
+        Id = id; NameKey = nameKey; MetadataUrl = metadataUrl;
     }
 }
 
@@ -28,10 +29,10 @@ sealed class EngineCheckResult {
 static class EngineManager {
     internal const string BundledVersion = "3.12.0";
     internal static readonly EngineMirror[] Mirrors = {
-        new EngineMirror("npmmirror", "阿里云 npmmirror（国内直连首选）", "https://registry.npmmirror.com/@playcanvas/splat-transform/latest"),
-        new EngineMirror("tencent", "腾讯云 NPM 镜像（国内备用）", "https://mirrors.cloud.tencent.com/npm/@playcanvas/splat-transform/latest"),
-        new EngineMirror("huawei", "华为云 NPM 镜像（国内备用）", "https://repo.huaweicloud.com/repository/npm/@playcanvas/splat-transform/latest"),
-        new EngineMirror("npmjs", "官方 npmjs 源（海外兜底）", "https://registry.npmjs.org/@playcanvas/splat-transform/latest")
+        new EngineMirror("npmmirror", "app.engine.mirrorNpmmirror", "https://registry.npmmirror.com/@playcanvas/splat-transform/latest"),
+        new EngineMirror("tencent", "app.engine.mirrorTencent", "https://mirrors.cloud.tencent.com/npm/@playcanvas/splat-transform/latest"),
+        new EngineMirror("huawei", "app.engine.mirrorHuawei", "https://repo.huaweicloud.com/repository/npm/@playcanvas/splat-transform/latest"),
+        new EngineMirror("npmjs", "app.engine.mirrorNpmjs", "https://registry.npmjs.org/@playcanvas/splat-transform/latest")
     };
 
     static readonly object Sync = new object();
@@ -43,15 +44,15 @@ static class EngineManager {
     }
 
     internal static string RootDir {
-        get { return Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "SplatConvertDesktop", "engine"); }
+        get { return PortablePaths.EngineDir; }
     }
 
     internal static string BundledDir {
-        get { return Path.Combine(RootDir, "bundled-" + BundledVersion); }
+        get { return PortablePaths.BundledEngineDir; }
     }
 
     internal static string PointerFile {
-        get { return Path.Combine(RootDir, "current.txt"); }
+        get { return PortablePaths.ActiveEngineFile; }
     }
 
     internal static string ActiveVersion {
@@ -74,7 +75,7 @@ static class EngineManager {
             EnsureBundledExtracted(token);
             string active = ResolveActiveDir();
             if (active != null && IsValidRuntime(active)) return active;
-            WritePointer("bundled-" + BundledVersion);
+            WritePointer("bundled");
             return BundledDir;
         }
     }
@@ -82,7 +83,7 @@ static class EngineManager {
     static string ResolveActiveDir() {
         try {
             if (File.Exists(PointerFile)) {
-                string rel = File.ReadAllText(PointerFile, Encoding.UTF8).Trim();
+                string rawPtr = File.ReadAllText(PointerFile, Encoding.UTF8).Trim(); string rel = rawPtr; if (rawPtr.StartsWith("{")) { var d = new JavaScriptSerializer().Deserialize<Dictionary<string, object>>(rawPtr); object pv; if (d != null && d.TryGetValue("path", out pv)) rel = Convert.ToString(pv, CultureInfo.InvariantCulture); }
                 if (!String.IsNullOrWhiteSpace(rel)) {
                     string full = Path.GetFullPath(Path.Combine(RootDir, rel));
                     if (full.StartsWith(Path.GetFullPath(RootDir) + Path.DirectorySeparatorChar, StringComparison.OrdinalIgnoreCase) && IsValidRuntime(full))
@@ -149,7 +150,7 @@ static class EngineManager {
             req.Method = "GET";
             req.Timeout = timeoutMs;
             req.ReadWriteTimeout = timeoutMs;
-            req.UserAgent = "SplatConvertDesktop/2.0.0";
+            req.UserAgent = "SplatConvertDesktop/3.2.2";
             req.Accept = "application/json";
             using (var resp = (HttpWebResponse)req.GetResponse())
             using (var stream = resp.GetResponseStream())
@@ -188,12 +189,12 @@ static class EngineManager {
             if (res.Success) return res;
             last = res;
         }
-        return last ?? new EngineCheckResult { Error = "All mirrors unreachable" };
+        return last ?? new EngineCheckResult { Error = I18n.T("app.engine.allMirrorsUnreachable") };
     }
 
     internal static string PullUpdate(EngineCheckResult meta, CancellationToken token, Action<string> log) {
         if (meta == null || !meta.Success) throw new InvalidOperationException("No valid update metadata.");
-        log("准备基础运行环境...");
+        log(I18n.T("app.engine.prepRuntime"));
         EnsureBundledExtracted(token);
 
         string versionsDir = Path.Combine(RootDir, "versions");
@@ -203,29 +204,29 @@ static class EngineManager {
         string tgzPath = Path.Combine(RootDir, ".download-" + Guid.NewGuid().ToString("N") + ".tgz");
 
         try {
-            log("正在从 " + meta.MirrorName + " 下载 v" + meta.LatestVersion + " ...");
+            log(I18n.F("app.engine.downloading", "mirror", meta.MirrorName, "version", meta.LatestVersion));
             DownloadFile(meta.TarballUrl, tgzPath, token);
 
             if (!String.IsNullOrWhiteSpace(meta.Integrity) && meta.Integrity.StartsWith("sha512-", StringComparison.OrdinalIgnoreCase)) {
-                log("正在校验 SHA-512 完整性...");
+                log(I18n.T("app.engine.verifyingSha"));
                 string expected = meta.Integrity.Substring(7).Trim();
                 string actual = ComputeSha512Base64(tgzPath);
                 if (!String.Equals(expected, actual, StringComparison.Ordinal))
-                    throw new InvalidDataException("SHA-512 校验失败，已中止更新。");
+                    throw new InvalidDataException(I18n.T("app.engine.shaMismatch"));
             }
 
-            log("正在组装隔离运行目录...");
+            log(I18n.T("app.engine.assemblingDir"));
             CopyDirectory(BundledDir, staging, token);
             string pkgDir = Path.Combine(staging, @"node_modules\@playcanvas\splat-transform");
             SafeDeleteDir(pkgDir);
             Directory.CreateDirectory(pkgDir);
 
-            log("正在解压新版引擎包...");
+            log(I18n.T("app.engine.extractingPkg"));
             ExtractTgz(tgzPath, pkgDir, token);
 
-            log("正在执行新版引擎自检 (--version)...");
+            log(I18n.T("app.engine.selfChecking"));
             string verified = VerifyEngineVersion(staging, token);
-            log("自检通过：@playcanvas/splat-transform " + verified);
+            log(I18n.F("app.engine.selfCheckOk", "version", verified));
 
             lock (Sync) {
                 if (Directory.Exists(targetDir)) SafeDeleteDir(targetDir);
@@ -244,14 +245,14 @@ static class EngineManager {
     internal static void RollbackToBundled(CancellationToken token) {
         lock (Sync) {
             EnsureBundledExtracted(token);
-            WritePointer("bundled-" + BundledVersion);
+            WritePointer("bundled");
         }
     }
 
     static void WritePointer(string relativeDir) {
         Directory.CreateDirectory(RootDir);
         string tmp = PointerFile + ".tmp";
-        File.WriteAllText(tmp, relativeDir, Encoding.UTF8);
+        File.WriteAllText(tmp, new JavaScriptSerializer().Serialize(new Dictionary<string, object> { { "schemaVersion", 1 }, { "path", relativeDir }, { "updatedAt", DateTime.UtcNow.ToString("O") } }), Encoding.UTF8);
         if (File.Exists(PointerFile)) File.Replace(tmp, PointerFile, null);
         else File.Move(tmp, PointerFile);
     }
@@ -261,7 +262,7 @@ static class EngineManager {
         req.Method = "GET";
         req.Timeout = 30000;
         req.ReadWriteTimeout = 30000;
-        req.UserAgent = "SplatConvertDesktop/2.0.0";
+        req.UserAgent = "SplatConvertDesktop/3.2.1";
         using (var resp = (HttpWebResponse)req.GetResponse())
         using (var input = resp.GetResponseStream())
         using (var output = new FileStream(dest, FileMode.Create, FileAccess.Write)) {
@@ -288,13 +289,13 @@ static class EngineManager {
             RedirectStandardOutput = true, RedirectStandardError = true,
             StandardOutputEncoding = Encoding.UTF8, StandardErrorEncoding = Encoding.UTF8
         };
-        using (var p = Process.Start(psi)) {
+        PortablePaths.ApplyChildEnvironment(psi, Path.Combine(PortablePaths.TmpDir, "engine-check")); using (var p = Process.Start(psi)) {
             string stdout = p.StandardOutput.ReadToEnd();
             string stderr = p.StandardError.ReadToEnd();
             p.WaitForExit(15000);
             token.ThrowIfCancellationRequested();
-            if (!p.HasExited) { try { p.Kill(); } catch { } throw new TimeoutException("引擎自检超时。"); }
-            if (p.ExitCode != 0) throw new InvalidOperationException("引擎自检失败：" + stderr);
+            if (!p.HasExited) { try { p.Kill(); } catch { } throw new TimeoutException(I18n.T("app.engine.selfCheckTimeout")); }
+            if (p.ExitCode != 0) throw new InvalidOperationException(I18n.F("app.engine.selfCheckFailed", "error", stderr));
             string ver = stdout.Trim();
             return String.IsNullOrWhiteSpace(ver) ? (ReadPackageVersion(runtimeDir) ?? "unknown") : ver;
         }

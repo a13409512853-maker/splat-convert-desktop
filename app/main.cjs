@@ -5,12 +5,12 @@ const { pathToFileURL } = require('node:url');
 const { convert, FORMATS, OPERATIONS } = require('./runner.cjs');
 const { claimPrompt } = require('./prompt.cjs');
 const { sampleResources, estimateJob, assess, classify, GiB } = require('./health.cjs');
-const { catalog, codes, translate } = require('./i18n.cjs');
+const { DEFAULT_LANG, codes, normalizeLanguage, translate, getCatalogForRenderer } = require('./i18n.cjs');
 const REPOSITORY = 'https://github.com/a13409512853-maker/splat-convert-desktop';
 app.setName('SplatConvertDesktop');
 let window, active, quitting = false, lastOutput;
-let language = 'en', resourcePromise, lastResources;
-const t = key => translate(language, key);
+let language = DEFAULT_LANG, resourcePromise, lastResources;
+const t = (key, vars) => translate(language, key, vars);
 const languageFile = () => path.join(app.getPath('userData'), 'language.txt');
 async function resources() {
   if (lastResources && Date.now() - lastResources.sampled < 1500) return lastResources;
@@ -19,10 +19,10 @@ async function resources() {
 }
 function estimateText(estimate, state) {
   if (!estimate) return '';
-  const gb = value => (value / GiB).toFixed(2) + ' GiB';
-  return estimate.count.toLocaleString() + ' · SH ' + estimate.bands + (estimate.upperBound ? ' · ' + t('upperBound') : '') + '\n' +
-    t('baseMemory') + ': ' + gb(estimate.baseBytes) + '\n' + t('estimatedMemory') + ': ' + gb(estimate.lowBytes) + ' – ' + gb(estimate.highBytes) + '\n' +
-    t('available') + ': ' + (Number.isFinite(state?.availableMemory) ? gb(state.availableMemory) : t('unknown')) + '\n\n' + t('estimateNote');
+  const gb = value => (value / GiB).toFixed(2) + ' GB';
+  return estimate.count.toLocaleString() + ' · SH ' + estimate.bands + (estimate.upperBound ? ' · ' + t('app.metrics.upperBound') : '') + '\n' +
+    t('app.metrics.baseMemory') + ': ' + gb(estimate.baseBytes) + '\n' + t('app.metrics.estimatedMemory') + ': ' + gb(estimate.lowBytes) + ' – ' + gb(estimate.highBytes) + '\n' +
+    t('app.metrics.available') + ': ' + (Number.isFinite(state?.availableMemory) ? gb(state.availableMemory) : t('common.unknown')) + '\n\n' + t('app.metrics.estimateNote');
 }
 const granted = new Set();
 const entry = pathToFileURL(path.join(__dirname, 'index.html')).href;
@@ -42,22 +42,23 @@ async function describe(paths) {
   }
   return results;
 }
-handle('config', () => ({ formats: FORMATS, operations: OPERATIONS, repository: REPOSITORY, catalog, language }));
+handle('config', () => ({ formats: FORMATS, operations: OPERATIONS, repository: REPOSITORY, i18n: getCatalogForRenderer(), language }));
 handle('resources', resources);
 handle('language', async code => {
-  if (!codes.includes(code)) return;
-  language = code;
-  try { await fs.mkdir(path.dirname(languageFile()), { recursive: true }); await fs.writeFile(languageFile(), code); } catch { }
+  const norm = normalizeLanguage(code);
+  if (!codes.includes(norm)) return;
+  language = norm;
+  try { await fs.mkdir(path.dirname(languageFile()), { recursive: true }); await fs.writeFile(languageFile(), norm); } catch { }
 });
 handle('choose-inputs', async () => {
-  const result = await dialog.showOpenDialog(window, { properties: ['openFile', 'multiSelections'], filters: [{ name: t('inputs'), extensions: ['ply', 'sog', 'ksplat', 'splat', 'spz'] }] });
+  const result = await dialog.showOpenDialog(window, { properties: ['openFile', 'multiSelections'], filters: [{ name: t('app.inputs.title'), extensions: ['ply', 'sog', 'ksplat', 'splat', 'spz'] }] });
   return result.canceled ? [] : describe(result.filePaths);
 });
 handle('dropped-inputs', paths => describe(Array.isArray(paths) ? paths : []));
 handle('choose-output', async ({ format, suggested }) => {
   const spec = FORMATS[format];
-  if (!spec) throw new Error('格式无效');
-  const result = await dialog.showSaveDialog(window, { defaultPath: suggested, filters: [{ name: spec.name, extensions: [spec.suffix.slice(1)] }] });
+  if (!spec) throw new Error(t('app.electron.invalidFormat'));
+  const result = await dialog.showSaveDialog(window, { defaultPath: suggested, filters: [{ name: t('app.formats.' + format), extensions: [spec.suffix.slice(1)] }] });
   if (result.canceled) return null;
   return result.filePath.toLowerCase().endsWith(spec.suffix) ? result.filePath : result.filePath + spec.suffix;
 });
@@ -69,37 +70,37 @@ handle('licenses', async () => {
 });
 handle('cancel', () => active?.abort());
 handle('convert', async request => {
-  if (active) throw new Error('已有转换任务在运行');
-  if (!Array.isArray(request?.inputs) || request.inputs.some(i => !granted.has(i.path))) throw new Error('请重新选择源文件');
+  if (active) throw new Error(t('app.electron.jobRunning'));
+  if (!Array.isArray(request?.inputs) || request.inputs.some(i => !granted.has(i.path))) throw new Error(t('app.electron.reselectInputs'));
   active = new AbortController();
   let estimate, state;
   try {
-    require('./runner.cjs').normalize(request);
+    require('./runner.cjs').normalize(request, language);
     try {
       await fs.access(request.output);
-      const result = await dialog.showMessageBox(window, { type: 'warning', message: t('overwrite'), detail: request.output,
-        buttons: [t('cancel'), t('ok')], defaultId: 0, cancelId: 0 });
+      const result = await dialog.showMessageBox(window, { type: 'warning', message: t('app.dialogs.overwrite'), detail: request.output,
+        buttons: [t('common.cancel'), t('common.ok')], defaultId: 0, cancelId: 0 });
       if (result.response !== 1) return { canceled: true };
       request.overwrite = true;
     } catch (error) { if (error.code !== 'ENOENT') throw error; request.overwrite = false; }
     const emit = (kind, text) => { if (!window.isDestroyed()) window.webContents.send('progress', { kind, text }); };
-    emit('status', 'preflight');
+    emit('status', 'app.status.preflight');
     estimate = await estimateJob(request); active.signal.throwIfAborted();
     state = await resources(); active.signal.throwIfAborted();
     const risks = assess(estimate, state, request.settings?.device || 'auto');
     if (risks.length) {
-      const decision = await dialog.showMessageBox(window, { type: 'warning', title: t('resourceWarning'), message: t('resourceWarning'),
-        detail: estimateText(estimate, state) + '\n\n' + t('memoryAdvice') + (risks.includes('vram') ? '\n' + t('gpuAdvice') : ''),
-        buttons: [t('adjust'), t('continue')], defaultId: 0, cancelId: 0 });
+      const decision = await dialog.showMessageBox(window, { type: 'warning', title: t('app.dialogs.resourceWarning'), message: t('app.dialogs.resourceWarning'),
+        detail: estimateText(estimate, state) + '\n\n' + t('app.dialogs.memoryAdvice') + (risks.includes('vram') ? '\n' + t('app.dialogs.gpuAdvice') : ''),
+        buttons: [t('app.dialogs.adjust'), t('app.dialogs.continue')], defaultId: 0, cancelId: 0 });
       if (decision.response !== 1) return { canceled: true };
     }
     active.signal.throwIfAborted();
-    const result = await convert(request, runtime, { signal: active.signal, status: text => emit('status', text), log: text => emit('log', text) });
+    const result = await convert(request, runtime, { signal: active.signal, language, status: text => emit('status', text), log: text => emit('log', text) });
     lastOutput = result.output;
     if (!quitting && claimPrompt(path.join(app.getPath('userData'), 'star-prompt-shown-v1'))) {
-      const answer = await dialog.showMessageBox(window, { type: 'info', title: t('starTitle'),
-        message: t('starTitle'), detail: t('starMessage'),
-        buttons: [t('close'), t('openProject')], defaultId: 0, cancelId: 0, noLink: true });
+      const answer = await dialog.showMessageBox(window, { type: 'info', title: t('app.star.title'),
+        message: t('app.star.title'), detail: t('app.star.message'),
+        buttons: [t('common.close'), t('app.star.openProject')], defaultId: 0, cancelId: 0, noLink: true });
       if (answer.response === 1) await shell.openExternal(REPOSITORY).catch(() => {});
     }
     return result;
@@ -107,12 +108,12 @@ handle('convert', async request => {
     if (active.signal.aborted) return { canceled: true };
     const diagnosis = classify(error);
     const detail = [t(diagnosis.detail || diagnosis.title), t(diagnosis.advice), estimateText(estimate, state)].filter(Boolean).join('\n\n');
-    const raw = 'Splat Convert Desktop 1.2.0\n' + process.platform + ' / ' + process.arch + '\n' + detail + '\n\n' + error.stack;
+    const raw = 'Splat Convert Desktop 3.2.3\n' + process.platform + ' / ' + process.arch + '\n' + detail + '\n\n' + error.stack;
     if (!quitting) {
       let response;
       do {
-        response = await dialog.showMessageBox(window, { type: 'error', title: t('failed'), message: t(diagnosis.title), detail,
-          buttons: [t('adjust'), t('viewLog'), t('copy')], defaultId: 0, cancelId: 0 });
+        response = await dialog.showMessageBox(window, { type: 'error', title: t('app.status.failed'), message: t(diagnosis.title), detail,
+          buttons: [t('app.dialogs.adjust'), t('app.dialogs.viewLog'), t('app.dialogs.copy')], defaultId: 0, cancelId: 0 });
         if (response.response === 2) clipboard.writeText(raw);
       } while (response.response === 2);
       if (response.response === 1) window.webContents.send('progress', { kind: 'focus-log' });
@@ -122,8 +123,12 @@ handle('convert', async request => {
   finally { active = null; if (quitting) app.quit(); }
 });
 app.whenReady().then(async () => {
-  try { const code = (await fs.readFile(languageFile(), 'utf8')).trim(); if (codes.includes(code)) language = code; }
-  catch { const code = app.getLocale().slice(0, 2); language = codes.includes(code) ? code : 'en'; }
+  try {
+    const saved = (await fs.readFile(languageFile(), 'utf8')).trim();
+    language = normalizeLanguage(saved);
+  } catch {
+    language = normalizeLanguage(app.getLocale());
+  }
   window = new BrowserWindow({ width: 1100, height: 810, minWidth: 880, minHeight: 680,
     title: 'Splat Convert Desktop', backgroundColor: '#f5f8f7',
     webPreferences: { preload: path.join(__dirname, 'preload.cjs'), contextIsolation: true, sandbox: true, nodeIntegration: false } });

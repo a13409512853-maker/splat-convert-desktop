@@ -1,116 +1,88 @@
 # Splat Convert Desktop
 
-高斯泼溅（3DGS）大文件本地转换工具，绕开在线网页的文件体积与浏览器环境限制；免安装便携，现代图形界面轻松上手。支持 PLY 压缩为 SOG / SPZ / HTML 等多种格式，并内置一键去飞点、批量独立转换与国内直连引擎在线更新。
+**高斯泼溅（3D Gaussian Splatting）本地全流程化桌面工具**——集大文件格式转换压缩、自有 `+Y` 朝上 3D 高斯编辑器、64 MiB 有界多核无损烘焙与离线 AI 分割补洞于一体。免安装严格便携，所有素材与模型全程本地处理，不上传云端。
 
-基于 [PlayCanvas Splat Transform](https://github.com/playcanvas/splat-transform) 的非官方 Windows / macOS 转换工具，所有 3D 文件均在本地处理，不上传云端。
+> **创作者归属保证**：你用本软件编辑、压缩或封装导出的任何 `.ply` / `.sog` / `.exe` / `.apk` 成品，其版权与商业分发权 **100% 归你所有**，本软件不主张任何权利，无需开源你的业务资产。
 
-![Windows 界面](docs/interface-windows.png)
+当前 Windows 里程碑版本：**`v3.2.3-rc14`**（内置引擎 `@playcanvas/splat-transform` **3.12.0**，内置离线 `SAM 2.1 Hiera Tiny` 语义模型，7 语种 **1,797 Key** 完整覆盖）。
 
-当前 Windows 版本为 **2.0.0**（内置引擎 `@playcanvas/splat-transform` **3.12.0**）。本轮仅升级 Windows 原生端，macOS 端保持原有代码不变。
+---
 
-## 下载与运行
+## 核心特性（v3.2.3）
 
-在 [Releases（发行版）](https://github.com/a13409512853-maker/splat-convert-desktop/releases) 下载适合自己电脑的文件。
+### 1. 严格便携的现代桌面转换工作台
+- **零外部残留便携架构**：所有配置、缓存、日志、语言扩展与解耦引擎均落在程序同级 `data/` 目录，不写注册表或 `AppData`。
+- **丰富格式支持**：
+  - 输入：`.ply`（含压缩 PLY）、`.sog`（v2/v3）、`.spz`（v3/v4）、`.ksplat`、`.splat`、`.glb`、`.lcc`、`.lcc2`；
+  - 输出：`.sog`、标准 `.ply`、`.compressed.ply`、`.spz`、`.csv`、`.html` 单页查看器、`.voxel.zip` 体素碰撞包。
+- **实用生产增强**：4 档校准预设（快速转换 / 极致瘦身 / 网页均衡 / 高质归档）、自适应重要性抽稀、目标体积硬上限、批量独立转换与历史任务断点续传队列、文件元数据体检（SOG 分层占比与格式兼容矩阵）、国内多镜像一键引擎热更新与回滚、0.5 秒高频硬件监控与悬停双色历史曲线。
 
-| 系统 | 文件 | 使用方法 |
-| --- | --- | --- |
-| Windows 10 / 11，64 位 x64 | `Splat-Convert-Desktop-2.0.0-win-x64.exe` | 双击运行，无需安装 Node.js |
-| macOS 13 或更高，Apple 芯片 | `Splat-Convert-Desktop-1.1.0-mac-arm64-adhoc.zip` | 解压后，将 `.app` 拖入“应用程序”并打开 |
-| macOS 13 或更高，Intel 芯片 | `Splat-Convert-Desktop-1.1.0-mac-x64-adhoc.zip` | 解压后，将 `.app` 拖入“应用程序”并打开 |
+### 2. 全自主 `+Y` 朝上 3D 高斯编辑器（非破坏性管线）
+- **统一右手 `+Y` 朝上坐标系**：无限 `Y=0` XZ 地面网格（64 位射线多尺度 LOD 防噪点）、永远横平竖直的 World AABB 八角边角框、透明悬浮 3D 坐标导航球、轨道/漫游双摄像机（带自适应速度滑条与五次缓动飞镜）、全局数值框横拖调参 & 滑块点值直输。
+- **完备选区与 AI 工具**：
+  - 6 大基础选择（浏览 / 框选 / 套索 / 椭圆 / 多边形 / 360px 实体圆圈画笔），常态「替换」+ `Ctrl` 临时加选 / `Alt` 临时减选，支持「仅选可见点（32-bit GPU ID 拾取）」与「整个高斯点」模式；
+  - 5 大筛选工具（吸管 / 透明度 / 尺寸 / **全内置离线 `SAM 2.1 Hiera Tiny` `Shift+左键` 框选 2D/3D 语义分割** / 悬浮点选择）；
+  - **智能平面补洞**：支持 **`L0 纯色`**（封装可复用 360° 色相环 + 吸管 + 最近颜色）、**`L1 极速几何`**、**`L2 LaMa ONNX`** 智能纹理反投影修复；
+  - **3DGS 智能测量**：全局非破坏性比例尺校准（`Shift+T`）+ 智能测量笔（`T`，支持直线/折线/2.5D 面积/堆体体积积分、一键智能贴边、4 种 GPU 堆体透视/热力/网格视图与多结果钉住）。
+- **GPU 光线投射 CSG 组合包裹体**：支持盒/球/圆柱递归嵌套分组与 `相加 / 挖去 / 交叠` 布尔运算、控点遮挡自动减淡、120 FPS 实时 GPU 可选范围柔和青蓝染色。
+- **Camera Raw 风格专业调色 & 生产级场景树**：直方图仅采样点云像素（零背景干扰）、8 段 HSL 混色器 + 16³ 3D LUT + 分屏实时对比 + 松手记单步撤销；场景管理器支持原位双击改名、多选合并/打组、`Ctrl+拖` 复制移动与历史操作连续 3 次自动打组折叠。
+- **单写者稀疏同步 + 64 MiB 严格有界多线程烘焙**：`ply-parallel.mjs` 实现 0 字节超限的 64 MiB 在途缓冲预算，500k 全 SH3 变换调色烘焙实测 **3.19×–3.59×** 加速且与串行 100% SHA-256 比特一致。
+- **实验性原生 Vulkan 1.3 旁路视口（可选预览）**：右键「3D 编辑」或 `Shift+左键` 体验 C++20/Vulkan 1.3 引擎（`splat_native_viewport.dll`），支持 SH0–3 实时渲染、GPU 基数排序、可调包裹球与故障自动回退 WebView2（注：实验原型请勿用于覆盖已有复杂编辑配方的旧工程）。
 
-Windows 版使用系统自带的 .NET Framework 4.8，适配 Windows 11 原生圆角与深浅色标题栏。
+### 3. 全量国际化（7 语种 1,797 Key）
+内置 `zh-CN / en-US / ja-JP / ko-KR / de-DE / fr-FR / es-ES` 完整翻译，主界面一键热切换实时同步 3D 编辑器；社区贡献者可直接将新语言 JSON 放入 `data/locales/` 零编译预览。校验命令：`npm run i18n:check`。
 
-## v2.0.0 核心功能（Windows 端）
+---
 
-- **现代 Win11 三段式流水线界面**：按 **01 源文件 → 02 清洗与变换 → 03 输出与压缩** 从左到右推进，支持**深色 / 浅色双主题切换**并自动记忆偏好，全套采用 Lucide 明暗适配图标。
-- **全量小白悬浮讲解**：鼠标悬停在任意设置项、格式、滑块或操作开关上，即弹出三段式讲解卡片（白话作用 + 调大/调小效果 + 新手建议）。
-- **引擎剥离与国内直连多镜像更新**：`.exe` 内置 v3.12.0 引擎保证断网开箱即用；运行时解耦至 `%LocalAppData%\SplatConvertDesktop\engine\`，支持点击顶部引擎徽章从 **阿里云 npmmirror（国内首选）→ 腾讯云 NPM → 华为云 NPM → 官方 npmjs** 自动测速拉取新版，经 SHA-512 校验与 `--version` 自检后原子切换，随时可一键回滚内置版本。
-- **批量独立转换 / 合并双模式**：支持一次拖入多个文件按原文件名批量输出到指定文件夹，也可切换为多文件合并输出。
-- **同步 3.12.0 新特性**：
-  - 输入：PLY（含压缩 PLY）、SOG、SPZ、KSPLAT、SPLAT、GLB、LCC、LCC2。
-  - 输出：SOG、标准 PLY、压缩 PLY、**SPZ（Niantic 压缩格式）**、CSV 表格、HTML 内嵌查看器、体素 ZIP 碰撞数据包。
-  - 清洗与变换：一键**去除空中飞点（`--filter-floaters`）**、**保留连通主体（`--filter-cluster`）**、自动清理无效点（NaN / Inf）、球谐阶数上限、平移、旋转、缩放、包围盒与球形裁剪。
-  - **自适应抽稀（`--decimate-adaptive`）**：默认开启，在大幅减面时优先保护主体细节与天空，可随时切回均匀抽稀。
-  - **Windows Vulkan 后端切换（`--gpu-backend vulkan`）**：设备设置中一键切换，绕过部分 Windows 显卡驱动在 D3D12 下的兼容问题。
-  - **小白一键预设**：内置「极致瘦身 / 网页均衡 / 高质归档」三档预设。
-- **实时百分比进度条与预估剩余时间（ETA）**：按字节块实时解析引擎进度输出，显示当前阶段、整体百分比、批量文件进度（`[i/N]`）、已用时与预计剩余时间。
-- **七种界面语言**：简体中文、英语、日语、韩语、德语、法语、西班牙语；原始引擎日志保留原文，支持折叠日志抽屉。
+## 下一代 V4 重构规划（Godot 4.6 + C++ RenderingDevice）
 
-### 0.5 秒高频资源监测与双色历史折线图
+为进一步突破千万级点云编辑帧率并实现「**3D 展示编排（人物/小鸟骨骼动画、1/3 人称物理漫游、热点切入建筑内部、天空球、9 系数 SH 探针光照反推与重打光）+ 零 SDK 一键封装独立 Windows `.exe` / Android `.apk`**」，后续 V4 将全面升级至 **Godot 4.6 + 同一套 C++ `RenderingDevice` / `CompositorEffect (POST_SKY)`** 统一原生底座。
 
-- Windows 端使用系统内存接口、处理器时间、DXGI 显卡信息和本地 GPU 性能计数器，窗口活跃时每 **0.5 秒**刷新一次 CPU、物理内存、GPU 与显存占用（最小化时降为 10 秒）。
-- 鼠标悬停底部任意硬件指标，即弹出详细历史折线图悬浮窗：
-  - 开始压缩时自动保留压缩前约 6 秒空闲基线，并在精确起点绘制「开始压缩」垂直虚线，空闲期与压缩期曲线以双色区分。
-  - 压缩过程中 X 轴整体自适应拉伸，不会将空闲基线或压缩曲线移出画面左侧。
-  - 压缩完成后曲线保持锁定，完整展示空闲期与整段压缩流程的负载与峰值，直至下一次压缩开始时才自动刷新。
-- 启动转换前自动估算内存/显存开销并在余量不足时预警；提供常见失败诊断弹窗、诊断复制与日志定位。
+---
 
-## 本地构建
+## 本地构建与测试
 
-开发者需要 Node.js 22 或更高版本；普通使用者不需要安装它。
+### 环境要求
+- **Windows 10 / 11 x64**，系统内置 .NET Framework 4.8（桌面单文件构建无需安装 Visual Studio）
+- **Node.js ≥ 22**（仅开发/测试/校验用，终端用户无需安装）
+- *(可选)* 构建实验性原生 Vulkan 旁路 DLL：LunarG Vulkan SDK 1.3+、MSVC x64、CMake、Ninja（详见 [docs/NATIVE_VULKAN_BUILD.md](docs/NATIVE_VULKAN_BUILD.md)）
 
-```sh
-npm install
-npm test
-npm run test:conversion
+### 常用命令
+
+```powershell
+# 1. 多语言完整性与占位符严格校验（7 语种 1,797 Key）
+npm run i18n:check
+
+# 2. 模块边界、历史兼容、稀疏状态、64 MiB 多核烘焙与纯领域契约回归
+node tests/module-boundary-check.mjs
+node tests/coord-and-cylinder-compat.test.mjs
+node tests/sparse-sync-and-state.test.mjs
+node tests/parallel-bake-bench.test.mjs
+node tests/domain-contract.test.mjs
+
+# 3. 构建 Windows 单文件便携版 EXE
+.\windows\Build.ps1 -Output ".\dist\Splat-Convert-Desktop-3.2.3-win-x64.exe"
 ```
 
-Windows 构建：
+---
 
-```sh
-npm run build:win
-```
-
-macOS 构建：
-
-```sh
-npm run build:mac:arm64
-npm run build:mac:x64
-```
-
-运行结果位于 `dist/`（如 `dist/Splat-Convert-Desktop-2.0.0-win-x64.exe`）。下载缓存和临时构建内容在 `.cache/`，不应提交。构建脚本校验 Node.js 和 Electron 官方 SHA-256 清单；默认内置引擎为 `3.12.0`，Node.js 为 `22.23.2`，Electron 为 `45.3.0`。
-
-## GitHub 自动构建与获取 EXE
-
-仓库内已配置 `.github/workflows/build.yml`，提供两种自动产出 `Splat-Convert-Desktop-2.0.0-win-x64.exe` 的方式：
-
-1. **推送版本标签自动生成草稿发行版（推荐）**：
-   ```sh
-   git add .
-   git commit -m "feat(windows): upgrade to v2.0.0"
-   git push origin main
-   git tag v2.0.0
-   git push origin v2.0.0
-   ```
-   等待 Actions 运行完成后，进入仓库 **Releases** 页面即可在草稿发行版中看到并下载 `Splat-Convert-Desktop-2.0.0-win-x64.exe`（编辑发布说明后点击 Publish release 即可正式发布）。
-2. **手动触发构建并下载产物**：
-   进入 GitHub 仓库顶部的 **Actions → Build desktop releases → Run workflow**，等待 `windows-2025` 任务变绿后，点进该次运行记录，在页面最底部的 **Artifacts** 区域下载 `desktop-win32-x64` 压缩包，解压即可得到 `.exe`。
-
-只推送源码，不要把 `node_modules/`、`.cache/`、`dist/`、模型文件或本机凭据放进仓库。
-
-## 源码结构
+## 仓库目录结构
 
 ```text
-windows/                 Windows 原生界面（方案 C 三段式流水线、主题、悬浮讲解、性能折线图、引擎多镜像更新与自测）
-app/                     macOS Electron 界面、受限进程通信、多语言词典 locales.json
-scripts/                 官方运行时下载校验、动态引擎打包、临时签名
-tests/                   参数校验、提示持久化、真实引擎转换、苹果包结构检查
-.github/workflows/       Windows、Apple 芯片、Intel 自动构建
+locales/                 7 语种统一 JSON 词典包（zh-CN 为单一事实来源）
+windows/                 C# 便携原生桌面壳（App / Controls / Theme / Health / ModelManager / EditorHost）
+├── editor/              自有 +Y-up 3D 高斯编辑器（domain / ui / shaders / semantic / smart / measure / ply-parallel）
+├── native-viewport/     实验性 C++20 / Vulkan 1.3 原生旁路视口源码与 GLSL 450 着色器
+└── icons/               明暗双套桌面图标
+app/                     macOS Electron 壳与通用 i18n 加载器
+scripts/                 引擎打包校验与 i18n-check.mjs 自动化工具
+docs/                    开发者文档（三维编辑模块 / I18N / NATIVE_VULKAN_BUILD / RESOURCES）
+tests/                   领域契约、多核烘焙、模块边界、i18n 与端到端回归套件
+.github/workflows/       GitHub Actions 自动构建配置
 ```
 
-## 隐私与本地数据
+---
 
-不提供遥测、账号登录或后台静默联网。本地转换全程离线；仅在用户主动点击「引擎更新」检查/拉取镜像或点击仓库链接时才会发起网络请求。
+## 许可证与开源致谢
 
-Windows 本地状态与解耦引擎存放于 `%LOCALAPPDATA%\SplatConvertDesktop\`（包含主题偏好 `theme.txt`、语言偏好 `language.txt`、一次性求赞标记与解耦引擎目录 `engine/`）。
-
-## 许可证与致谢
-
-本项目界面与构建代码采用 [MIT License](LICENSE)。上游引擎、Node.js、Electron、Dawn/WebGPU、WebP、SPZ 以及图标等组件分别遵循其自身许可证。
-
-- [PlayCanvas Splat Transform](https://github.com/playcanvas/splat-transform)
-- [SuperSplat Convert](https://superspl.at/convert)
-- [Node.js](https://nodejs.org/)
-- [Electron](https://www.electronjs.org/)
-- [Lucide Icons](https://lucide.dev/)
-- [apple-codesign](https://github.com/indygreg/apple-platform-rs)
+本项目采用 **[Apache License 2.0](LICENSE)** 开源发布。请同时参阅 **[NOTICE](NOTICE)** 与 **[THIRD_PARTY_LICENSES.md](THIRD_PARTY_LICENSES.md)** 查看完整的第三方开源版权与致谢清单。

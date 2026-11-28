@@ -1,40 +1,37 @@
-# 发布到 GitHub
+# 发布到 GitHub（v3.2.3 操作指南）
 
 仓库：https://github.com/a13409512853-maker/splat-convert-desktop
 
-## 当前 1.2.0
+## 一、快速上传洁净源码与发布版
 
-本轮已构建并实测 Windows 1.2.0；macOS 源码已同步，但未重新构建或真机验证。发布 Windows 稳定版与苹果预发布时，请分别写清验证状态，不要将旧苹果 1.1.0 文件改名为 1.2.0。
+本工作区已在 `05_构建发布产物/GitHub_Release_v3.2.3/` 生成可直接上传的发布包：
+- **`repo/`**：已清理 `.cache/`、`dist/`、`node_modules/` 与一切临时文件的洁净源码根目录，内含 `LICENSE`（Apache 2.0）、`NOTICE`、`THIRD_PARTY_LICENSES.md`、`README.md`、`CHANGELOG.md`、`locales/`、`windows/`、`app/`、`scripts/`、`docs/`、`tests/`、`.github/`。
+- **`release/`**：已编译并通过完整回归测试的 Windows 发行文件（`Splat-Convert-Desktop-3.2.3-rc14-win-x64.exe`、`splat_native_viewport.dll`）、`SHA256SUMS.txt` 与 `RELEASE_NOTES_v3.2.3-rc14.md`。
 
-Windows 1.2.0 新增资源角标、按当前资源余量判断的预警、常见错误弹窗、七语言和工具图标。详细规则见 `docs/RESOURCES.md`。
+### 推荐推送步骤
 
-推送当前版本标签请使用 `v1.2.0`。下方 1.1.0 内容是初版发布示例，实际发布应以新版本号为准。
-
-1. 将源码包解压后的文件放在仓库根目录。根目录应直接看到 `README.md`、`package.json`、`windows/`、`app/` 和 `.github/`，不要再套一层目录。
-2. 提交源码、锁文件和许可证。不要提交运行时缓存、依赖目录、模型测试文件或程序二进制文件。
-3. 在 GitHub 的 Actions 页面手动运行 `Build desktop releases`，核对三个构建任务和测试结果。
-4. 在 macOS 真机验证两种架构的启动、文件选择、实际 SOG 转换和首次提示后，再作为稳定版发布。现有本地苹果包建议先发预发布。
-5. 创建 `v1.1.0` 标签后，自动构建会生成草稿发行版。也可以手动创建发行版并上传已制作的三种程序和 `SHA256SUMS.txt`。
-
-建议发行说明：
-
-```text
-Splat Convert Desktop v1.1.0
-
-Windows / macOS 本地高斯泼溅转换工具，基于 PlayCanvas Splat Transform 3.10.3。
-
-支持标准 PLY、压缩 PLY、SOG、CSV、HTML 和体素碰撞数据导出。
-新增苹果 Apple 芯片 / Intel 版本、项目仓库入口、首次转换成功仅提示一次的求赞窗口。
-
-Windows：下载 win-x64.exe，双击运行。
-Mac Apple 芯片：下载 mac-arm64-adhoc.zip。
-Mac Intel 芯片：下载 mac-x64-adhoc.zip。
-Mac 解压后将 .app 拖入“应用程序”。
-
-苹果包为临时签名，未做开发者身份签名或公证；可能触发系统安全提示。
-macOS 13 或更高。苹果包尚未完成真机验收，本次作为预发布提供。
+```powershell
+# 1. 将 repo/ 内容同步至本地 git 仓库根目录（确保根目录直接看到 README.md / package.json / windows/）
+git status
+git add .
+git commit -m "release: v3.2.3-rc14 (+Y-up native editor, 64MiB parallel bake, Apache-2.0, Vulkan bypass prototype)"
+git tag v3.2.3-rc14
+git push origin main --tags
 ```
 
-## 正式签名
+### 创建 GitHub Release
 
-面向广泛用户的稳定苹果发行版，建议在 Mac 上配置开发者身份签名、公证和票据装订。仓库未包含任何签名密钥。临时签名不等于苹果公证，不应在宣传中描述为“已通过苹果认证”。
+1. 打开仓库 **Releases → Draft a new release**；
+2. 选择标签 `v3.2.3-rc14`（建议勾选 **Set as a pre-release**，作为 V4 Godot 4 重构前的完整里程碑归档备份）；
+3. 粘贴 `release/RELEASE_NOTES_v3.2.3-rc14.md` 内容作为发行说明；
+4. 上传 `release/` 下的全部附件：
+   - `Splat-Convert-Desktop-3.2.3-rc14-win-x64.exe`
+   - `splat_native_viewport.dll`
+   - `SHA256SUMS.txt`
+   - `LICENSE` / `NOTICE` / `THIRD_PARTY_LICENSES.md`
+
+## 二、安全与合规自查清单
+
+- 仓库中**严禁提交** `.cache/`、`dist/`、`node_modules/`、`data/`、大型 `.ply`/`.sog` 测试素材或本机签名私钥；
+- 所有分发包须附带 `LICENSE`、`NOTICE` 与第三方开源声明文件；
+- 未在真机完成验收的 macOS 包不要伪标为 Windows 同版稳定发布。

@@ -1,0 +1,757 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta
+      http-equiv="Content-Security-Policy"
+      content="default-src 'self' https://session.splat.invalid https://models.splat.invalid; script-src 'self' 'unsafe-inline' 'wasm-unsafe-eval' https://models.splat.invalid; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob:; connect-src 'self' https://session.splat.invalid https://models.splat.invalid; worker-src 'self' blob:; object-src 'none'; base-uri 'none'"
+    />
+    <title data-i18n="editor.window.title">三维高斯编辑 (+Y 朝上) · Splat Convert Desktop 3.2.3</title>
+    <link rel="stylesheet" href="editor.css" />
+    <script type="importmap">
+      { "imports": { "three": "./vendor/three.module.min.js" } }
+    </script>
+  </head>
+  <body>
+    <div id="app">
+      <!-- Main Full-Viewport WebGL2 Stage -->
+      <main id="viewport-stage">
+        <canvas id="canvas"></canvas>
+        <svg id="overlay"></svg>
+
+        <!-- Exact 1:1 Brush Radius Cursor Ring (rc8 #4a) -->
+        <div id="brush-cursor-ring" class="hidden" aria-hidden="true"></div>
+
+        <!-- Cursor-Following Floating Action Pill for U/L/T & Color Eyedroppers (rc8 #6 Fig 5) -->
+        <div id="cursor-hint-pill" class="cursor-hint-pill hidden" aria-hidden="true"></div>
+
+        <!-- Draggable Floating Smart Measurement Result Card (rc9) -->
+        <div id="measure-floating-card" class="measure-floating-card hidden" role="region" data-i18n-aria="editor.measure.cardAria" aria-label="智能测量结果"></div>
+
+        <!-- Scale Calibration Input Popover Card (rc9) -->
+        <div id="scale-calib-card" class="scale-calib-card hidden" role="dialog" data-i18n-aria="editor.measure.calibCardAria" aria-label="比例尺校准"></div>
+
+        <!-- Conditional Non-Blocking Auto-Align Bottom Prompt on Scene Load (rc8 #3) -->
+        <div id="auto-align-prompt" class="auto-align-prompt hidden" role="status" aria-live="polite">
+          <div class="auto-align-prompt-body">
+            <strong id="auto-align-prompt-title" data-i18n="editor.banners.autoAlignTitle">检测到倾斜实拍场景</strong>
+            <span id="auto-align-prompt-desc" data-i18n="editor.banners.autoAlignDescDefault">地面倾斜明显，是否执行一键自动摆正？矫正后如不满意可随时按 Ctrl+Z 一键撤回。</span>
+          </div>
+          <div class="auto-align-prompt-actions">
+            <button id="btn-auto-align-accept" class="primary-pill" type="button" data-i18n="editor.banners.autoAlignAccept">自动矫正</button>
+            <button id="btn-auto-align-dismiss" class="mini-btn" type="button" data-i18n="editor.banners.autoAlignDismiss">暂不需要</button>
+          </div>
+        </div>
+
+        <!-- Fragment-exact Split-Screen Before/After Color Compare Divider -->
+        <div id="split-divider" class="hidden">
+          <div class="split-handle" data-i18n="editor.banners.splitHandle">原图 ◀ ▶ 调色</div>
+        </div>
+
+        <!-- Top-Center Stacked Non-Blocking Banners (Compatibility & Emergency Safe Mode — never overlap!) -->
+        <div id="top-banner-stack">
+          <div id="recipe-compat-banner" class="recipe-compat-banner hidden" role="status">
+            <span id="recipe-compat-text"></span>
+            <button id="btn-dismiss-compat" class="tiny-btn" type="button" data-i18n="editor.banners.gotIt">知道了</button>
+          </div>
+          <div id="safe-mode-banner" class="safe-mode-banner hidden" role="alert">
+            <span id="safe-mode-text" data-i18n="editor.banners.safeModeText">性能应急保护已启用：已切换至「中心模式」并冻结筛选与调色等高耗能工具，保留基础选区、软删与矫正功能以完成粗略编辑。</span>
+            <button id="btn-exit-safe-mode" class="tiny-btn" type="button" data-i18n="editor.banners.exitSafeMode">恢复完整模式</button>
+          </div>
+        </div>
+
+        <!-- Subtle Translucent Operation Overlay (Semantic Segmentation / Smart Inpaint — keeps scene visible!) -->
+        <div id="semantic-op-overlay" class="hidden" role="status" aria-live="polite">
+          <div class="semantic-op-card">
+            <div class="semantic-spinner" aria-hidden="true">
+              <span class="semantic-spinner-ring outer"></span>
+              <span class="semantic-spinner-ring inner"></span>
+            </div>
+            <div class="semantic-op-body">
+              <div id="semantic-op-mode" class="semantic-op-mode" data-i18n="editor.banners.semanticModeDefault">正在自动判别分割模式…</div>
+              <div id="semantic-op-stage" class="semantic-op-stage" data-i18n="editor.banners.preparing">准备中…</div>
+              <div id="semantic-op-note" class="semantic-op-note hidden"></div>
+            </div>
+            <button id="btn-semantic-cancel" class="mini-btn" type="button" data-i18n="editor.banners.cancelBtn">取消 <kbd>Esc</kbd></button>
+          </div>
+        </div>
+
+        <!-- Loading Progress Overlay (Clean Shimmer Bar + Pulse Dot + >10s ETA, no spinner ring per Fig 8) -->
+        <div id="loading-overlay" class="hidden">
+          <div class="loading-card">
+            <div class="loading-head">
+              <div id="loading-title" class="loading-title" data-i18n="editor.loading.title">正在加载高斯点云模型…</div>
+            </div>
+            <div class="loading-bar-track">
+              <div id="loading-bar-fill" style="width: 0%"></div>
+            </div>
+            <div class="loading-meta">
+              <span class="loading-stage-wrap"><span class="loading-pulse-dot" aria-hidden="true"></span><span id="loading-stage" data-i18n="editor.loading.preparing">准备中…</span></span>
+              <span id="loading-pct" class="loading-pct">0%</span>
+            </div>
+            <div id="loading-eta" class="loading-eta hidden"></div>
+          </div>
+        </div>
+
+        <!-- TOP-LEFT: Single Decluttered Menu Bar (File / Edit / Select / Render / Advanced[+Help] / Compact Save) -->
+        <header id="top-left-bar">
+          <div class="pill-bar menu-bar">
+            <div class="menu-dropdown">
+              <button class="menu-trigger" data-menu="file" data-i18n="editor.menu.file">文件</button>
+              <div class="menu-popup hidden" id="menu-file">
+                <button id="act-save-overwrite" data-i18n="editor.menu.saveOverwrite">覆盖保存（无损工作流）<kbd>Ctrl+S</kbd></button>
+                <button id="act-save-as" data-i18n="editor.menu.saveAs">另存为导出到文件夹…<kbd>Ctrl+Shift+S</kbd></button>
+                <div class="menu-sep"></div>
+                <button id="act-cancel-close" data-i18n="editor.menu.cancelClose">取消并关闭<kbd>Esc</kbd></button>
+              </div>
+            </div>
+            <div class="menu-dropdown">
+              <button class="menu-trigger" data-menu="edit" data-i18n="editor.menu.edit">编辑</button>
+              <div class="menu-popup hidden" id="menu-edit">
+                <button id="btn-undo" disabled data-i18n="editor.menu.undo">↶ 撤回上一步<kbd>Ctrl+Z</kbd></button>
+                <button id="btn-redo" disabled data-i18n="editor.menu.redo">↷ 重做<kbd>Ctrl+Shift+Z</kbd></button>
+                <div class="menu-sep"></div>
+                <button id="act-tool-autoalign" data-i18n="editor.menu.autoAlign">⊞ 自动对齐 (+Y 朝上)<kbd>A</kbd></button>
+                <button id="act-tool-vertical" data-i18n="editor.menu.verticalAlign">┃ 垂线摆正<kbd>U</kbd></button>
+                <button id="act-tool-ground" data-i18n="editor.menu.groundAlign">⊿ 平面摆正<kbd>L</kbd></button>
+                <div class="menu-sep"></div>
+                <button id="act-tool-scale-calib" data-i18n="editor.menu.scaleCalib">📐 比例尺校准<kbd>Shift+T</kbd></button>
+                <button id="act-tool-smart-measure" data-i18n="editor.menu.smartMeasure">📏 智能测量笔<kbd>T</kbd></button>
+              </div>
+            </div>
+            <div class="menu-dropdown">
+              <button class="menu-trigger" data-menu="select" data-i18n="editor.menu.select">选择</button>
+              <div class="menu-popup hidden" id="menu-select">
+                <button id="act-sel-all" data-i18n="editor.menu.selAll">全选<kbd>Ctrl+A</kbd></button>
+                <button id="act-sel-none" data-i18n="editor.menu.selNone">取消选择<kbd>Ctrl+D</kbd></button>
+                <button id="act-sel-invert" data-i18n="editor.menu.selInvert">反选<kbd>Ctrl+I</kbd></button>
+                <div class="menu-sep"></div>
+                <button id="act-sel-isolate" data-i18n="editor.menu.selIsolate">隔离显示（仅显示选中点）<kbd>Shift+I</kbd></button>
+                <button id="act-sel-hide" data-i18n="editor.menu.selHide">临时隐藏选中点<kbd>H</kbd></button>
+                <button id="act-sel-showall" data-i18n="editor.menu.selShowAll">全部显示<kbd>Alt+H</kbd></button>
+                <div class="menu-sep"></div>
+                <button id="act-sel-split" data-i18n="editor.menu.selSplit">分割为独立对象<kbd>P</kbd></button>
+                <button id="act-sel-dup" data-i18n="editor.menu.selDup">复制为局部副本<kbd>Shift+D</kbd></button>
+                <button id="act-sel-delete" class="danger" data-i18n="editor.menu.selDelete">软删除选中点<kbd>Del</kbd></button>
+              </div>
+            </div>
+            <div class="menu-dropdown">
+              <button class="menu-trigger" data-menu="render" data-i18n="editor.menu.render">渲染</button>
+              <div class="menu-popup hidden" id="menu-render">
+                <button id="act-export-view" data-i18n="editor.menu.exportView">导出当前视图图片…<kbd>F12</kbd></button>
+                <div class="menu-sep"></div>
+                <button id="act-toggle-grid" data-i18n="editor.menu.toggleGrid">切换无限地面网格 (+Y 朝上)<kbd>G</kbd></button>
+                <button id="act-toggle-bounds" data-i18n="editor.menu.toggleBounds">切换模型边界边角框<kbd>B</kbd></button>
+                <button id="act-fit-view" data-i18n="editor.menu.fitView">聚焦居中主体<kbd>Space</kbd></button>
+              </div>
+            </div>
+            <div class="menu-dropdown">
+              <button class="menu-trigger" data-menu="advanced" data-i18n="editor.menu.advanced">高级选项</button>
+              <div class="menu-popup menu-popup-wide hidden" id="menu-advanced">
+                <div class="menu-section-title" data-i18n="editor.menu.secPerfDisplay">性能与显示辅助</div>
+                <label class="menu-check-item" id="menu-chk-bounds-wrap">
+                  <input type="checkbox" id="chk-show-bounds" checked />
+                  <span class="menu-check-text">
+                    <strong data-i18n="editor.menu.showBoundsTitle">显示高斯模型边角框</strong>
+                    <small data-i18n="editor.menu.showBoundsDesc">在模型三维边界八角显示细框指示范围 (B)</small>
+                  </span>
+                </label>
+                <label class="menu-check-item" id="menu-chk-grid-wrap">
+                  <input type="checkbox" id="chk-show-grid" checked />
+                  <span class="menu-check-text">
+                    <strong data-i18n="editor.menu.showGridTitle">显示无限延伸地面网格</strong>
+                    <small data-i18n="editor.menu.showGridDesc">在 Y=0 平面显示抗锯齿无限地面参考网格 (G)</small>
+                  </span>
+                </label>
+                <div class="menu-sep"></div>
+                <div class="menu-section-title" data-i18n="editor.menu.secToolMonitor">工具与监控三级设置</div>
+                <div class="menu-sub-wrap" id="subwrap-tool-adv">
+                  <button class="menu-sub-trigger" type="button" data-submenu="tool-adv">
+                    <span data-i18n="editor.menu.toolAdvOptions">工具高级选项</span><span class="sub-arrow">▸</span>
+                  </button>
+                  <div class="menu-sub-popup hidden" id="submenu-tool-adv">
+                    <div class="menu-section-title" data-i18n="editor.menu.secSemantic3dAdv">3D 语义分割高级选项</div>
+                    <label class="menu-check-item" id="menu-chk-silent-3d-wrap">
+                      <input type="checkbox" id="chk-semantic-silent-3d" checked />
+                      <span class="menu-check-text">
+                        <strong data-i18n="editor.menu.silent3dTitle">3D 语义无感选择</strong>
+                        <small data-i18n="editor.menu.silent3dDesc">后台离屏截图识别，不抢占主视口画面（关闭后仅展示有效视角切换）</small>
+                      </span>
+                    </label>
+                    <div class="submenu-group">
+                      <div class="submenu-label" data-i18n="editor.menu.semanticViewsLabel">3D 语义采样视角数</div>
+                      <div class="preset-seg-row" id="adv-semantic-views-row">
+                        <button type="button" class="mini-btn" data-sem-views="4" data-i18n="editor.menu.viewsFast4">极速 4</button>
+                        <button type="button" class="mini-btn active" data-sem-views="6" data-i18n="editor.menu.viewsBal6">均衡 6</button>
+                        <button type="button" class="mini-btn" data-sem-views="8" data-i18n="editor.menu.viewsFine8">精细 8</button>
+                        <button type="button" class="mini-btn" data-sem-views="12" data-i18n="editor.menu.viewsUltra12">极致 12</button>
+                      </div>
+                    </div>
+                    <div class="menu-sep"></div>
+                    <div class="submenu-group">
+                      <div class="submenu-label" data-i18n="editor.menu.semanticModelsLabel">3D 语义模型（悬停查看区别）</div>
+                      <div id="adv-semantic-models-list" class="model-cards-list"></div>
+                    </div>
+                    <div class="menu-sep"></div>
+                    <div class="submenu-group">
+                      <div class="submenu-label" data-i18n="editor.menu.inpaintModelsLabel">智能平面补洞模型 (L2)</div>
+                      <div id="adv-inpaint-models-list" class="model-cards-list"></div>
+                    </div>
+                  </div>
+                </div>
+                <div class="menu-sub-wrap" id="subwrap-perf-hud">
+                  <button class="menu-sub-trigger" type="button" data-submenu="perf-hud">
+                    <span data-i18n="editor.menu.perfHudSettings">性能监控显示设置</span><span class="sub-arrow">▸</span>
+                  </button>
+                  <div class="menu-sub-popup menu-sub-popup-compact hidden" id="submenu-perf-hud">
+                    <div class="menu-section-title" data-i18n="editor.menu.secPerfFields">右下角参数显示项</div>
+                    <div id="adv-perf-fields-list" class="perf-fields-list"></div>
+                  </div>
+                </div>
+                <div class="menu-sep"></div>
+                <div class="menu-section-title" data-i18n="editor.menu.secCamCoord">视角与坐标高级工具</div>
+                <button id="act-toggle-proj" data-i18n="editor.menu.toggleProj">切换透视 / 正交相机<kbd>N</kbd></button>
+                <button id="act-toggle-cammode" data-i18n="editor.menu.toggleCamMode">切换轨道 / 漫游摄像机<kbd>V</kbd></button>
+                <button id="act-opencv-zup" data-i18n="editor.menu.opencvZup">一键翻转 OpenCV (-Y) → +Y 朝上</button>
+                <div class="menu-sep"></div>
+                <div class="menu-section-title" data-i18n="editor.menu.secHelpAbout">帮助与关于</div>
+                <button id="act-show-shortcuts" data-i18n="editor.menu.showShortcuts">快捷键一览表</button>
+                <button id="act-show-credits" data-i18n="editor.menu.showCredits">开源鸣谢与关于</button>
+              </div>
+            </div>
+            <span class="sep"></span>
+            <button id="btn-save-overwrite-top" class="primary-pill compact-save" data-i18n="editor.menu.saveOverwriteShort">覆盖保存</button>
+            <button id="btn-save-as-top" class="accent-pill compact-save" data-i18n="editor.menu.saveAsShort">另存为</button>
+          </div>
+        </header>
+
+        <!-- TOP-CENTER-RIGHT: ReSplat Graphical Icon Toolbar + 3-Mode Dropdown + Dual Camera Switch + W/E/R Icons + Axis Sphere (Fig 5 & 6) -->
+        <div id="top-right-tools">
+          <div class="top-icon-row">
+            <!-- Color Grading Palette Icon -->
+            <button id="btn-color-panel" class="sq-icon-btn" data-i18n-aria="editor.topBar.colorPanel" aria-label="专业调色">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="13.5" cy="6.5" r=".9" fill="currentColor"/><circle cx="17.5" cy="10.5" r=".9" fill="currentColor"/><circle cx="8.5" cy="7.5" r=".9" fill="currentColor"/><circle cx="6.5" cy="12.5" r=".9" fill="currentColor"/><path d="M12 2C6.5 2 2 6.5 2 12s4.5 10 10 10c.93 0 1.65-.75 1.65-1.69 0-.43-.18-.83-.44-1.12-.29-.29-.44-.65-.44-1.12a1.64 1.64 0 0 1 1.67-1.67h2c3.05 0 5.56-2.5 5.56-5.55C22 6.01 17.52 2 12 2Z"/></svg>
+            </button>
+
+            <!-- Selection Visibility & Export Graphic Icon Cluster -->
+            <div class="pill-bar seg-icon-bar">
+              <button id="btn-isolate-top" class="seg-icon-btn" data-i18n-aria="editor.topBar.isolate" aria-label="隔离显示">
+                <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M3 7V5a2 2 0 0 1 2-2h2"/><path d="M17 3h2a2 2 0 0 1 2 2v2"/><path d="M21 17v2a2 2 0 0 1-2 2h-2"/><path d="M7 21H5a2 2 0 0 1-2-2v-2"/></svg>
+              </button>
+              <button id="btn-hide-top" class="seg-icon-btn" data-i18n-aria="editor.topBar.hide" aria-label="临时隐藏">
+                <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M10.73 5.08A10.43 10.43 0 0 1 12 5c7 0 10 7 10 7a13.16 13.16 0 0 1-1.67 2.68"/><path d="M6.61 6.61A13.53 13.53 0 0 0 2 12s3 7 10 7a9.74 9.74 0 0 0 5.39-1.61"/><line x1="2" y1="2" x2="22" y2="22"/></svg>
+              </button>
+              <button id="btn-showall-top" class="seg-icon-btn" data-i18n-aria="editor.topBar.showAll" aria-label="全部显示">
+                <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M2 12s3-7 10-7 10 7 10 7-3 7-10 7-10-7-10-7Z"/><circle cx="12" cy="12" r="3"/></svg>
+              </button>
+            </div>
+
+            <!-- Bounds Box + Infinite Grid + Snapshot Graphic Buttons (matching Fig 5/6) -->
+            <div class="pill-bar seg-icon-bar">
+              <button id="btn-bounds-top" class="seg-icon-btn active" data-i18n-aria="editor.topBar.bounds" aria-label="模型边角框">
+                <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M4 8V6a2 2 0 0 1 2-2h2"/><path d="M16 4h2a2 2 0 0 1 2 2v2"/><path d="M20 16v2a2 2 0 0 1-2 2h-2"/><path d="M8 20H6a2 2 0 0 1-2-2v-2"/><path d="M10 4h4" stroke-dasharray="2 2.5"/><path d="M10 20h4" stroke-dasharray="2 2.5"/><path d="M4 10v4" stroke-dasharray="2 2.5"/><path d="M20 10v4" stroke-dasharray="2 2.5"/></svg>
+              </button>
+              <button id="btn-grid-top" class="seg-icon-btn active" data-i18n-aria="editor.topBar.grid" aria-label="无限地面网格">
+                <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18"/><path d="M3 15h18"/><path d="M9 3v18"/><path d="M15 3v18"/></svg>
+              </button>
+              <button id="btn-export-img-top" class="seg-icon-btn" data-i18n-aria="editor.topBar.exportImg" aria-label="导出当前视图图片">
+                <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M14.5 4h-5L7 7H4a2 2 0 0 0-2 2v9a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V9a2 2 0 0 0-2-2h-3l-2.5-3Z"/><circle cx="12" cy="13" r="3"/></svg>
+              </button>
+            </div>
+
+            <!-- Custom Dark Display Mode Dropdown Mount (泼溅模式 / 中心模式 / 环模式, Fig 6) -->
+            <div id="display-mode-mount"></div>
+
+            <!-- Dual Camera Mode Segmented Icon Switch (轨道相机 / 漫游相机, Fig 5) -->
+            <div class="pill-bar seg-icon-bar" id="camera-mode-switch">
+              <button id="btn-cam-orbit" class="seg-icon-btn active" data-cam-mode="orbit" data-i18n-aria="editor.topBar.camOrbit" aria-label="轨道相机">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="2.2"/><ellipse cx="12" cy="12" rx="9" ry="4.2" transform="rotate(-32 12 12)"/><ellipse cx="12" cy="12" rx="9" ry="4.2" transform="rotate(32 12 12)"/></svg>
+              </button>
+              <button id="btn-cam-fly" class="seg-icon-btn" data-cam-mode="fly" data-i18n-aria="editor.topBar.camFly" aria-label="漫游相机">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="6.5" cy="6.5" r="2.3"/><circle cx="17.5" cy="6.5" r="2.3"/><circle cx="6.5" cy="17.5" r="2.3"/><circle cx="17.5" cy="17.5" r="2.3"/><path d="M8.3 8.3 12 12m3.7-3.7L12 12m0 0-3.7 3.7M12 12l3.7 3.7"/><rect x="10.2" y="10.2" width="3.6" height="3.6" rx="1" fill="currentColor" stroke="none"/></svg>
+              </button>
+            </div>
+          </div>
+
+          <div class="top-gizmo-row">
+            <div class="top-gizmo-subrow">
+              <!-- Fly Camera Speed Bar (shown ONLY in Fly Camera mode; range calibrated to initial model size!) -->
+              <div class="pill-bar fly-speed-bar hidden" id="fly-speed-bar">
+                <svg class="fly-speed-ico" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m12 14 4-4"/><path d="M3.34 19a10 10 0 1 1 17.32 0"/></svg>
+                <span class="fly-speed-lbl" data-i18n="editor.topBar.flySpeed">速度</span>
+                <input type="range" id="fly-speed-slider" min="0.08" max="4.5" step="0.05" value="0.85" data-i18n-aria="editor.topBar.flySpeedAria" aria-label="漫游移动速度" />
+                <output id="fly-speed-value" class="fly-speed-val">0.85 m/s</output>
+              </div>
+              <!-- W / E / R Transform Icon Cluster directly beneath Camera Switch (Fig 5) -->
+              <div class="pill-bar seg-icon-bar gizmo-cluster" id="top-gizmo-cluster">
+                <button class="seg-icon-btn gizmo-btn" data-gizmo="translate" data-i18n-aria="editor.topBar.gizmoTranslateAria" aria-label="移动 (W)">
+                  <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.85" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v18"/><path d="M3 12h18"/><path d="m9 6 3-3 3 3"/><path d="m9 18 3 3 3-3"/><path d="m6 9-3 3 3 3"/><path d="m18 9 3 3-3 3"/></svg>
+                </button>
+                <button class="seg-icon-btn gizmo-btn" data-gizmo="rotate" data-i18n-aria="editor.topBar.gizmoRotateAria" aria-label="旋转 (E)">
+                  <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.85" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12a9 9 0 1 1-2.64-6.36"/><path d="M21 3v6h-6"/></svg>
+                </button>
+                <button class="seg-icon-btn gizmo-btn" data-gizmo="scale" data-i18n-aria="editor.topBar.gizmoScaleAria" aria-label="缩放 (R)">
+                  <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.85" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="10" height="10" rx="1.5"/><path d="M13 11 20 4"/><path d="M15 4h5v5"/><path d="M10 4H5a2 2 0 0 0-2 2v2" stroke-dasharray="2 2"/></svg>
+                </button>
+              </div>
+            </div>
+            <canvas id="axis-gizmo" width="96" height="96" data-i18n-aria="editor.topBar.axisGizmoAria" aria-label="+Y 朝上坐标轴导航"></canvas>
+          </div>
+        </div>
+
+        <!-- LEFT UNIFIED SINGLE-COLUMN TOOL RAIL (Uniform 22px Crisp SVG Icons + Centered Muted Labels + Subtle Corner Keys) -->
+        <aside id="left-rail">
+          <div class="rail-group" id="rail-select-basic">
+            <button class="rail-btn active" data-tool="orbit">
+              <span class="ico"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="8"/><circle cx="12" cy="12" r="2.6"/><path d="M12 2.5v2.2M12 19.3v2.2M2.5 12h2.2M19.3 12h2.2"/></svg></span>
+              <span class="lbl" data-i18n="editor.rail.orbit">浏览</span><kbd>1</kbd>
+            </button>
+            <button class="rail-btn" data-tool="rect">
+              <span class="ico"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><rect x="3.5" y="5" width="17" height="14" rx="2"/></svg></span>
+              <span class="lbl" data-i18n="editor.rail.rect">框选</span><kbd>2</kbd>
+            </button>
+            <button class="rail-btn" data-tool="lasso">
+              <span class="ico"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M7 15.5c-2.8-1.4-4-3.8-3.2-6.4.9-2.8 4.4-4.8 8.6-4.6 4.4.2 7.8 2.6 7.8 5.6 0 3.1-3.3 5.7-7.8 5.9-1.7.1-3.3-.2-4.6-.7"/><circle cx="7.4" cy="15.8" r="1.8"/><path d="M6.8 17.6c-.4 1.2-1.4 2.2-2.6 2.7"/></svg></span>
+              <span class="lbl" data-i18n="editor.rail.lasso">套索</span><kbd>3</kbd>
+            </button>
+            <button class="rail-btn" data-tool="ellipse">
+              <span class="ico"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><ellipse cx="12" cy="12" rx="8.8" ry="6"/></svg></span>
+              <span class="lbl" data-i18n="editor.rail.ellipse">椭圆</span><kbd>4</kbd>
+            </button>
+            <button class="rail-btn" data-tool="poly">
+              <span class="ico"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><polygon points="12 3.5 20 9.4 17 19.2 7 19.2 4 9.4"/></svg></span>
+              <span class="lbl" data-i18n="editor.rail.poly">多边形</span><kbd>5</kbd>
+            </button>
+            <button class="rail-btn" data-tool="brush">
+              <span class="ico"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M18.4 4.6a2.1 2.1 0 0 1 3 3L11 18l-4.2 1.2L8 15 18.4 4.6Z"/><path d="M15.2 7.8 18.2 10.8"/></svg></span>
+              <span class="lbl" data-i18n="editor.rail.brush">画笔</span><kbd>6</kbd>
+            </button>
+
+            <div class="rail-sep"></div>
+
+            <!-- Collapsible Secondary Menu: Smart Filter / Special Selection -->
+            <div class="rail-flyout-wrap">
+              <button class="rail-btn flyout-trigger" data-flyout-trigger="filter" id="btn-flyout-filter">
+                <span class="ico"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3.2 14.3 9.7 20.8 12 14.3 14.3 12 20.8 9.7 14.3 3.2 12 9.7 9.7 12 3.2Z"/></svg></span>
+                <span class="lbl" data-i18n="editor.rail.filter">筛选</span><kbd class="hidden"></kbd><span class="fly-caret" aria-hidden="true">▸</span>
+              </button>
+              <div class="rail-flyout-menu hidden" data-flyout-menu="filter" id="rail-select-special">
+                <div class="flyout-head" data-i18n="editor.rail.filterHead">智能筛选选区</div>
+                <button class="flyout-item" data-tool="eyedropper"><span class="ico">💧</span><span class="lbl" data-i18n="editor.rail.eyedropperFull">吸管选择</span><kbd>Y</kbd></button>
+                <button class="flyout-item" data-tool="opacitySel"><span class="ico">◐</span><span class="lbl" data-i18n="editor.rail.opacitySelFull">透明度选择</span><kbd>O</kbd></button>
+                <button class="flyout-item" data-tool="sizeSel"><span class="ico">⤢</span><span class="lbl" data-i18n="editor.rail.sizeSelFull">尺寸选择</span><kbd>K</kbd></button>
+                <button class="flyout-item" data-tool="semanticSel"><span class="ico">✦</span><span class="lbl" data-i18n="editor.rail.semanticSelFull">语义选择</span><kbd>M</kbd></button>
+                <button class="flyout-item" data-tool="floaterSel"><span class="ico">◌</span><span class="lbl" data-i18n="editor.rail.floaterSelFull">悬浮点选择</span><kbd>F</kbd></button>
+              </div>
+            </div>
+
+            <!-- Collapsible Secondary Menu: Smart AI Editing Tools (between Filter & Align) -->
+            <div class="rail-flyout-wrap">
+              <button class="rail-btn flyout-trigger" data-flyout-trigger="smart" id="btn-flyout-smart">
+                <span class="ico"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><rect x="6.5" y="6.5" width="11" height="11" rx="2" transform="rotate(45 12 12)"/><circle cx="12" cy="12" r="2.2"/></svg></span>
+                <span class="lbl" data-i18n="editor.rail.smart">智能</span><kbd class="hidden"></kbd><span class="fly-caret" aria-hidden="true">▸</span>
+              </button>
+              <div class="rail-flyout-menu hidden" data-flyout-menu="smart" id="rail-smart-tools">
+                <div class="flyout-head" data-i18n="editor.rail.smartHead">智能修复与生成</div>
+                <button class="flyout-item" data-tool="planeInpaint"><span class="ico">❖</span><span class="lbl" data-i18n="editor.rail.planeInpaintFull">平面补洞</span><kbd>J</kbd></button>
+              </div>
+            </div>
+
+            <!-- Collapsible Secondary Menu: Alignment -->
+            <div class="rail-flyout-wrap">
+              <button class="rail-btn flyout-trigger" data-flyout-trigger="align" id="btn-flyout-align">
+                <span class="ico"><svg width="21" height="21" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="4" width="16" height="16" rx="2"/><path d="M12 4v16M4 12h16"/></svg></span>
+                <span class="lbl" data-i18n="editor.rail.align">矫正</span><kbd class="hidden"></kbd><span class="fly-caret" aria-hidden="true">▸</span>
+              </button>
+              <div class="rail-flyout-menu hidden" data-flyout-menu="align" id="rail-align">
+                <div class="flyout-head" data-i18n="editor.rail.alignHead">姿态矫正 (+Y)</div>
+                <button class="flyout-item" data-tool="autoAlign"><span class="ico">⊞</span><span class="lbl" data-i18n="editor.rail.autoAlignFull">自动对齐</span><kbd>A</kbd></button>
+                <button class="flyout-item" data-tool="verticalAlign"><span class="ico">┃</span><span class="lbl" data-i18n="editor.rail.verticalAlignFull">垂线摆正</span><kbd>U</kbd></button>
+                <button class="flyout-item" data-tool="groundAlign"><span class="ico">⊿</span><span class="lbl" data-i18n="editor.rail.groundAlignFull">平面摆正</span><kbd>L</kbd></button>
+              </div>
+            </div>
+
+            <!-- Collapsible Secondary Menu: Measurement (Independent module below Align, rc8 #7) -->
+            <div class="rail-flyout-wrap">
+              <button class="rail-btn flyout-trigger" data-flyout-trigger="measure" id="btn-flyout-measure">
+                <span class="ico"><svg width="21" height="21" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M4.5 16.5 16.5 4.5l3 3-12 12-3-3Z"/><path d="m11 10 1.8 1.8M8.3 12.7l1.8 1.8M13.7 7.3l1.8 1.8"/></svg></span>
+                <span class="lbl" data-i18n="editor.rail.measure">测量</span><kbd class="hidden"></kbd><span class="fly-caret" aria-hidden="true">▸</span>
+              </button>
+              <div class="rail-flyout-menu hidden" data-flyout-menu="measure" id="rail-measure">
+                <div class="flyout-head" data-i18n="editor.rail.measureHead">空间测量</div>
+                <button class="flyout-item" data-tool="scaleCalib"><span class="ico">📐</span><span class="lbl" data-i18n="editor.rail.scaleCalibFull">比例尺校准</span><kbd>Shift+T</kbd></button>
+                <button class="flyout-item" data-tool="smartMeasure"><span class="ico">📏</span><span class="lbl" data-i18n="editor.rail.smartMeasureFull">智能测量笔</span><kbd>T</kbd></button>
+              </div>
+            </div>
+
+            <div class="rail-sep"></div>
+
+            <!-- Unified Coordinate Space & Bounds Center Toggles (Same width, icon scale, label & shortcut styling!) -->
+            <button id="btn-local-space" class="rail-btn rail-toggle-btn" type="button" data-i18n-aria="editor.rail.localSpaceAria" aria-label="使用局部坐标系 (X)">
+              <span class="ico"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="8.5"/><polygon points="16.2 7.8 14 14 7.8 16.2 10 10 16.2 7.8"/></svg></span>
+              <span class="lbl" data-i18n="editor.rail.localSpace">局部</span><kbd>X</kbd>
+            </button>
+            <button id="btn-bounds-center" class="rail-btn rail-toggle-btn" type="button" data-i18n-aria="editor.rail.boundsCenterAria" aria-label="使用边界中心 (Z)">
+              <span class="ico"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M4.5 8.5V6a1.5 1.5 0 0 1 1.5-1.5h2.5M15.5 4.5H18A1.5 1.5 0 0 1 19.5 6v2.5M19.5 15.5V18a1.5 1.5 0 0 1-1.5 1.5h-2.5M8.5 19.5H6A1.5 1.5 0 0 1 4.5 18v-2.5"/><circle cx="12" cy="12" r="2.2"/><path d="M12 7.5v2.3M12 14.2v2.3M7.5 12h2.3M14.2 12h2.3"/></svg></span>
+              <span class="lbl" data-i18n="editor.rail.boundsCenter">中心</span><kbd>Z</kbd>
+            </button>
+          </div>
+        </aside>
+
+        <!-- TOP-RIGHT: Scene Manager, Transform Panel, Color Panel & Collapsible History Card -->
+        <aside id="right-panel">
+          <div class="panel-card" id="scene-manager-card">
+            <div class="panel-header">
+              <span class="panel-title" data-i18n="editor.scene.title">场景管理器</span>
+              <div class="panel-header-actions">
+                <button id="btn-group-selected" class="tiny-btn" data-i18n="editor.scene.groupBtn">打组</button>
+                <button id="btn-ungroup-selected" class="tiny-btn" data-i18n="editor.scene.ungroupBtn">解组</button>
+                <button id="btn-add-vol-menu" class="tiny-btn accent" data-i18n="editor.scene.addVolBtn">+ 包裹体</button>
+              </div>
+            </div>
+            <div class="scene-section-head">
+              <span class="scene-section-label" data-i18n="editor.scene.objectsHead">场景物体（Ctrl 多选 · 双击重命名）</span>
+              <div class="scene-section-actions">
+                <button id="btn-clear-obj-sel" class="micro-btn" type="button" data-i18n="editor.scene.clearSel">清除选择</button>
+                <button id="btn-expand-objects" class="micro-btn hidden" type="button" data-i18n="editor.scene.expand">展开</button>
+              </div>
+            </div>
+            <div id="scene-objects-list" class="scene-list"></div>
+
+            <div class="scene-section-head">
+              <span class="scene-section-label" data-i18n="editor.scene.volumesHead">包裹体与遮挡平面（拖拽排序 · 组内布尔）</span>
+              <div class="scene-section-actions">
+                <button id="btn-expand-volumes" class="micro-btn hidden" type="button" data-i18n="editor.scene.expand">展开</button>
+              </div>
+            </div>
+            <div id="scene-volumes-list" class="scene-list"></div>
+          </div>
+
+          <div class="panel-card" id="transform-card">
+            <div class="panel-header">
+              <span class="panel-title" data-i18n="editor.transform.title">变换（+Y 朝上）</span>
+              <div class="panel-header-actions">
+                <span id="transform-target-name" class="muted-tag" data-i18n="editor.scene.mainSceneShort">主场景</span>
+              </div>
+            </div>
+            <div class="transform-grid">
+              <div class="t-row">
+                <span class="t-lbl-wrap">
+                  <span class="t-lbl" data-i18n="editor.transform.position">位置</span>
+                  <button id="btn-pivot-edit" class="t-inline-icon" type="button" data-i18n-aria="editor.transform.pivotEditAria" aria-label="编辑坐标原点">
+                    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><line x1="12" y1="2" x2="12" y2="6"/><line x1="12" y1="18" x2="12" y2="22"/><line x1="2" y1="12" x2="6" y2="12"/><line x1="18" y1="12" x2="22" y2="12"/></svg>
+                  </button>
+                </span>
+                <label class="axis-in x"><span>X</span><input type="number" step="0.05" id="tr-px" value="0" /></label>
+                <label class="axis-in y"><span>Y</span><input type="number" step="0.05" id="tr-py" value="0" /></label>
+                <label class="axis-in z"><span>Z</span><input type="number" step="0.05" id="tr-pz" value="0" /></label>
+                <button id="btn-reset-pos" class="t-reset-btn" type="button" data-i18n-aria="editor.transform.resetPos" aria-label="重置位置">↺</button>
+              </div>
+              <div class="t-row">
+                <span class="t-lbl-wrap">
+                  <span class="t-lbl" data-i18n="editor.transform.rotation">旋转</span>
+                </span>
+                <label class="axis-in x"><span>X</span><input type="number" step="1" id="tr-rx" value="0" /></label>
+                <label class="axis-in y"><span>Y</span><input type="number" step="1" id="tr-ry" value="0" /></label>
+                <label class="axis-in z"><span>Z</span><input type="number" step="1" id="tr-rz" value="0" /></label>
+                <button id="btn-reset-rot" class="t-reset-btn" type="button" data-i18n-aria="editor.transform.resetRot" aria-label="重置旋转">↺</button>
+              </div>
+              <div class="t-row">
+                <span class="t-lbl-wrap">
+                  <span class="t-lbl" data-i18n="editor.transform.scale">缩放</span>
+                  <button id="btn-scale-lock" class="t-inline-icon" type="button" data-i18n-aria="editor.transform.scaleLockAria" aria-label="锁定等比例缩放">
+                    <svg width="12.5" height="12.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="5" y="11" width="14" height="10" rx="2"/><path d="M8 11V7a4 4 0 0 1 7.4-2.1"/></svg>
+                  </button>
+                </span>
+                <label class="axis-in x"><span>X</span><input type="number" step="0.05" id="tr-sx" value="1" /></label>
+                <label class="axis-in y"><span>Y</span><input type="number" step="0.05" id="tr-sy" value="1" /></label>
+                <label class="axis-in z"><span>Z</span><input type="number" step="0.05" id="tr-sz" value="1" /></label>
+                <button id="btn-reset-scale" class="t-reset-btn" type="button" data-i18n-aria="editor.transform.resetScale" aria-label="重置缩放">↺</button>
+              </div>
+            </div>
+          </div>
+
+          <!-- Professional Camera-Raw / Lightroom Color Grading Panel (toggled via C, rc8 #5) -->
+          <div class="panel-card hidden" id="color-grade-card">
+            <div class="panel-header">
+              <span class="panel-title" data-i18n="editor.color.title">专业调色（SH 烘焙）</span>
+              <span id="color-scope-badge" class="muted-tag" data-i18n="editor.color.scopeDefault">当前物体</span>
+            </div>
+
+            <!-- Interactive 5-Zone Histogram + 3-Triangle Input Levels + Dual-Thumb Output Levels -->
+            <div class="hist-block">
+              <div class="hist-canvas-wrap">
+                <canvas id="histogram-canvas" width="272" height="68"></canvas>
+                <div id="hist-zone-badge" class="hist-zone-badge hidden"></div>
+              </div>
+              <!-- Input Levels: 3 draggable triangles (Black / Midtone Gamma / White) -->
+              <div class="levels-in-wrap" id="levels-input-track" data-i18n-title="editor.color.levelsInTitle" title="拖动三角调节输入色阶（黑场 / 中间调伽马 / 白场），双击重置">
+                <div class="levels-in-rail"></div>
+                <button type="button" id="lvl-in-black" class="lvl-tri dark" data-i18n-aria="editor.color.lvlInBlackAria" aria-label="输入黑场"></button>
+                <button type="button" id="lvl-in-mid" class="lvl-tri mid" data-i18n-aria="editor.color.lvlInMidAria" aria-label="输入中间调伽马"></button>
+                <button type="button" id="lvl-in-white" class="lvl-tri light" data-i18n-aria="editor.color.lvlInWhiteAria" aria-label="输入白场"></button>
+              </div>
+              <div class="levels-readout-row">
+                <span id="lvl-in-black-val">0</span>
+                <span id="lvl-in-mid-val">1.00</span>
+                <span id="lvl-in-white-val">255</span>
+              </div>
+              <!-- Output Levels: Dual-Thumb Black-to-White Gradient Slider -->
+              <div class="levels-out-row">
+                <span class="levels-out-lbl" data-i18n="editor.color.outputLevels">输出色阶</span>
+                <div class="levels-out-track" id="levels-output-track" data-i18n-title="editor.color.levelsOutTitle" title="拖动左右滑块调节输出色阶，双击重置">
+                  <div class="levels-out-grad"></div>
+                  <div id="lvl-out-active-range" class="levels-out-active"></div>
+                  <button type="button" id="lvl-out-black" class="lvl-out-thumb dark" data-i18n-aria="editor.color.lvlOutBlackAria" aria-label="输出黑场"></button>
+                  <button type="button" id="lvl-out-white" class="lvl-out-thumb light" data-i18n-aria="editor.color.lvlOutWhiteAria" aria-label="输出白场"></button>
+                </div>
+                <span class="levels-out-vals"><span id="lvl-out-black-val">0</span>-<span id="lvl-out-white-val">255</span></span>
+              </div>
+            </div>
+
+            <div class="color-compare-row">
+              <button id="btn-compare-hold" class="mini-btn" type="button" data-i18n="editor.color.compareHold">对比原图 <kbd>\</kbd></button>
+              <button id="btn-compare-split" class="mini-btn" type="button" data-i18n="editor.color.compareSplit">分屏 <kbd>Shift+\</kbd></button>
+              <button id="btn-color-reset" class="mini-btn" type="button" data-i18n="editor.color.resetAll">一键重置</button>
+            </div>
+
+            <!-- PS Camera Raw Section: 亮 (Light) -->
+            <details class="cr-section" open>
+              <summary class="cr-section-head">
+                <span class="cr-sec-title" data-i18n="editor.color.secLight">亮</span>
+                <button type="button" id="btn-eye-light" class="cr-eye-btn" data-i18n-aria="editor.color.eyeLightAria" aria-label="开关亮度调色"></button>
+              </summary>
+              <div class="cr-sliders" id="color-light-sliders"></div>
+            </details>
+
+            <!-- PS Camera Raw Section: 颜色 (Color) -->
+            <details class="cr-section" open>
+              <summary class="cr-section-head">
+                <span class="cr-sec-title" data-i18n="editor.color.secColor">颜色</span>
+                <button type="button" id="btn-eye-color" class="cr-eye-btn" data-i18n-aria="editor.color.eyeColorAria" aria-label="开关颜色调色"></button>
+              </summary>
+              <div class="cr-wb-row">
+                <span class="cr-lbl" data-i18n="editor.color.whiteBalance">白平衡</span>
+                <select id="color-wb-preset" class="cr-wb-select"></select>
+                <button type="button" id="btn-wb-eyedropper" class="cr-wb-eye" data-i18n-aria="editor.color.wbEyedropperAria" aria-label="白平衡吸管"></button>
+              </div>
+              <div class="cr-sliders" id="color-tone-sliders"></div>
+            </details>
+
+            <!-- Lightroom-style HSL混色器 (with Targeted Eyedropper + Tolerance & Color Range + 8-Band) -->
+            <details class="cr-section">
+              <summary class="cr-section-head">
+                <span class="cr-sec-title" data-i18n="editor.color.secHsl">HSL混色器</span>
+                <button type="button" id="btn-eye-hsl" class="cr-eye-btn" data-i18n-aria="editor.color.eyeHslAria" aria-label="开关 HSL 混色器"></button>
+              </summary>
+              <div class="hsl-tat-bar">
+                <button type="button" id="btn-hsl-eyedropper" class="mini-btn hsl-eye-btn"></button>
+                <div class="hsl-chan-seg">
+                  <button type="button" class="micro-btn" data-hsl-chan="hue" data-i18n="editor.color.chanHue">色相</button>
+                  <button type="button" class="micro-btn active" data-hsl-chan="sat" data-i18n="editor.color.chanSatShort">饱和</button>
+                  <button type="button" class="micro-btn" data-hsl-chan="light" data-i18n="editor.color.chanLight">明度</button>
+                </div>
+              </div>
+              <div id="hsl-pc-box" class="hsl-pc-box">
+                <div class="hsl-pc-head">
+                  <span class="hsl-pc-swatch-wrap">
+                    <span id="hsl-pc-swatch" class="hsl-pc-swatch"></span>
+                    <span class="hsl-pc-lbl" data-i18n="editor.color.pickRange">吸色范围</span>
+                  </span>
+                  <div class="hsl-pc-head-right">
+                    <label class="hsl-vis-chk"><input type="checkbox" id="chk-hsl-vis-range" /><span data-i18n="editor.color.rangePreview">范围预览</span></label>
+                    <button type="button" id="btn-hsl-pc-clear" class="micro-btn" data-i18n="editor.color.resetShort">重置</button>
+                  </div>
+                </div>
+                <div class="cr-sliders" id="hsl-point-color-sliders"></div>
+              </div>
+              <div id="hsl-bands-bar" class="hsl-bands-bar"></div>
+              <div class="cr-sliders" id="hsl-band-sliders"></div>
+            </details>
+
+            <!-- Collapsible 3D LUT -->
+            <details class="cr-section">
+              <summary class="cr-section-head">
+                <span class="cr-sec-title">3D LUT</span>
+                <button type="button" id="btn-eye-lut" class="cr-eye-btn" data-i18n-aria="editor.color.eyeLutAria" aria-label="开关 3D LUT"></button>
+              </summary>
+              <div class="lut-controls">
+                <select id="lut-select"></select>
+                <label class="lut-int-row"><span data-i18n="editor.color.lutIntensity">强度</span> <input type="range" id="lut-intensity" min="0" max="1" step="0.02" value="1" /><output id="lut-intensity-v">100%</output></label>
+              </div>
+            </details>
+          </div>
+
+          <!-- Collapsible Quick History Timeline (#1: below Color when open, below Transform when closed; default collapsed showing latest 3 steps!) -->
+          <div class="panel-card history-card collapsed" id="history-card">
+            <div class="panel-header history-header" id="history-card-header">
+              <span class="panel-title" data-i18n="editor.history.title">历史操作</span>
+              <div class="panel-header-actions">
+                <span id="history-count-badge" class="muted-tag">0/50</span>
+                <button id="btn-history-toggle" class="micro-btn" type="button" data-i18n="editor.scene.expand">展开</button>
+              </div>
+            </div>
+            <div id="history-list" class="history-list"></div>
+          </div>
+        </aside>
+
+        <!-- BOTTOM-CENTER: Dual-Stack Context Toolbar (Max 2 bars, newer stacked above older, Fig 6) -->
+        <div id="context-bar-stack"></div>
+
+        <!-- BOTTOM-LEFT: Auto Concise Tool Usage Guide (Section III.3) -->
+        <div id="bottom-left-guide"></div>
+
+        <!-- BOTTOM-RIGHT: Always-Visible Live Performance Monitor (Section III.4) -->
+        <div id="bottom-right-perf">GPU --%  -- GB/ --GB     |    CPU --%   -- GB/ --GB</div>
+
+        <!-- RIGHT-CLICK CONTEXT MENU (Section V.2) -->
+        <div id="viewport-ctx-menu" class="ctx-menu hidden">
+          <button data-ctx="vol-box" data-i18n="editor.contextMenu.volBox">+ 创建包裹盒（立方体）</button>
+          <button data-ctx="vol-ellipsoid" data-i18n="editor.contextMenu.volEllipsoid">+ 创建包裹椭球</button>
+          <button data-ctx="vol-cylinder" data-i18n="editor.contextMenu.volCylinder">+ 创建包裹柱体（+Y 轴向）</button>
+          <button data-ctx="vol-plane" data-i18n="editor.contextMenu.volPlane">+ 创建遮挡平面（无限大）</button>
+          <div class="menu-sep"></div>
+          <button data-ctx="isolate" data-i18n="editor.contextMenu.isolate">隔离显示选中点 <kbd>Shift+I</kbd></button>
+          <button data-ctx="hide" data-i18n="editor.contextMenu.hide">临时隐藏选中点 <kbd>H</kbd></button>
+          <button data-ctx="showall" data-i18n="editor.contextMenu.showAll">全部显示 <kbd>Alt+H</kbd></button>
+          <div class="menu-sep"></div>
+          <button data-ctx="split" data-i18n="editor.contextMenu.split">分割为独立对象 <kbd>P</kbd></button>
+          <button data-ctx="dup" data-i18n="editor.contextMenu.dup">复制为局部副本 <kbd>Shift+D</kbd></button>
+          <button data-ctx="delete" class="danger" data-i18n="editor.contextMenu.delete">软删除选中点 <kbd>Del</kbd></button>
+        </div>
+
+        <!-- SCENE MANAGER RIGHT-CLICK CONTEXT MENU (rc11 #3.2 & #3.3) -->
+        <div id="scene-mgr-ctx-menu" class="ctx-menu scene-mgr-ctx-menu hidden"></div>
+      </main>
+
+      <!-- DEDICATED FULL-WIDTH BOTTOM STATUS BAR (Section III.5) -->
+      <footer id="status-bar">
+        <div class="status-left">
+          <span class="coord-badge" data-i18n="editor.statusBar.coordBadge">+Y 朝上</span>
+          <span id="status-msg" data-i18n="editor.statusBar.ready">就绪</span>
+        </div>
+        <div class="status-right">
+          <span><span data-i18n="editor.statusBar.totalPoints">场景总点数</span> <strong id="stat-total">0</strong></span>
+          <span id="stat-selected-wrap" class="hidden"><span data-i18n="editor.statusBar.selectedPoints">已选择点数</span> <strong id="stat-selected">0</strong></span>
+          <span><span data-i18n="editor.statusBar.deletedPoints">已删除点数</span> <strong id="stat-deleted">0</strong></span>
+        </div>
+      </footer>
+    </div>
+
+    <!-- MODAL: Export Current View Image (Section IV.4) -->
+    <div id="modal-export-image" class="modal-backdrop hidden">
+      <div class="modal-card">
+        <div class="modal-head"><span data-i18n="editor.modals.exportImgTitle">导出当前视图图片</span> <button class="modal-close" data-close="modal-export-image">✕</button></div>
+        <div class="modal-body">
+          <div class="preset-chips" id="img-res-presets">
+            <button type="button" class="mini-btn" data-res="current" data-i18n="editor.modals.resCurrent">当前窗口</button>
+            <button type="button" class="mini-btn" data-res="1920x1080">1080P</button>
+            <button type="button" class="mini-btn" data-res="2560x1440">2K QHD</button>
+            <button type="button" class="mini-btn" data-res="3840x2160">4K UHD</button>
+          </div>
+          <div class="form-row">
+            <label><span data-i18n="editor.modals.widthPx">宽度 (px)</span><input type="number" id="img-w" value="1920" min="128" max="7680" /></label>
+            <label><span data-i18n="editor.modals.heightPx">高度 (px)</span><input type="number" id="img-h" value="1080" min="128" max="4320" /></label>
+          </div>
+          <label class="chk-block"><input type="checkbox" id="img-transparent" /> <span data-i18n="editor.modals.pngTransparent">PNG 透明背景（无损直通 Alpha）</span></label>
+          <label class="chk-block"><input type="checkbox" id="img-hide-helpers" checked /> <span data-i18n="editor.modals.hideHelpers">自动隐藏辅助元素（网格线、包裹体线框与控点、选中高亮、坐标轴等）</span></label>
+        </div>
+        <div class="modal-foot">
+          <button class="mini-btn" data-close="modal-export-image" data-i18n="common.cancel">取消</button>
+          <button id="btn-confirm-export-image" class="primary-pill" data-i18n="editor.modals.confirmExportPng">渲染并导出 PNG</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- MODAL: Overwrite Save (Strictly Non-Destructive Workflow, Section IX.1) -->
+    <div id="modal-save-overwrite" class="modal-backdrop hidden">
+      <div class="modal-card">
+        <div class="modal-head"><span data-i18n="editor.modals.overwriteTitle">覆盖保存（接入主工作流）</span><button class="modal-close" data-close="modal-save-overwrite">✕</button></div>
+        <div class="modal-body">
+          <div class="notice-box" data-i18n-html="editor.modals.overwriteNoticeHtml">
+            <strong>无损编辑说明：</strong>仅以新结果替换当前工作流中的文件，不会修改原始源文件（无损编辑）。所有已软删除的高斯点将自动剔除；最终导出时再按主界面编码设置执行重编码。
+          </div>
+          <div id="overwrite-compat-warn" class="notice-box warn hidden"></div>
+          <div class="field-label" data-i18n="editor.modals.overwriteSelectLabel">选择要输出回工作流的场景物体（多选时默认合并为一个文件）：</div>
+          <div id="overwrite-objects-list" class="checklist-box"></div>
+        </div>
+        <div class="modal-foot">
+          <button class="mini-btn" data-close="modal-save-overwrite" data-i18n="common.cancel">取消</button>
+          <button id="btn-confirm-overwrite" class="primary-pill" data-i18n="editor.modals.overwriteConfirm">确认替换工作流文件</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- MODAL: Save As Export (Section IX.2) -->
+    <div id="modal-save-as" class="modal-backdrop hidden">
+      <div class="modal-card">
+        <div class="modal-head"><span data-i18n="editor.modals.saveAsTitle">另存为（直接导出到指定文件夹）</span><button class="modal-close" data-close="modal-save-as">✕</button></div>
+        <div class="modal-body">
+          <div class="field-label" data-i18n="editor.modals.saveAsModeLabel">多物体导出模式（已自动剔除软删除点）：</div>
+          <div class="radio-group">
+            <label><input type="radio" name="saveas-mode" value="merged" checked /> <span data-i18n="editor.modals.saveAsMerged">全部合并导出（输出单个文件）</span></label>
+            <label><input type="radio" name="saveas-mode" value="per-object" /> <span data-i18n="editor.modals.saveAsPerObject">按物体分开导出（每个物体输出独立文件）</span></label>
+            <label><input type="radio" name="saveas-mode" value="per-group" /> <span data-i18n="editor.modals.saveAsPerGroup">按组导出（组内合并，组间分别导出）</span></label>
+          </div>
+          <div class="field-label" data-i18n="editor.modals.saveAsFormatLabel">目标编码格式：</div>
+          <select id="saveas-format">
+            <option value=".ply" data-i18n="editor.modals.fmtPly">标准 PLY（无损保留完整球谐）</option>
+            <option value=".compressed.ply" data-i18n="editor.modals.fmtCompressedPly">压缩 PLY</option>
+            <option value=".sog" data-i18n="editor.modals.fmtSog">SOG（SuperSplat 高压缩包）</option>
+            <option value=".spz" data-i18n="editor.modals.fmtSpz">SPZ（轻量跨平台压缩）</option>
+            <option value=".html" data-i18n="editor.modals.fmtHtml">独立交互 HTML</option>
+          </select>
+          <label class="chk-block" style="margin-top:8px">
+            <input type="checkbox" id="saveas-use-main-params" checked /> <span data-i18n="editor.modals.saveAsUseMainParams">沿用主界面当前编码参数（保留点数、球谐迭代、打包强度、设备后端等）</span>
+          </label>
+          <div id="saveas-encoder-summary" class="encoder-summary-pill"></div>
+          <div class="notice-box safe" data-i18n-html="editor.modals.saveAsNoticeHtml">
+            <strong>防丢失容错保护：</strong>导出前自动写入恢复检查点。若重编码中断或失败，您的所有编辑数据与历史记录绝不丢失，可直接重试导出。
+          </div>
+          <div id="saveas-status" class="saveas-status hidden"></div>
+        </div>
+        <div class="modal-foot">
+          <button class="mini-btn" data-close="modal-save-as" data-i18n="common.close">关闭</button>
+          <button id="btn-confirm-save-as" class="accent-pill" data-i18n="editor.modals.saveAsConfirm">选择文件夹并导出…</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- MODAL: Open-Source Credits & Shortcuts -->
+    <div id="modal-info" class="modal-backdrop hidden">
+      <div class="modal-card wide">
+        <div class="modal-head"><span id="modal-info-title" data-i18n="editor.modals.infoTitle">信息</span><button class="modal-close" data-close="modal-info">✕</button></div>
+        <div class="modal-body" id="modal-info-body"></div>
+        <div class="modal-foot">
+          <button class="primary-pill" data-close="modal-info" data-i18n="editor.banners.gotIt">知道了</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- MODAL: Crash / Hang Low-Performance Safe Mode Alert (Centers Mode + Minimal Tools) -->
+    <div id="modal-crash-recovery" class="modal-backdrop hidden">
+      <div class="modal-card">
+        <div class="modal-head"><span data-i18n="editor.modals.crashTitle">性能不足自动节能保护</span><button class="modal-close" data-close="modal-crash-recovery">✕</button></div>
+        <div class="modal-body">
+          <div class="notice-box warn">
+            <strong data-i18n="editor.modals.crashHeading">检测到渲染负载过高或显存不足，已自动切换至「中心模式」节约性能。</strong>
+            <p style="margin:6px 0 0" data-i18n="editor.modals.crashDesc">为防止继续卡死，已临时冻结智能筛选、专业调色及高耗能显示模式，仅保留基础选择、软删、包裹体、变换与矫正工具以便完成粗略删减编辑。您的编辑历史记录已完整保留。</p>
+          </div>
+          <div class="field-label" data-i18n="editor.modals.crashTelemetryLabel">触发瞬间性能监控数据：</div>
+          <pre id="crash-telemetry-pre" class="telemetry-pre"></pre>
+        </div>
+        <div class="modal-foot">
+          <button class="primary-pill" data-close="modal-crash-recovery" data-i18n="editor.modals.crashContinue">以中心模式继续编辑</button>
+        </div>
+      </div>
+    </div>
+
+    <script>
+      window.addEventListener("error", (e) =>
+        window.chrome?.webview?.postMessage("error:" + e.message),
+      );
+    </script>
+    <script type="module" src="viewport.js"></script>
+  </body>
+</html>

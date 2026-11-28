@@ -42,7 +42,7 @@ static class HealthTests {
             I18n.Language = lang;
             Check(I18n.MissingKeys().Length == 0, "complete locale " + lang);
         }
-        I18n.Language = "zh";
+        I18n.Language = "zh-CN";
         log("PASS resource policy, metadata estimate, allocation error classification and all language catalogs");
     }
     static void Check(bool condition, string message) { if (!condition) throw new Exception("FAIL " + message); }

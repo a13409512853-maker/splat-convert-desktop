@@ -30,7 +30,8 @@ async function inspect(file) {
   assert.ok(files.has(base + 'Resources/app/node_modules/yauzl/index.js'));
   assert.ok(files.has(base + 'Resources/app/node_modules/pend/index.js'));
   assert.ok(files.has(base + 'Resources/app/health.cjs'));
-  assert.ok(files.has(base + 'Resources/app/locales.json'));
+  assert.ok(files.has(base + 'Resources/locales/zh-CN.json'));
+  assert.ok(files.has(base + 'Resources/locales/en-US.json'));
   assert.ok(files.has(base + 'Resources/engine/node_modules/webgpu/dist/darwin-universal/dawn.node'));
   assert.ok(files.has(base + '_CodeSignature/CodeResources'));
   assert.match(files.get(base + 'Resources/app/main.cjs').data.toString(), /https:\/\/github.com\/a13409512853-maker\/splat-convert-desktop/);

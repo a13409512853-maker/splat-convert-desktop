@@ -1,0 +1,88 @@
+#version 450
+layout(local_size_x = 256, local_size_y = 1, local_size_z = 1) in;
+
+const uint NUM_BLOCKS = 512u;
+
+layout(std430, binding = 0) readonly buffer KeysIn { uint keysIn[]; };
+layout(std430, binding = 1) readonly buffer ValsIn { uint valsIn[]; };
+layout(std430, binding = 2) writeonly buffer KeysOut { uint keysOut[]; };
+layout(std430, binding = 3) writeonly buffer ValsOut { uint valsOut[]; };
+layout(std430, binding = 4) readonly buffer BlockHist { uint blockHist[]; };
+layout(std430, binding = 5) readonly buffer BinTotals { uint binTotals[]; };
+layout(std430, binding = 6) readonly buffer IndirectBuf {
+  uint vertexCount;
+  uint instanceCount;
+  uint firstVertex;
+  uint firstInstance;
+} indirectCmd;
+
+layout(push_constant) uniform SortPC {
+  uint shift;
+} pc;
+
+shared uint sOffset[16];
+shared uint sBitmask[16][8];
+
+void main() {
+  uint tid = gl_LocalInvocationID.x;
+  uint blockId = gl_WorkGroupID.x;
+  uint count = indirectCmd.instanceCount;
+  if (count == 0u) return;
+
+  if (tid == 0u) {
+    uint acc = 0u;
+    for (uint d = 0u; d < 16u; ++d) {
+      sOffset[d] = acc + blockHist[d * NUM_BLOCKS + blockId];
+      acc += binTotals[d];
+    }
+  }
+  barrier();
+
+  uint perBlock = (count + NUM_BLOCKS - 1u) / NUM_BLOCKS;
+  uint start = blockId * perBlock;
+  uint end = min(start + perBlock, count);
+
+  for (uint base = start; base < end; base += 256u) {
+    if (tid < 128u) {
+      sBitmask[tid >> 3u][tid & 7u] = 0u;
+    }
+    barrier();
+
+    uint idx = base + tid;
+    bool valid = idx < end;
+    uint k = 0u;
+    uint v = 0u;
+    uint d = 0u;
+    if (valid) {
+      k = keysIn[idx];
+      v = valsIn[idx];
+      d = (k >> pc.shift) & 0xFu;
+      atomicOr(sBitmask[d][tid >> 5u], 1u << (tid & 31u));
+    }
+    barrier();
+
+    if (valid) {
+      uint word = tid >> 5u;
+      uint bit = tid & 31u;
+      uint rank = 0u;
+      for (uint w = 0u; w < word; ++w) {
+        rank += bitCount(sBitmask[d][w]);
+      }
+      uint lowMask = (bit == 0u) ? 0u : ((1u << bit) - 1u);
+      rank += bitCount(sBitmask[d][word] & lowMask);
+      uint dst = sOffset[d] + rank;
+      keysOut[dst] = k;
+      valsOut[dst] = v;
+    }
+    barrier();
+
+    if (tid < 16u) {
+      uint wcnt = 0u;
+      for (uint w = 0u; w < 8u; ++w) {
+        wcnt += bitCount(sBitmask[tid][w]);
+      }
+      sOffset[tid] += wcnt;
+    }
+    barrier();
+  }
+}

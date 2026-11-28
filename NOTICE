@@ -1,0 +1,40 @@
+Splat Convert Desktop
+Copyright 2026 Splat Convert Desktop Contributors (a13409512853-maker)
+
+This product includes software developed by the Splat Convert Desktop project
+(https://github.com/a13409512853-maker/splat-convert-desktop).
+
+-------------------------------------------------------------------------------
+Creator Output Ownership Guarantee / 创作者归属保证
+-------------------------------------------------------------------------------
+Any 3D assets, edited scenes, compressed outputs, or standalone viewer packages
+(.ply, .sog, .spz, .html, .exe, .apk, etc.) exported by users with this software
+remain 100% owned by their respective creators, with unrestricted commercial and
+distribution rights. This software claims no ownership or copyleft obligations
+over user-exported content.
+
+你用本软件编辑、压缩或封装导出的任何 .ply / .sog / .exe / .apk 成品，其版权与
+商业分发权 100% 归你所有，本软件不主张任何权利，无需开源你的业务资产。
+
+-------------------------------------------------------------------------------
+Third-Party Apache-2.0 Attribution Notices
+-------------------------------------------------------------------------------
+1. Meta Segment Anything 2 (SAM 2) & ONNX Exports
+   https://github.com/facebookresearch/sam2
+   https://huggingface.co/onnx-community/sam2.1-hiera-tiny-ONNX
+   Copyright (c) Meta Platforms, Inc. and affiliates.
+   Licensed under the Apache License, Version 2.0.
+
+2. LaMa: Resolution-robust Large Mask Inpainting with Fourier Convolutions
+   https://github.com/advimman/lama
+   Copyright (c) Samsung AI Center Moscow.
+   Licensed under the Apache License, Version 2.0.
+
+3. NVIDIA vk_gaussian_splatting (architectural concepts for GPU culling & radix sort)
+   https://github.com/nvpro-samples/vk_gaussian_splatting
+   Copyright (c) NVIDIA CORPORATION & AFFILIATES.
+   Licensed under the Apache License, Version 2.0.
+
+For the full list of MIT, ISC, BSD, CC BY 4.0, and Apache-2.0 third-party
+components and license texts, see THIRD_PARTY_LICENSES.md and
+THIRD-PARTY-LICENSES.txt.

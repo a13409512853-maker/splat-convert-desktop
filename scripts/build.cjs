@@ -58,6 +58,7 @@ async function macArchive(engine, arch) {
     });
   });
   for (const file of tree(path.join(root, 'app'))) zip.addFile(file.source, appPrefix + 'Resources/app/' + file.name);
+  for (const file of tree(path.join(root, 'locales'))) zip.addFile(file.source, appPrefix + 'Resources/locales/' + file.name);
   for (const module of ['yazl', 'buffer-crc32', 'yauzl', 'pend']) {
     for (const file of tree(path.join(root, 'node_modules', module))) zip.addFile(file.source, appPrefix + 'Resources/app/node_modules/' + module + '/' + file.name);
   }
@@ -94,6 +95,13 @@ async function main() {
   if (platform === 'win32') {
     await zipFiles(tree(engine.directory), path.join(cache, 'engine-win32-x64.zip'));
     if (spawnSync('powershell.exe', ['-NoProfile', '-ExecutionPolicy', 'Bypass', '-File', path.join(root, 'windows/Build.ps1')], { stdio: 'inherit' }).status !== 0) throw new Error('Windows build failed');
+    // Also assemble the strict portable directory archive (SplatConvert.exe + data/engine/bundled/)
+    const exePath = path.join(root, 'dist', `Splat-Convert-Desktop-${version}-win-x64.exe`);
+    const portableFiles = [
+      { source: exePath, name: 'SplatConvert.exe' },
+      ...tree(engine.directory).map(f => ({ source: f.source, name: path.posix.join('data/engine/bundled', f.name) }))
+    ];
+    await zipFiles(portableFiles, path.join(root, 'dist', `Splat-Convert-Desktop-${version}-win-x64-portable.zip`));
   } else await macArchive(engine, arch);
 }
 main().catch(error => { console.error(error); process.exitCode = 1; });

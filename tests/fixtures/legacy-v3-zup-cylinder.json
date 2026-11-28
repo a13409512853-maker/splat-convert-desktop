@@ -1,0 +1,70 @@
+{
+  "version": 3,
+  "coordSystem": "z-up",
+  "objects": [
+    {
+      "id": 0,
+      "name": "主点云",
+      "visible": true,
+      "groupId": null,
+      "sourceKind": "original",
+      "matrix": [1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1],
+      "deletedRanges": [],
+      "bakedGrades": []
+    }
+  ],
+  "objectGroups": [],
+  "volumes": {
+    "items": [
+      {
+        "id": 1,
+        "kind": "cylinder",
+        "name": "旧版Z轴圆柱",
+        "enabled": true,
+        "invert": false,
+        "groupId": null,
+        "boolOp": "union",
+        "pos": [1.5, -2.0, 0.8],
+        "quat": [0.22, -0.15, 0.31, 0.9122],
+        "scale": [1.4, 2.6, 3.8]
+      },
+      {
+        "id": 2,
+        "kind": "cylinder",
+        "name": "组内旧版Z轴圆柱",
+        "enabled": true,
+        "invert": false,
+        "groupId": 10,
+        "boolOp": "intersect",
+        "pos": [-0.6, 0.9, 1.2],
+        "quat": [-0.18, 0.27, -0.11, 0.9395],
+        "scale": [0.8, 1.9, 2.5]
+      },
+      {
+        "id": 3,
+        "kind": "box",
+        "name": "非圆柱立方体",
+        "enabled": true,
+        "invert": false,
+        "groupId": 10,
+        "boolOp": "union",
+        "pos": [0.2, 0.3, 0.4],
+        "quat": [0, 0, 0, 1],
+        "scale": [2.0, 3.0, 4.0]
+      }
+    ],
+    "groups": [
+      {
+        "id": 10,
+        "name": "复合包裹体组",
+        "enabled": true,
+        "invert": false,
+        "parentGroupId": null,
+        "boolOp": "union",
+        "pos": [3.0, 1.0, -2.0],
+        "quat": [0.1, 0.2, 0.3, 0.9274],
+        "scale": [1.2, 0.7, 1.8]
+      }
+    ]
+  }
+}

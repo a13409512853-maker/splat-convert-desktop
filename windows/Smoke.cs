@@ -11,11 +11,11 @@ using System.Windows.Forms;
 
 static class Smoke {
     internal static int Layout(string folder) {
-        Directory.CreateDirectory(folder); I18n.Language="zh";
+        Directory.CreateDirectory(folder); I18n.Language="zh-CN";
         using(var ui=new MainWindow(new string[0])) {
             var timer=new System.Windows.Forms.Timer {Interval=4000};
             timer.Tick+=(s,e)=>{
-                timer.Stop();ui.SetLanguage("zh");ui.PerformLayout();ui.Refresh();Application.DoEvents();
+                timer.Stop();ui.SetLanguage("zh-CN");ui.PerformLayout();ui.Refresh();Application.DoEvents();
                 File.WriteAllLines(Path.Combine(folder,"bounds.txt"),Descendants(ui).Select(c=>c.GetType().Name+" "+c.AccessibleName+" text="+c.Text+" bounds="+c.Bounds+" visible="+c.Visible+" screen="+ui.PointToClient(c.PointToScreen(Point.Empty))));
                 Capture(ui,Path.Combine(folder,"window.png"));
                 ui.Size=ui.MinimumSize;
@@ -57,15 +57,15 @@ static class Smoke {
                     var formats = Descendants(ui).OfType<FluentDropdown>().Single(b => b.AccessibleName == "format");
                     if (!formats.Text.StartsWith("SOG")) throw new InvalidOperationException("Default format mismatch");
                     formats.SelectedIndex = Converter.Formats.Length - 1;
-                    if (!formats.Text.StartsWith("体素") || !Descendants(ui).OfType<FluentSlider>().Any(t => t.Visible && t.AccessibleName == "voxel"))
+                    if (formats.Text != I18n.T("app.formats.voxel") || !Descendants(ui).OfType<FluentSlider>().Any(t => t.Visible && t.AccessibleName == "voxel"))
                         throw new InvalidOperationException("Voxel controls are not visible");
                     formats.SelectedIndex = 0;
                     foreach(string language in I18n.Codes) {
                         ui.SetLanguage(language); Application.DoEvents();
-                        if(Descendants(ui).OfType<Button>().Single(b=>b.AccessibleName=="start").Text!=I18n.T("start")) throw new IOException("Language switch failed: "+language);
+                        if(Descendants(ui).OfType<Button>().Single(b=>b.AccessibleName=="start").Text!=I18n.T("app.actions.start")) throw new IOException("Language switch failed: "+language);
                         Capture(ui,Path.Combine(folder,"interface-"+language+".png"));
                     }
-                    ui.SetLanguage("zh");
+                    ui.SetLanguage("zh-CN");
                     Button button = Descendants(ui).OfType<Button>().Single(b => b.AccessibleName == "start");
                     if (!button.Visible || !button.Enabled || button.Width < 60) throw new InvalidOperationException("Start button is not actionable");
                     string output = Path.Combine(folder, "界面 测试.sog");
@@ -73,7 +73,8 @@ static class Smoke {
                     button.PerformClick();
                     var timer = Stopwatch.StartNew();
                     while (!button.Enabled && timer.ElapsedMilliseconds < 30000) { Application.DoEvents(); Thread.Sleep(20); }
-                    if (!File.Exists(output) || new FileInfo(output).Length == 0) throw new IOException(Descendants(ui).OfType<TextBox>().Single(t => t.AccessibleName == "log").Text);
+                    string produced = File.Exists(output) ? output : Path.Combine(output, "测试 样本.sog");
+                    if (!File.Exists(produced) || new FileInfo(produced).Length == 0) throw new IOException(Descendants(ui).OfType<TextBox>().Single(t => t.AccessibleName == "log").Text);
                     if (promptCount != 1 || StarPrompt.TryClaim(ui.PromptMarker)) throw new IOException("One-time star prompt failed");
                     if (!Descendants(ui).OfType<LinkLabel>().Any(x => x.Text == App.Repository)) throw new IOException("Repository link missing");
                     int warnings=0;

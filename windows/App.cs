@@ -15,6 +15,8 @@ static class App {
     internal const string Repository = "https://github.com/a13409512853-maker/splat-convert-desktop";
     internal const string UpstreamRepository = "https://github.com/playcanvas/splat-transform";
     [STAThread] static int Main(string[] args) {
+        EditorAssets.Bind();
+        if (CliInterface.IsCliInvocation(args)) return CliInterface.Execute(args);
         Application.EnableVisualStyles();
         Application.SetCompatibleTextRenderingDefault(false);
         if (args.Length == 2 && args[0] == "--ui-test") return Smoke.Layout(args[1]);
@@ -26,6 +28,16 @@ static class App {
             }
         }
         if (args.Length == 2 && args[0] == "--self-test") return Smoke.Run(args[1]);
+        if (args.Length >= 3 && args[0] == "--desktop-smoke") return SceneEditorDialog.RunDesktopSmokeCli(args);
+        if (args.Length >= 2 && args[0] == "--native-viewport") return NativeViewportDialog.RunNativeViewportGuiCli(args);
+        if (args.Length >= 2 && args[0] == "--native-abi-test") return NativeViewportDialog.RunNativeAbiTestCli(args);
+        if (args.Length >= 3 && args[0] == "--native-viewport-smoke") return NativeViewportDialog.RunNativeViewportSmokeCli(args);
+        if (args.Length >= 3 && args[0] == "--desktop-bench") return NativeViewportDialog.RunDesktopBenchCli(args);
+        if (args.Length >= 7 && args[0] == "--desktop-bench-worker") return NativeViewportDialog.RunDesktopBenchWorkerCli(args);
+        if (args.Length == 2 && args[0] == "--dump-manifest") {
+            File.WriteAllText(args[1], EditorAssets.GetRawManifestJson(), new System.Text.UTF8Encoding(false));
+            return 0;
+        }
         I18n.Restore();
         Theme.Restore();
         using (var win = new MainWindow(args)) Application.Run(win);
@@ -78,7 +90,7 @@ sealed class Knob : UserControl {
         grid.RowStyles.Add(new RowStyle(SizeType.Absolute, 25));
         label = new Label { Dock = DockStyle.Fill, TextAlign = ContentAlignment.BottomLeft, AutoEllipsis = true, UseMnemonic = false, Font = new Font("Microsoft YaHei UI", 8.5f) };
         value = new Label { Dock = DockStyle.Fill, TextAlign = ContentAlignment.BottomRight, AutoEllipsis = true, Font = new Font("Consolas", 8.8f, FontStyle.Bold) };
-        Track = new FluentSlider { Minimum = min, Maximum = max, Value = initial, Dock = DockStyle.Fill, AccessibleName = key };
+        Track = new FluentSlider { Minimum = min, Maximum = max, Value = initial, Dock = DockStyle.Fill, AccessibleName = key.Contains(".") ? key.Substring(key.LastIndexOf('.') + 1) : key };
         Track.ValueChanged += (s, e) => value.Text = format(Track.Value);
         grid.Controls.Add(label, 0, 0); grid.Controls.Add(value, 1, 0);
         grid.Controls.Add(Track, 0, 1); grid.SetColumnSpan(Track, 2);
@@ -105,6 +117,7 @@ sealed class MainWindow : Form {
     internal static Color Paper { get { return Theme.Current.WindowBg; } }
 
     readonly Converter converter = new Converter();
+    readonly AdvancedOptionsState advState = new AdvancedOptionsState();
     readonly ResourceMonitor monitor = new ResourceMonitor();
     readonly TelemetryHistory telemetry = new TelemetryHistory();
     readonly BeginnerTipPopup tipPopup = new BeginnerTipPopup();
@@ -128,6 +141,22 @@ sealed class MainWindow : Form {
     readonly ToolTip tips = new ToolTip();
     readonly ConcurrentQueue<string> events = new ConcurrentQueue<string>();
     readonly System.Windows.Forms.Timer ticker = new System.Windows.Forms.Timer { Interval = 250 };
+    readonly Stopwatch jobClock = new Stopwatch();
+    ProgressInfo latestProgress;
+    double? etaDeadline;
+    void PaintJobClock() {
+        if (active == null || !jobClock.IsRunning) return;
+        var p = Interlocked.Exchange(ref latestProgress, null);
+        if (p != null) {
+            progressBar.Percent = Math.Max(progressBar.Percent, p.Percent);
+            progressPctLabel.Text = Math.Round(progressBar.Percent).ToString("0") + "%";
+            etaDeadline = p.EtaSeconds.HasValue ? (double?)(jobClock.Elapsed.TotalSeconds + p.EtaSeconds.Value) : null;
+            status.Text = (p.FileTotal > 1 ? "[" + p.FileIndex + "/" + p.FileTotal + "] " : "") + I18n.T(p.StageKey) + (String.IsNullOrEmpty(p.Detail) ? "" : " · " + p.Detail);
+        }
+        elapsedLabel.Text = I18n.T("app.status.elapsed") + " " + FmtDuration(Math.Floor(jobClock.Elapsed.TotalSeconds));
+        double left = etaDeadline.GetValueOrDefault() - jobClock.Elapsed.TotalSeconds;
+        etaLabel.Text = I18n.T("app.status.etaRemaining") + " " + (left >= 1 ? "≈ " + FmtDuration(left) : "--:--");
+    }
     readonly List<Action> translations = new List<Action>();
     readonly List<Action> themeUpdaters = new List<Action>();
     readonly FluentMetricTile[] metricTiles = new FluentMetricTile[4];
@@ -136,13 +165,15 @@ sealed class MainWindow : Form {
     readonly TableLayoutPanel workspace;
     readonly Panel headerPanel, footerPanel, resourceBar, logDrawer, estSizeBar;
     readonly CardPanel sliderGroupCard;
+    readonly FluentBadge verBadge;
+    readonly ToolStripMenuItem editOutputMenuItem, editNativePreviewMenuItem, editNativeOutputMenuItem;
     readonly FluentButton start, cancel, reveal, btnEngine, btnTheme, btnLogToggle;
     readonly LinkLabel repository = new LinkLabel();
     CancellationTokenSource active;
     bool autoPath = true, updatingPath, closing, sampling, changing, batchMode = true, logsExpanded = false;
     DateTime nextSample = DateTime.MinValue;
     ResourceSnapshot resources;
-    string completed, statusKey = "ready", activeHoverMetric = null;
+    string completed, statusKey = "app.status.ready", activeHoverMetric = null;
 
     internal string PromptMarker;
     internal Action PromptOverride;
@@ -155,9 +186,11 @@ sealed class MainWindow : Form {
         Font = new Font("Microsoft YaHei UI", 9F);
         AutoScaleMode = AutoScaleMode.Dpi;
         MinimumSize = new Size(1180, 760);
-        Size = new Size(1340, 840);
+        Size = new Size(1360, 870);
         StartPosition = FormStartPosition.CenterScreen;
-        Text = "Splat Convert Desktop 2.0.0";
+        Text = "Splat Convert Desktop 3.2.3";
+        TooltipConfig.Load();
+        advState.LoadFromSettings();
         try { Icon = System.Drawing.Icon.ExtractAssociatedIcon(Application.ExecutablePath) ?? SystemIcons.Application; }
         catch { Icon = SystemIcons.Application; }
 
@@ -170,51 +203,54 @@ sealed class MainWindow : Form {
         root.RowStyles.Add(new RowStyle(SizeType.Absolute, 58));   // Top Fluent Header
         root.RowStyles.Add(new RowStyle(SizeType.Percent, 100));   // Proposal C 3-Column Pipeline
         root.RowStyles.Add(new RowStyle(SizeType.AutoSize));       // Collapsible Log Drawer
-        root.RowStyles.Add(new RowStyle(SizeType.Absolute, 106));  // Generous Progress + ETA + Action Footer (zero clipping!)
-        root.RowStyles.Add(new RowStyle(SizeType.Absolute, 60));   // Generous Bottom 0.5s Telemetry Tiles
+        root.RowStyles.Add(new RowStyle(SizeType.Absolute, 118));  // Generous Progress + ETA + Action Footer (zero button clipping!)
+        root.RowStyles.Add(new RowStyle(SizeType.Absolute, 62));   // Generous Bottom 0.5s Telemetry Tiles
 
         // ===== Header Bar =====
         headerPanel = new Panel { Dock = DockStyle.Fill, Padding = new Padding(18, 0, 18, 0) };
+        var leftHeader = new FlowLayoutPanel { Dock = DockStyle.Fill, WrapContents = false, Padding = new Padding(0, 12, 0, 10), Margin = Padding.Empty };
         var logoBadge = new PictureBox {
             Image = Art.RawIcon("app-logo", 30), SizeMode = PictureBoxSizeMode.Zoom,
-            Width = 30, Height = 30, Location = new Point(18, 14), BackColor = Color.Transparent
+            Width = 30, Height = 30, Margin = new Padding(0, 1, 10, 0), BackColor = Color.Transparent
         };
         var brand = new Label {
             Text = "Splat Convert Desktop", Font = new Font(Font.FontFamily, 12.5f, FontStyle.Bold),
-            Location = new Point(56, 16), AutoSize = true
+            AutoSize = true, Margin = new Padding(0, 4, 10, 0)
         };
-        var verBadge = new Label {
-            Text = "v2.0", Font = new Font(Font.FontFamily, 8f, FontStyle.Bold),
-            Location = new Point(256, 20), AutoSize = true, Padding = new Padding(5, 2, 5, 2)
+        verBadge = new FluentBadge {
+            Text = I18n.T("app.header.portableBadge"), Font = new Font(Font.FontFamily, 8f, FontStyle.Bold),
+            AccentStyle = false, Radius = Theme.RadiusBadge, Height = 24, Margin = new Padding(0, 4, 12, 0)
         };
+        verBadge.FitWidth();
         btnEngine = new FluentButton {
-            Width = 210, Height = 30, Pill = true, SoftAccent = true,
-            Location = new Point(308, 14), Font = new Font(Font.FontFamily, 8.2f, FontStyle.Bold)
+            Width = 236, Height = 30, Pill = true, SoftAccent = true,
+            Margin = new Padding(0, 1, 0, 0), Font = new Font(Font.FontFamily, 8.2f, FontStyle.Bold)
         };
         btnEngine.Click += (s, e) => OpenEngineUpdater();
         AttachTip(btnEngine, "engine");
+        leftHeader.Controls.Add(logoBadge);
+        leftHeader.Controls.Add(brand);
+        leftHeader.Controls.Add(verBadge);
+        leftHeader.Controls.Add(btnEngine);
 
         var rightHeader = new FlowLayoutPanel { Dock = DockStyle.Right, Width = 280, FlowDirection = FlowDirection.RightToLeft, Padding = new Padding(0, 13, 0, 10), WrapContents = false };
-        language.SetItems(I18n.Names.Cast<object>(), Array.IndexOf(I18n.Codes, I18n.Language));
+        language.SetItems(I18n.Names.Cast<object>(), Math.Max(0, Array.IndexOf(I18n.Codes, I18n.Language)));
         language.Margin = new Padding(0, 1, 0, 0);
-        btnTheme = new FluentButton { Width = 106, Height = 30, Margin = new Padding(0, 1, 10, 0) };
+        btnTheme = new FluentButton { Width = 120, Height = 30, Margin = new Padding(0, 1, 10, 0) };
         btnTheme.Click += (s, e) => { Theme.Toggle(); ApplyThemeAll(); };
         rightHeader.Controls.Add(language);
         rightHeader.Controls.Add(btnTheme);
 
-        headerPanel.Controls.Add(logoBadge);
-        headerPanel.Controls.Add(brand);
-        headerPanel.Controls.Add(verBadge);
-        headerPanel.Controls.Add(btnEngine);
+        headerPanel.Controls.Add(leftHeader);
         headerPanel.Controls.Add(rightHeader);
         themeUpdaters.Add(() => {
             var p = Theme.Current;
             headerPanel.BackColor = p.TitleBarBg;
             logoBadge.BackColor = Color.Transparent;
             brand.ForeColor = p.Ink;
-            verBadge.BackColor = p.SubCardBg; verBadge.ForeColor = p.Muted;
-            btnEngine.Text = "● " + I18n.T("engineBadge").Replace("{0}", EngineManager.ActiveVersion);
-            btnTheme.Text = I18n.T(p.IsDark ? "themeLight" : "themeDark");
+            verBadge.Invalidate();
+            btnEngine.Text = "● " + I18n.F("app.header.engineBadge", "version", EngineManager.ActiveVersion);
+            btnTheme.Text = I18n.T(p.IsDark ? "app.header.themeLight" : "app.header.themeDark");
         });
         root.Controls.Add(headerPanel, 0, 0);
 
@@ -225,38 +261,40 @@ sealed class MainWindow : Form {
         workspace.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 32f));
         workspace.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 36f));
 
-        // --- Column 1: 01 源文件 ---
+        // --- Column 1: 01 Inputs ---
         var col1Card = new CardPanel { Dock = DockStyle.Fill, Margin = new Padding(0, 0, 7, 0) };
-        var col1 = Grid(1, 3);
+        var col1 = Grid(1, 4);
+        col1.RowStyles.Add(new RowStyle(SizeType.Absolute, 32));
         col1.RowStyles.Add(new RowStyle(SizeType.Absolute, 36));
         col1.RowStyles.Add(new RowStyle(SizeType.Absolute, 40));
         col1.RowStyles.Add(new RowStyle(SizeType.Percent, 100));
 
         var col1Head = Grid(2, 1);
-        col1Head.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 46));
-        col1Head.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 54));
-        var col1TitleWrap = new FlowLayoutPanel { Dock = DockStyle.Fill, WrapContents = false, Margin = Padding.Empty, Padding = new Padding(0, 4, 0, 0) };
-        col1TitleWrap.Controls.Add(StepTitle("01", "inputs"));
-        tally.AutoSize = true; tally.Margin = new Padding(4, 5, 0, 0); tally.Font = new Font(Font.FontFamily, 8f);
-        col1TitleWrap.Controls.Add(tally);
-        col1Head.Controls.Add(col1TitleWrap, 0, 0);
-        modeSegment.Dock = DockStyle.Fill; modeSegment.Margin = new Padding(0, 3, 0, 3);
-        modeSegment.SelectedIndexChanged += (s, e) => { if (!changing) SetBatchMode(modeSegment.SelectedIndex == 0); };
-        AttachTip(modeSegment, "mode");
-        col1Head.Controls.Add(modeSegment, 1, 0);
+        col1Head.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 52));
+        col1Head.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 48));
+        col1Head.Controls.Add(StepTitle("01", "app.inputs.title"), 0, 0);
+        tally.Dock = DockStyle.Fill; tally.TextAlign = ContentAlignment.MiddleRight; tally.AutoEllipsis = true; tally.Font = new Font(Font.FontFamily, 8.2f);
+        col1Head.Controls.Add(tally, 1, 0);
         col1.Controls.Add(col1Head, 0, 0);
 
-        var fileTools = Grid(4, 1);
+        modeSegment.Dock = DockStyle.Fill; modeSegment.Margin = new Padding(0, 3, 0, 4);
+        modeSegment.SelectedIndexChanged += (s, e) => { if (!changing) SetBatchMode(modeSegment.SelectedIndex == 0); };
+        AttachTipRegion(modeSegment, "mode", "input");
+        col1.Controls.Add(modeSegment, 0, 1);
+
+        var fileTools = Grid(5, 1);
         fileTools.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 100));
-        fileTools.ColumnStyles.Add(new ColumnStyle(SizeType.Absolute, 38));
-        fileTools.ColumnStyles.Add(new ColumnStyle(SizeType.Absolute, 38));
-        fileTools.ColumnStyles.Add(new ColumnStyle(SizeType.Absolute, 38));
-        var btnAdd = ButtonOf("add", "add", "plus", 140, BrowseInputs); btnAdd.Dock = DockStyle.Fill; btnAdd.Margin = new Padding(0, 3, 6, 5);
-        var btnUp = ButtonOf(null, "up", "up", 34, () => MoveFile(-1)); btnUp.Dock = DockStyle.Fill; btnUp.Margin = new Padding(0, 3, 4, 5);
-        var btnDn = ButtonOf(null, "down", "down", 34, () => MoveFile(1)); btnDn.Dock = DockStyle.Fill; btnDn.Margin = new Padding(0, 3, 4, 5);
-        var btnClr = ButtonOf(null, "remove", "minus", 34, RemoveFiles); btnClr.Dock = DockStyle.Fill; btnClr.Margin = new Padding(0, 3, 0, 5);
-        fileTools.Controls.Add(btnAdd, 0, 0); fileTools.Controls.Add(btnUp, 1, 0); fileTools.Controls.Add(btnDn, 2, 0); fileTools.Controls.Add(btnClr, 3, 0);
-        col1.Controls.Add(fileTools, 0, 1);
+        fileTools.ColumnStyles.Add(new ColumnStyle(SizeType.Absolute, 78));
+        fileTools.ColumnStyles.Add(new ColumnStyle(SizeType.Absolute, 36));
+        fileTools.ColumnStyles.Add(new ColumnStyle(SizeType.Absolute, 36));
+        fileTools.ColumnStyles.Add(new ColumnStyle(SizeType.Absolute, 36));
+        var btnAdd = ButtonOf("app.inputs.add", "app.inputs.add", "plus", 120, BrowseInputs); btnAdd.Dock = DockStyle.Fill; btnAdd.Margin = new Padding(0, 3, 5, 5);
+        var btnInspect = ButtonOf("app.inputs.inspectBtn", "app.inputs.inspectBtn", null, 74, OpenInspectDialog); btnInspect.Dock = DockStyle.Fill; btnInspect.Margin = new Padding(0, 3, 4, 5);
+        var btnUp = ButtonOf(null, "app.inputs.up", "up", 32, () => MoveFile(-1)); btnUp.Dock = DockStyle.Fill; btnUp.Margin = new Padding(0, 3, 4, 5);
+        var btnDn = ButtonOf(null, "app.inputs.down", "down", 32, () => MoveFile(1)); btnDn.Dock = DockStyle.Fill; btnDn.Margin = new Padding(0, 3, 4, 5);
+        var btnClr = ButtonOf(null, "app.inputs.remove", "minus", 32, RemoveFiles); btnClr.Dock = DockStyle.Fill; btnClr.Margin = new Padding(0, 3, 0, 5);
+        fileTools.Controls.Add(btnAdd, 0, 0); fileTools.Controls.Add(btnInspect, 1, 0); fileTools.Controls.Add(btnUp, 2, 0); fileTools.Controls.Add(btnDn, 3, 0); fileTools.Controls.Add(btnClr, 4, 0);
+        col1.Controls.Add(fileTools, 0, 2);
 
         fileList.Dock = DockStyle.Fill;
         fileList.DragEnter += (s, e) => { if (active == null && e.Data.GetDataPresent(DataFormats.FileDrop)) e.Effect = DragDropEffects.Copy; };
@@ -264,11 +302,11 @@ sealed class MainWindow : Form {
         fileList.AddRequested += BrowseInputs;
         fileList.DeleteRequested += idx => { if (idx >= 0 && idx < inputs.Count) { inputs.RemoveAt(idx); RefreshFiles(-1); } };
         fileList.SelectedIndexChanged += (s, e) => { if (!changing && fileList.SelectedIndex >= 0) scope.SelectedIndex = fileList.SelectedIndex + 1; };
-        col1.Controls.Add(fileList, 0, 2);
+        col1.Controls.Add(fileList, 0, 3);
         col1Card.Controls.Add(col1);
         workspace.Controls.Add(col1Card, 0, 0);
 
-        // --- Column 2: 02 变换与筛选 ---
+        // --- Column 2: 02 Transforms & Filters ---
         var col2Card = new CardPanel { Dock = DockStyle.Fill, Margin = new Padding(7, 0, 7, 0) };
         var col2 = Grid(1, 3);
         col2.RowStyles.Add(new RowStyle(SizeType.Absolute, 36));
@@ -276,12 +314,22 @@ sealed class MainWindow : Form {
         col2.RowStyles.Add(new RowStyle(SizeType.Percent, 100));
 
         var col2Head = Grid(2, 1);
-        col2Head.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 58));
         col2Head.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 42));
-        col2Head.Controls.Add(StepTitle("02", "actions"), 0, 0);
-        var btnAddOp = ButtonOf("addOp", "addOp", "plus", 112, () => EditOp(false));
-        btnAddOp.Dock = DockStyle.Right; btnAddOp.Margin = new Padding(0, 2, 0, 2);
-        col2Head.Controls.Add(btnAddOp, 1, 0);
+        col2Head.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 58));
+        col2Head.Controls.Add(StepTitle("02", "app.pipeline.title"), 0, 0);
+        var col2Btns = new FlowLayoutPanel { Dock = DockStyle.Fill, FlowDirection = FlowDirection.RightToLeft, WrapContents = false, Margin = Padding.Empty };
+        var btnAddOp = ButtonOf("app.pipeline.addOp", "app.pipeline.addOp", "plus", 108, () => EditOp(false)); btnAddOp.Height = 30; btnAddOp.Margin = new Padding(4, 2, 0, 2);
+        var btnPreview = ButtonOf("app.pipeline.previewBtn", "app.pipeline.previewBtn", null, 90, () => {
+            if ((Control.ModifierKeys & Keys.Shift) == Keys.Shift) OpenNativeBypassDialog();
+            else OpenPreviewDialog();
+        }); btnPreview.Height = 30; btnPreview.SoftAccent = true; btnPreview.Margin = new Padding(0, 2, 0, 2);
+        var previewMenu = new ContextMenuStrip();
+        editNativePreviewMenuItem = new ToolStripMenuItem(I18n.T("app.actions.openNativeVulkan"), null, (s, e) => OpenNativeBypassDialog());
+        previewMenu.Items.Add(editNativePreviewMenuItem);
+        btnPreview.ContextMenuStrip = previewMenu;
+        AttachTipRegion(btnPreview, "preview3d", "pipeline");
+        col2Btns.Controls.Add(btnAddOp); col2Btns.Controls.Add(btnPreview);
+        col2Head.Controls.Add(col2Btns, 1, 0);
         col2.Controls.Add(col2Head, 0, 0);
 
         var opBar = Grid(5, 1);
@@ -292,10 +340,10 @@ sealed class MainWindow : Form {
         opBar.ColumnStyles.Add(new ColumnStyle(SizeType.Absolute, 36));
         scope.AccessibleName = "scope"; scope.Margin = new Padding(0, 3, 6, 5);
         scope.SelectedIndexChanged += (s, e) => { if (!changing) RefreshOps(-1); };
-        var bEdit = ButtonOf(null, "edit", "edit", 32, () => EditOp(true)); bEdit.Dock = DockStyle.Fill; bEdit.Margin = new Padding(0, 3, 4, 5);
-        var bRem = ButtonOf(null, "remove", "minus", 32, () => { int i = opList.SelectedIndex; if (i >= 0) { CurrentOps().RemoveAt(i); RefreshOps(i); UpdateOutputEstimate(); } }); bRem.Dock = DockStyle.Fill; bRem.Margin = new Padding(0, 3, 4, 5);
-        var bUp = ButtonOf(null, "up", "up", 32, () => MoveOp(-1)); bUp.Dock = DockStyle.Fill; bUp.Margin = new Padding(0, 3, 4, 5);
-        var bDn = ButtonOf(null, "down", "down", 32, () => MoveOp(1)); bDn.Dock = DockStyle.Fill; bDn.Margin = new Padding(0, 3, 0, 5);
+        var bEdit = ButtonOf(null, "app.pipeline.editOp", "edit", 32, () => EditOp(true)); bEdit.Dock = DockStyle.Fill; bEdit.Margin = new Padding(0, 3, 4, 5);
+        var bRem = ButtonOf(null, "app.inputs.remove", "minus", 32, () => { int i = opList.SelectedIndex; if (i >= 0) { CurrentOps().RemoveAt(i); RefreshOps(i); UpdateOutputEstimate(); } }); bRem.Dock = DockStyle.Fill; bRem.Margin = new Padding(0, 3, 4, 5);
+        var bUp = ButtonOf(null, "app.inputs.up", "up", 32, () => MoveOp(-1)); bUp.Dock = DockStyle.Fill; bUp.Margin = new Padding(0, 3, 4, 5);
+        var bDn = ButtonOf(null, "app.inputs.down", "down", 32, () => MoveOp(1)); bDn.Dock = DockStyle.Fill; bDn.Margin = new Padding(0, 3, 0, 5);
         opBar.Controls.Add(scope, 0, 0); opBar.Controls.Add(bEdit, 1, 0); opBar.Controls.Add(bRem, 2, 0); opBar.Controls.Add(bUp, 3, 0); opBar.Controls.Add(bDn, 4, 0);
         col2.Controls.Add(opBar, 0, 1);
 
@@ -308,24 +356,24 @@ sealed class MainWindow : Form {
         // Fixed Image 5: anchor tooltip right next to the EXACT hovered card rectangle!
         opList.HoverOpChanged += idx => {
             var ops = CurrentOps();
-            if (idx < 0 || idx >= ops.Count) { tipPopup.Hide(); return; }
+            if (idx < 0 || idx >= ops.Count) { tipPopup.CancelAndHide(); return; }
             string key = BeginnerTips.KeyForStepFlag(ops[idx].Step.Flag);
-            if (key != null) tipPopup.ShowForRect(key, opList.GetRowScreenRect(idx));
-            else tipPopup.Hide();
+            if (key != null) tipPopup.ScheduleShowForRect(key, opList.GetRowScreenRect(idx), "pipeline");
+            else tipPopup.CancelAndHide();
         };
         col2.Controls.Add(opList, 0, 2);
         col2Card.Controls.Add(col2);
         workspace.Controls.Add(col2Card, 1, 0);
 
-        // --- Column 3: 03 输出设置 ---
+        // --- Column 3: 03 Output Settings ---
         var col3Card = new CardPanel { Dock = DockStyle.Fill, Margin = new Padding(7, 0, 0, 0) };
         var settingsHost = new Panel { Dock = DockStyle.Fill, AutoScroll = true };
         var settings = new TableLayoutPanel { ColumnCount = 1, RowCount = 7, Dock = DockStyle.Top, AutoSize = true, AutoSizeMode = AutoSizeMode.GrowAndShrink, Margin = Padding.Empty };
         for (int i = 0; i < 7; i++) settings.RowStyles.Add(new RowStyle(SizeType.AutoSize));
 
-        Row(settings, StepTitle("03", "settings"), 0, 32);
+        Row(settings, StepTitle("03", "app.settings.title"), 0, 32);
 
-        // 4-option Preset Segmented Control (快速转换 | 极致瘦身 | 网页均衡 | 高质归档)
+        // 4-option Preset Segmented Control
         presetSegment.Dock = DockStyle.Fill; presetSegment.Margin = new Padding(0, 4, 0, 6);
         presetSegment.SelectedIndexChanged += (s, e) => { if (!changing) ApplyPreset(presetSegment.SelectedIndex); };
         AttachTip(presetSegment, "preset");
@@ -340,7 +388,7 @@ sealed class MainWindow : Form {
         var fmtBox = Grid(1, 2); fmtBox.Margin = new Padding(0, 0, 8, 0);
         fmtBox.RowStyles.Add(new RowStyle(SizeType.Absolute, 20)); fmtBox.RowStyles.Add(new RowStyle(SizeType.Absolute, 32));
         var fmtLbl = new Label { Dock = DockStyle.Fill, TextAlign = ContentAlignment.BottomLeft, Font = new Font(Font.FontFamily, 8.4f) };
-        Bind(fmtLbl, "format"); themeUpdaters.Add(() => fmtLbl.ForeColor = Theme.Current.Text2);
+        Bind(fmtLbl, "app.settings.format"); themeUpdaters.Add(() => fmtLbl.ForeColor = Theme.Current.Text2);
         formats.SetItems(Converter.Formats.Cast<object>(), 0);
         AttachTip(fmtLbl, "format"); AttachTip(formats, "format");
         fmtBox.Controls.Add(fmtLbl, 0, 0); fmtBox.Controls.Add(formats, 0, 1);
@@ -354,30 +402,30 @@ sealed class MainWindow : Form {
         outField.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 100)); outField.ColumnStyles.Add(new ColumnStyle(SizeType.Absolute, 38));
         outputBox.Dock = DockStyle.Fill; outputBox.Inner.AccessibleName = "output";
         outputBox.Inner.TextChanged += (s, e) => { if (!updatingPath) autoPath = false; RefreshStart(); };
-        var btnBrowse = ButtonOf(null, "browse", "folder", 34, BrowseOutput); btnBrowse.Dock = DockStyle.Fill; btnBrowse.Margin = new Padding(4, 0, 0, 0);
+        var btnBrowse = ButtonOf(null, "app.settings.browse", "folder", 34, BrowseOutput); btnBrowse.Dock = DockStyle.Fill; btnBrowse.Margin = new Padding(4, 0, 0, 0);
         outField.Controls.Add(outputBox, 0, 0); outField.Controls.Add(btnBrowse, 1, 0);
         outBoxWrap.Controls.Add(outputLabel, 0, 0); outBoxWrap.Controls.Add(outField, 0, 1);
         fmtOutRow.Controls.Add(outBoxWrap, 1, 0);
         Row(settings, fmtOutRow, 2, 62);
 
         // Rounded Sub-Card for Sliders + Live Output Size Estimate
-        sliderGroupCard = new CardPanel { UseSubCard = true, Radius = 9, Padding = new Padding(12, 10, 12, 10), Dock = DockStyle.Top, AutoSize = true, AutoSizeMode = AutoSizeMode.GrowAndShrink };
+        sliderGroupCard = new CardPanel { UseSubCard = true, Radius = Theme.RadiusPanel, Padding = new Padding(12, 10, 12, 10), Dock = DockStyle.Top, AutoSize = true, AutoSizeMode = AutoSizeMode.GrowAndShrink };
         var sliderGrid = new TableLayoutPanel { ColumnCount = 1, RowCount = 8, Dock = DockStyle.Top, AutoSize = true, AutoSizeMode = AutoSizeMode.GrowAndShrink, Margin = Padding.Empty };
         for (int i = 0; i < 8; i++) sliderGrid.RowStyles.Add(new RowStyle(SizeType.AutoSize));
 
-        keep = new Knob("keep", 1, 100, 75, v => v + "%"); keep.BindTip(AttachTip, "keep");
+        keep = new Knob("app.settings.keep", 1, 100, 75, v => v + "%"); keep.BindTip(AttachTip, "keep");
         keep.Track.ValueChanged += (s, e) => UpdateOutputEstimate();
-        chkAdaptive.AutoSize = true; chkAdaptive.Checked = true; Bind(chkAdaptive, "adaptiveDecimate"); AttachTip(chkAdaptive, "adaptive");
+        chkAdaptive.AutoSize = true; chkAdaptive.Checked = true; Bind(chkAdaptive, "app.settings.adaptiveDecimate"); AttachTip(chkAdaptive, "adaptive");
         chkAdaptive.Margin = new Padding(0, 0, 0, 4);
-        iterations = new Knob("iterations", 1, 100, 10, v => v.ToString()); iterations.BindTip(AttachTip, "iterations");
-        effort = new Knob("effort", -1, 9, -1, v => v < 0 ? I18n.T("default") : v.ToString()); effort.BindTip(AttachTip, "effort");
+        iterations = new Knob("app.settings.iterations", 1, 100, 10, v => v.ToString()); iterations.BindTip(AttachTip, "iterations");
+        effort = new Knob("app.settings.effort", -1, 9, -1, v => v < 0 ? I18n.T("common.default") : v.ToString()); effort.BindTip(AttachTip, "effort");
         effort.Track.ValueChanged += (s, e) => UpdateOutputEstimate();
-        workers = new Knob("workers", 0, 16, 4, v => v == 0 ? I18n.T("serial") : v.ToString()); workers.BindTip(AttachTip, "workers");
-        voxel = new Knob("voxel", 1, 500, 50, v => F(v / 1000d)); voxel.BindTip(AttachTip, "voxel");
-        opacity = new Knob("opacity", 0, 100, 10, v => F(v / 100d)); opacity.BindTip(AttachTip, "opacity");
+        workers = new Knob("app.settings.workers", 0, 16, 4, v => v == 0 ? I18n.T("app.settings.serial") : v.ToString()); workers.BindTip(AttachTip, "workers");
+        voxel = new Knob("app.settings.voxel", 1, 500, 50, v => F(v / 1000d)); voxel.BindTip(AttachTip, "voxel");
+        opacity = new Knob("app.settings.opacity", 0, 100, 10, v => F(v / 100d)); opacity.BindTip(AttachTip, "opacity");
 
-        estSizeBar = new Panel { Dock = DockStyle.Fill, Height = 26, Padding = new Padding(8, 3, 8, 3), Margin = new Padding(0, 6, 0, 0) };
-        estSizeLabel.Dock = DockStyle.Fill; estSizeLabel.TextAlign = ContentAlignment.MiddleLeft; estSizeLabel.Font = new Font("Microsoft YaHei UI", 8.2f, FontStyle.Bold); estSizeLabel.AutoEllipsis = true;
+        estSizeBar = new CardPanel { UseAccentSoft = true, Radius = Theme.RadiusBadge, Dock = DockStyle.Fill, Height = 28, Padding = new Padding(10, 3, 10, 3), Margin = new Padding(0, 6, 0, 0) };
+        estSizeLabel.Dock = DockStyle.Fill; estSizeLabel.TextAlign = ContentAlignment.MiddleLeft; estSizeLabel.Font = new Font("Microsoft YaHei UI", 8.2f, FontStyle.Bold); estSizeLabel.AutoEllipsis = true; estSizeLabel.BackColor = Color.Transparent;
         estSizeBar.Controls.Add(estSizeLabel);
         AttachTip(estSizeBar, "estOutput"); AttachTip(estSizeLabel, "estOutput");
 
@@ -392,21 +440,24 @@ sealed class MainWindow : Form {
         sliderGroupCard.Controls.Add(sliderGrid);
         settings.Controls.Add(sliderGroupCard, 0, 3);
 
-        // Device Segmented Control (Short crisp labels: 自动显卡 | Vulkan | 纯 CPU — zero ellipsis!)
+        // Device Segmented Control
         var devRow = Grid(2, 1);
         devRow.Padding = new Padding(0, 10, 0, 6);
         devRow.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 32));
         devRow.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 68));
         var devLbl = new Label { Dock = DockStyle.Fill, TextAlign = ContentAlignment.MiddleLeft, Font = new Font(Font.FontFamily, 8.6f) };
-        Bind(devLbl, "device"); themeUpdaters.Add(() => devLbl.ForeColor = Theme.Current.Ink);
+        Bind(devLbl, "app.settings.device"); themeUpdaters.Add(() => devLbl.ForeColor = Theme.Current.Ink);
         deviceSegment.Dock = DockStyle.Fill; deviceSegment.AccessibleName = "device";
         AttachTip(devLbl, "device"); AttachTip(deviceSegment, "device");
         devRow.Controls.Add(devLbl, 0, 0); devRow.Controls.Add(deviceSegment, 1, 0);
         Row(settings, devRow, 4, 46);
 
-        var licBtn = ButtonOf("licenses", "licenses", "file", 148, () => MessageDialog.ShowLicenses(this));
-        licBtn.Margin = new Padding(0, 6, 0, 0);
-        Row(settings, licBtn, 5, 38);
+        var bottomTools = new FlowLayoutPanel { Dock = DockStyle.Fill, WrapContents = false, Margin = Padding.Empty, Padding = new Padding(0, 6, 0, 0) };
+        var advBtn = ButtonOf("app.settings.advBtn", "app.settings.advBtn", "settings", 122, OpenAdvancedDialog);
+        var jobsBtn = ButtonOf("app.settings.jobsBtn", "app.settings.jobsBtn", "layers", 104, OpenJobsDialog);
+        var licBtn = ButtonOf("app.settings.licenses", "app.settings.licenses", "file", 122, () => MessageDialog.ShowLicenses(this));
+        bottomTools.Controls.Add(advBtn); bottomTools.Controls.Add(jobsBtn); bottomTools.Controls.Add(licBtn);
+        Row(settings, bottomTools, 5, 42);
 
         settingsHost.Controls.Add(settings);
         col3Card.Controls.Add(settingsHost);
@@ -420,17 +471,17 @@ sealed class MainWindow : Form {
         logDrawer.Controls.Add(logView);
         root.Controls.Add(logDrawer, 0, 2);
 
-        // ===== Progress + ETA + Action Footer (Fixed Image 6 spacing & breathing room!) =====
-        footerPanel = new Panel { Dock = DockStyle.Fill, Padding = new Padding(18, 10, 18, 10) };
+        // ===== Progress + ETA + Action Footer =====
+        footerPanel = new Panel { Dock = DockStyle.Fill, Padding = new Padding(18, 8, 18, 10) };
         var footerGrid = Grid(1, 3);
         footerGrid.RowStyles.Add(new RowStyle(SizeType.Absolute, 22));
         footerGrid.RowStyles.Add(new RowStyle(SizeType.Absolute, 16));
-        footerGrid.RowStyles.Add(new RowStyle(SizeType.Absolute, 46));
+        footerGrid.RowStyles.Add(new RowStyle(SizeType.Percent, 100));
 
         var progInfo = Grid(4, 1);
         progInfo.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 100));
-        progInfo.ColumnStyles.Add(new ColumnStyle(SizeType.Absolute, 118));
-        progInfo.ColumnStyles.Add(new ColumnStyle(SizeType.Absolute, 144));
+        progInfo.ColumnStyles.Add(new ColumnStyle(SizeType.Absolute, 126));
+        progInfo.ColumnStyles.Add(new ColumnStyle(SizeType.Absolute, 148));
         progInfo.ColumnStyles.Add(new ColumnStyle(SizeType.Absolute, 52));
         status.Dock = DockStyle.Fill; status.TextAlign = ContentAlignment.MiddleLeft; status.AutoEllipsis = true;
         elapsedLabel.Dock = DockStyle.Fill; elapsedLabel.TextAlign = ContentAlignment.MiddleRight; elapsedLabel.Font = new Font("Consolas", 8.5f);
@@ -446,27 +497,33 @@ sealed class MainWindow : Form {
         footerGrid.Controls.Add(barWrap, 0, 1);
 
         var actRow = Grid(2, 1);
-        actRow.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 52));
-        actRow.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 48));
+        actRow.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 50));
+        actRow.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 50));
 
-        var leftAct = new FlowLayoutPanel { Dock = DockStyle.Fill, WrapContents = false, Padding = new Padding(0, 6, 0, 0) };
-        btnLogToggle = ButtonOf("toggleLogs", "logs", "logs", 114, ToggleLogs); btnLogToggle.Height = 34;
-        repository.Text = App.Repository; repository.AutoSize = true; repository.Margin = new Padding(12, 10, 0, 0); repository.AccessibleName = "repository";
+        var leftAct = new FlowLayoutPanel { Dock = DockStyle.Fill, WrapContents = false, Padding = new Padding(0, 6, 0, 4), Margin = Padding.Empty };
+        btnLogToggle = ButtonOf("app.actions.toggleLogs", "app.actions.logs", "logs", 122, ToggleLogs); btnLogToggle.Height = 36; btnLogToggle.Margin = new Padding(0, 0, 0, 0);
+        repository.Text = App.Repository; repository.AutoSize = true; repository.Margin = new Padding(14, 10, 0, 0); repository.AccessibleName = "repository";
         repository.LinkClicked += (s, e) => OpenRepository();
         leftAct.Controls.Add(btnLogToggle); leftAct.Controls.Add(repository);
         actRow.Controls.Add(leftAct, 0, 0);
 
-        var rightAct = new FlowLayoutPanel { Dock = DockStyle.Fill, FlowDirection = FlowDirection.RightToLeft, WrapContents = false, Padding = new Padding(0, 5, 0, 0) };
-        start = ButtonOf("start", "start", "play", 154, Begin); start.Primary = true; start.Height = 36; start.Margin = new Padding(10, 0, 0, 0); start.AccessibleName = "start";
-        cancel = ButtonOf("cancel", "cancel", "stop", 110, Stop); cancel.Height = 36; cancel.Margin = new Padding(10, 0, 0, 0); cancel.Enabled = false;
-        reveal = ButtonOf("openOutput", "openOutput", "folder", 148, OpenOutput); reveal.Height = 36; reveal.Visible = false;
+        var rightAct = new FlowLayoutPanel { Dock = DockStyle.Fill, FlowDirection = FlowDirection.RightToLeft, WrapContents = false, Padding = new Padding(0, 6, 0, 4), Margin = Padding.Empty };
+        start = ButtonOf("app.actions.start", "app.actions.start", "play", 164, Begin); start.Primary = true; start.Height = 36; start.Margin = new Padding(10, 0, 0, 0); start.AccessibleName = "start";
+        cancel = ButtonOf("common.cancel", "common.cancel", "stop", 118, Stop); cancel.Height = 36; cancel.Margin = new Padding(10, 0, 0, 0); cancel.Enabled = false;
+        reveal = ButtonOf("app.actions.openOutput", "app.actions.openOutput", "folder", 156, OpenOutput); reveal.Height = 36; reveal.Margin = new Padding(10, 0, 0, 0); reveal.Visible = false;
+        var outputMenu = new ContextMenuStrip();
+        editOutputMenuItem = new ToolStripMenuItem(I18n.T("app.actions.editOutput3d"), null, (s, e) => EditOutput());
+        editNativeOutputMenuItem = new ToolStripMenuItem(I18n.T("app.actions.openNativeVulkan"), null, (s, e) => EditOutputNative());
+        outputMenu.Items.Add(editOutputMenuItem);
+        outputMenu.Items.Add(editNativeOutputMenuItem);
+        reveal.ContextMenuStrip = outputMenu;
         rightAct.Controls.Add(start); rightAct.Controls.Add(cancel); rightAct.Controls.Add(reveal);
         actRow.Controls.Add(rightAct, 1, 0);
         footerGrid.Controls.Add(actRow, 0, 2);
         footerPanel.Controls.Add(footerGrid);
         root.Controls.Add(footerPanel, 0, 3);
 
-        // ===== Bottom 0.5s Hardware Telemetry Bar (Generous spacing, crisp Image 3 Lucide icons!) =====
+        // ===== Bottom 0.5s Hardware Telemetry Bar =====
         var resGrid = Grid(4, 1);
         resourceBar = resGrid;
         resGrid.Padding = new Padding(14, 6, 14, 8);
@@ -487,16 +544,18 @@ sealed class MainWindow : Form {
         formats.SelectedIndexChanged += (s, e) => { if (!changing) FormatChanged(); };
         language.SelectedIndexChanged += (s, e) => {
             if (changing || language.SelectedIndex < 0) return;
-            I18n.Language = I18n.Codes[language.SelectedIndex]; I18n.Save(); Translate();
+            I18n.SetLanguage(I18n.Codes[language.SelectedIndex], true);
+            Translate();
         };
 
         ticker.Tick += (s, e) => {
+            PaintJobClock();
             FlushLog();
             if (!sampling && DateTime.UtcNow >= nextSample) SampleResources();
         };
         ticker.Start();
 
-        HandleCreated += (s, e) => Theme.ApplyWindowChrome(this);
+        HandleCreated += (s, e) => { Theme.ApplyWindowChrome(this); Theme.ApplyDarkScrollbars(this); };
         FormClosing += (s, e) => { if (active != null) { e.Cancel = true; closing = true; Stop(); } };
         FormClosed += (s, e) => {
             ticker.Dispose(); tips.Dispose(); tipPopup.Dispose(); chartPopup.Dispose(); converter.Dispose();
@@ -510,23 +569,30 @@ sealed class MainWindow : Form {
 
     Control StepTitle(string num, string key) {
         var wrap = new FlowLayoutPanel { AutoSize = true, WrapContents = false, Margin = Padding.Empty, Padding = new Padding(0, 2, 0, 0) };
-        var badge = new Label { Text = num, AutoSize = true, Padding = new Padding(5, 2, 5, 2), Font = new Font("Consolas", 8.5f, FontStyle.Bold), Margin = new Padding(0, 2, 6, 0) };
+        var badge = new FluentBadge { Text = num, AccentStyle = true, Radius = Theme.RadiusBadge, Height = 22, Font = new Font("Consolas", 8.5f, FontStyle.Bold), Margin = new Padding(0, 2, 7, 0) };
+        badge.FitWidth();
         var lbl = new Label { AutoSize = true, Font = new Font(Font.FontFamily, 10f, FontStyle.Bold), Margin = new Padding(0, 3, 0, 0), UseMnemonic = false };
         Bind(lbl, key);
-        themeUpdaters.Add(() => { badge.BackColor = Theme.Current.AccentSoft; badge.ForeColor = Theme.Current.Accent; lbl.ForeColor = Theme.Current.Ink; });
+        themeUpdaters.Add(() => { badge.Invalidate(); lbl.ForeColor = Theme.Current.Ink; });
         wrap.Controls.Add(badge); wrap.Controls.Add(lbl);
         return wrap;
     }
 
     void AttachTip(Control ctrl, string key) {
+        AttachTipRegion(ctrl, key, "output");
+    }
+
+    void AttachTipRegion(Control ctrl, string key, string region) {
         if (ctrl == null) return;
-        ctrl.MouseEnter += (s, e) => tipPopup.ShowFor(key, ctrl);
-        ctrl.MouseLeave += (s, e) => tipPopup.Hide();
+        ctrl.MouseEnter += (s, e) => tipPopup.ScheduleShowFor(key, ctrl, region);
+        ctrl.MouseLeave += (s, e) => tipPopup.CancelAndHide();
+        ctrl.MouseDown += (s, e) => tipPopup.CancelAndHide();
     }
 
     void ApplyThemeAll() {
         var p = Theme.Current;
         Theme.ApplyWindowChrome(this);
+        Theme.ApplyDarkScrollbars(this);
         BackColor = p.WindowBg; ForeColor = p.Ink;
         workspace.BackColor = p.WindowBg;
         footerPanel.BackColor = p.TitleBarBg;
@@ -535,7 +601,7 @@ sealed class MainWindow : Form {
         logView.BackColor = p.LogBg; logView.ForeColor = p.Text2;
         outputBox.ApplyTheme();
         chkAdaptive.ForeColor = p.Ink; chkAdaptive.BackColor = p.SubCardBg;
-        estSizeBar.BackColor = p.AccentSoft; estSizeLabel.ForeColor = p.Accent;
+        estSizeBar.Invalidate(); estSizeLabel.ForeColor = p.Accent;
         tally.ForeColor = p.Muted;
         status.ForeColor = p.Ink; elapsedLabel.ForeColor = p.Muted; etaLabel.ForeColor = p.Accent; progressPctLabel.ForeColor = p.Ink;
         repository.LinkColor = p.Muted;
@@ -546,7 +612,7 @@ sealed class MainWindow : Form {
 
     void SetBatchMode(bool isBatch) {
         batchMode = isBatch;
-        outputLabel.Text = I18n.T(batchMode ? "outputFolder" : "output");
+        outputLabel.Text = I18n.T(batchMode ? "app.settings.outputFolder" : "app.settings.output");
         autoPath = true;
         SuggestPath();
     }
@@ -591,25 +657,28 @@ sealed class MainWindow : Form {
         if (shOp != null && Int32.TryParse(shOp.Value, out parsed)) shLim = parsed;
         long[] range = Budget.EstimateOutputBytes(inputs, SelectedFormat, keep.Value, shLim, effort.Value);
         if (range == null) {
-            estSizeLabel.Text = I18n.T("estOutput") + "：" + I18n.T("estUnknown");
+            estSizeLabel.Text = I18n.F("app.settings.estPending", "hint", I18n.T("app.settings.estUnknown"));
             return;
         }
         long inputBytes = 0;
         foreach (var inp in inputs) { try { inputBytes += new FileInfo(inp.Path).Length; } catch { } }
-        string txt = I18n.T("estOutput") + "：≈ " + SizeText(range[0]) + " – " + SizeText(range[1]);
+        string low = SizeText(range[0]), high = SizeText(range[1]);
         if (inputBytes > 0) {
             double mid = (range[0] + range[1]) / 2d;
             int savePct = (int)Math.Round((1d - mid / inputBytes) * 100d);
-            if (savePct > 5) txt += "  (-" + savePct + "%)";
+            if (savePct > 5) {
+                estSizeLabel.Text = I18n.F("app.settings.estRangeSaved", "low", low, "high", high, "pct", savePct);
+                return;
+            }
         }
-        estSizeLabel.Text = txt;
+        estSizeLabel.Text = I18n.F("app.settings.estRange", "low", low, "high", high);
     }
 
     void ToggleLogs() { logsExpanded = !logsExpanded; logDrawer.Visible = logsExpanded; }
 
     void OpenEngineUpdater() {
         using (var dlg = new EngineUpdateDialog(this, () => {
-            btnEngine.Text = "● " + I18n.T("engineBadge").Replace("{0}", EngineManager.ActiveVersion);
+            btnEngine.Text = "● " + I18n.F("app.header.engineBadge", "version", EngineManager.ActiveVersion);
         })) {
             dlg.ShowDialog(this);
         }
@@ -630,19 +699,24 @@ sealed class MainWindow : Form {
     static void Row(TableLayoutPanel grid, Control control, int row, int height) { control.Height = height; control.Dock = DockStyle.Top; control.Margin = Padding.Empty; grid.Controls.Add(control, 0, row); }
 
     internal void SetLanguage(string code) {
-        int index = Array.IndexOf(I18n.Codes, code); if (index < 0) return;
-        changing = true; language.SelectedIndex = index; I18n.Language = code; changing = false; Translate();
+        string norm = I18n.NormalizeCode(code);
+        int index = Array.IndexOf(I18n.Codes, norm); if (index < 0) return;
+        changing = true; language.SelectedIndex = index; I18n.SetLanguage(norm, false); changing = false; Translate();
     }
 
     void Translate() {
         changing = true;
         foreach (var update in translations) update();
-        outputLabel.Text = I18n.T(batchMode ? "outputFolder" : "output");
-        btnTheme.Text = I18n.T(Theme.Current.IsDark ? "themeLight" : "themeDark");
-        btnEngine.Text = "● " + I18n.T("engineBadge").Replace("{0}", EngineManager.ActiveVersion);
-        modeSegment.SetItems(I18n.T("batchMode"), I18n.T("mergeMode"));
+        verBadge.Text = I18n.T("app.header.portableBadge"); verBadge.FitWidth();
+        if (editOutputMenuItem != null) editOutputMenuItem.Text = I18n.T("app.actions.editOutput3d");
+        if (editNativePreviewMenuItem != null) editNativePreviewMenuItem.Text = I18n.T("app.actions.openNativeVulkan");
+        if (editNativeOutputMenuItem != null) editNativeOutputMenuItem.Text = I18n.T("app.actions.openNativeVulkan");
+        outputLabel.Text = I18n.T(batchMode ? "app.settings.outputFolder" : "app.settings.output");
+        btnTheme.Text = I18n.T(Theme.Current.IsDark ? "app.header.themeLight" : "app.header.themeDark");
+        btnEngine.Text = "● " + I18n.F("app.header.engineBadge", "version", EngineManager.ActiveVersion);
+        modeSegment.SetItems(I18n.T("app.inputs.batchMode"), I18n.T("app.inputs.mergeMode"));
         modeSegment.SelectedIndex = batchMode ? 0 : 1;
-        presetSegment.SetItems(I18n.T("presetFast"), I18n.T("presetLite"), I18n.T("presetBalanced"), I18n.T("presetHq"));
+        presetSegment.SetItems(I18n.T("app.presets.fast"), I18n.T("app.presets.lite"), I18n.T("app.presets.balanced"), I18n.T("app.presets.hq"));
         if (presetSegment.SelectedIndex < 0) presetSegment.SelectedIndex = 2;
         int fIdx = Math.Max(0, formats.SelectedIndex);
         formats.SetItems(Converter.Formats.Cast<object>(), fIdx);
@@ -654,8 +728,8 @@ sealed class MainWindow : Form {
 
     void RefreshDevices() {
         int sel = Math.Max(0, deviceSegment.SelectedIndex);
-        if (SelectedFormat.Voxel) deviceSegment.SetItems(I18n.T("devAuto"), I18n.T("devVulkan"));
-        else deviceSegment.SetItems(I18n.T("devAuto"), I18n.T("devVulkan"), I18n.T("devCpu"));
+        if (SelectedFormat.Voxel) deviceSegment.SetItems(I18n.T("app.devices.shortAuto"), I18n.T("app.devices.shortVulkan"));
+        else deviceSegment.SetItems(I18n.T("app.devices.shortAuto"), I18n.T("app.devices.shortVulkan"), I18n.T("app.devices.shortCpu"));
         deviceSegment.SelectedIndex = Math.Min(sel, SelectedFormat.Voxel ? 1 : 2);
     }
 
@@ -669,11 +743,11 @@ sealed class MainWindow : Form {
 
     Format SelectedFormat { get { return (Format)formats.SelectedItem; } }
     static string F(double number) { return number.ToString("0.###", CultureInfo.InvariantCulture); }
-    static string SizeText(long size) { return size >= 1073741824 ? Budget.GB(size) : (size / 1048576d).ToString("0.0", CultureInfo.InvariantCulture) + " MiB"; }
+    static string SizeText(long size) { return size >= 1073741824 ? Budget.GB(size) : (size / 1048576d).ToString("0.0", CultureInfo.InvariantCulture) + " MB"; }
     static string FmtDuration(double sec) { int s = Math.Max(0, (int)Math.Round(sec)); return (s / 60).ToString("00") + ":" + (s % 60).ToString("00"); }
 
     void BrowseInputs() {
-        using (var dialog = new OpenFileDialog { Multiselect = true, Filter = I18n.T("inputs") + "|*.ply;*.sog;*.ksplat;*.splat;*.spz;*.glb;*.lcc;*.lcc2", Title = I18n.T("add") })
+        using (var dialog = new OpenFileDialog { Multiselect = true, Filter = I18n.T("app.inputs.title") + "|*.ply;*.sog;*.ksplat;*.splat;*.spz;*.glb;*.lcc;*.lcc2", Title = I18n.T("app.inputs.add") })
             if (dialog.ShowDialog(this) == DialogResult.OK) AddFiles(dialog.FileNames);
     }
     void AddFiles(IEnumerable<string> paths) {
@@ -689,7 +763,7 @@ sealed class MainWindow : Form {
 
     void RefreshFiles(int select) {
         changing = true; int previous = scope.SelectedIndex;
-        var scopeItems = new List<object> { I18n.T("merged") };
+        var scopeItems = new List<object> { I18n.T("app.pipeline.merged") };
         long bytes = 0;
         foreach (var input in inputs) {
             var info = new FileInfo(input.Path); long size = info.Exists ? info.Length : 0; bytes += size;
@@ -698,15 +772,18 @@ sealed class MainWindow : Form {
         fileList.SetFiles(inputs, select);
         scope.SetItems(scopeItems, select >= 0 ? select + 1 : Math.Max(0, Math.Min(previous, scopeItems.Count - 1)));
         changing = false;
-        tally.Text = inputs.Count + " " + I18n.T("files") + (bytes > 0 ? " · " + SizeText(bytes) : "");
+        tally.Text = bytes > 0
+            ? I18n.F("app.inputs.fileCountWithSize", "count", inputs.Count, "size", SizeText(bytes))
+            : I18n.F("app.inputs.fileCount", "count", inputs.Count);
         RefreshOps(-1); SuggestPath(); RefreshStart(); UpdateOutputEstimate();
     }
 
     List<Op> CurrentOps() { return scope.SelectedIndex <= 0 || scope.SelectedIndex > inputs.Count ? outputOps : inputs[scope.SelectedIndex - 1].Ops; }
     void RefreshOps(int select) { opList.SetOps(CurrentOps(), select); }
-    void MoveOp(int delta) { var ops = CurrentOps(); int i = opList.SelectedIndex, j = i + delta; if (i < 0 || j < 0 || j >= ops.Count) return; var op = ops[i]; ops.RemoveAt(i); ops.Insert(j, op); RefreshOps(j); }
+    void MoveOp(int delta) { var ops = CurrentOps(); int i = opList.SelectedIndex, j = i + delta; if (i < 0 || j < 0 || j >= ops.Count || ops[i].Step==Step.Scene || ops[j].Step==Step.Scene) return; var op = ops[i]; ops.RemoveAt(i); ops.Insert(j, op); RefreshOps(j); }
     void EditOp(bool edit) {
         var ops = CurrentOps(); int i = opList.SelectedIndex; if (edit && i < 0) return;
+        if(edit && ops[i].Step==Step.Scene && scope.SelectedIndex>0){EditScene(inputs[scope.SelectedIndex-1]);return;}
         using (var dialog = new StepDialog(this, edit ? ops[i] : null)) {
             if (dialog.ShowDialog(this) != DialogResult.OK) return;
             if (edit) ops[i] = dialog.Result; else { i = ops.Count; ops.Add(dialog.Result); }
@@ -725,14 +802,14 @@ sealed class MainWindow : Form {
 
     void BrowseOutput() {
         if (batchMode) {
-            using (var folderDlg = new FolderBrowserDialog { Description = I18n.T("outputFolder") }) {
+            using (var folderDlg = new FolderBrowserDialog { Description = I18n.T("app.settings.outputFolder") }) {
                 if (inputs.Count > 0) folderDlg.SelectedPath = Path.GetDirectoryName(inputs[0].Path);
                 if (folderDlg.ShowDialog(this) == DialogResult.OK) outputBox.Inner.Text = folderDlg.SelectedPath;
             }
             return;
         }
         var f = SelectedFormat;
-        using (var dialog = new SaveFileDialog { Filter = f.Name.Replace("|", " ") + "|*" + f.Suffix, AddExtension = false, FileName = Path.GetFileName(outputBox.Inner.Text), OverwritePrompt = false, Title = I18n.T("browse") }) {
+        using (var dialog = new SaveFileDialog { Filter = f.Name.Replace("|", " ") + "|*" + f.Suffix, AddExtension = false, FileName = Path.GetFileName(outputBox.Inner.Text), OverwritePrompt = false, Title = I18n.T("app.settings.browse") }) {
             if (inputs.Count > 0) dialog.InitialDirectory = Path.GetDirectoryName(inputs[0].Path);
             if (dialog.ShowDialog(this) == DialogResult.OK) outputBox.Inner.Text = Suffix(dialog.FileName, f.Suffix);
         }
@@ -760,7 +837,7 @@ sealed class MainWindow : Form {
     }
 
     void PaintMetrics() {
-        string unknown = I18n.T("unknown"); var r = resources;
+        string unknown = I18n.T("common.unknown"); var r = resources;
         bool busy = active != null;
         double cpu = r != null && r.Cpu.HasValue ? r.Cpu.Value : 0;
         metricTiles[0].LabelText = "CPU";
@@ -768,8 +845,8 @@ sealed class MainWindow : Form {
         metricTiles[0].Percent = cpu; metricTiles[0].IsCompressing = busy; metricTiles[0].Invalidate();
 
         double ramPct = r != null && r.TotalMemory > 0 ? Math.Max(0, Math.Min(100, (r.TotalMemory - r.AvailableMemory) / r.TotalMemory * 100d)) : 0;
-        metricTiles[1].LabelText = I18n.T("memory");
-        metricTiles[1].ValueText = r != null && r.TotalMemory > 0 ? F((r.TotalMemory - r.AvailableMemory) / 1073741824d) + " / " + F(r.TotalMemory / 1073741824d) + " GiB" : unknown;
+        metricTiles[1].LabelText = I18n.T("app.metrics.memory");
+        metricTiles[1].ValueText = r != null && r.TotalMemory > 0 ? F((r.TotalMemory - r.AvailableMemory) / 1073741824d) + " / " + F(r.TotalMemory / 1073741824d) + " GB" : unknown;
         metricTiles[1].Percent = ramPct; metricTiles[1].IsCompressing = busy;
         metricTiles[1].AlertDanger = r != null && r.TotalMemory > 0 && r.AvailableMemory / r.TotalMemory < 0.1;
         metricTiles[1].Invalidate();
@@ -781,8 +858,8 @@ sealed class MainWindow : Form {
         metricTiles[2].Percent = gpuPct; metricTiles[2].IsCompressing = busy; metricTiles[2].Invalidate();
 
         double vramPct = gpu != null && gpu.MemoryTotal > 0 && gpu.MemoryUsed.HasValue ? Math.Max(0, Math.Min(100, gpu.MemoryUsed.Value / gpu.MemoryTotal * 100d)) : 0;
-        metricTiles[3].LabelText = I18n.T("vram");
-        metricTiles[3].ValueText = gpu != null && gpu.MemoryTotal > 0 && gpu.MemoryUsed.HasValue ? F(gpu.MemoryUsed.Value / 1073741824d) + " / " + F(gpu.MemoryTotal / 1073741824d) + " GiB" : unknown;
+        metricTiles[3].LabelText = I18n.T("app.metrics.vram");
+        metricTiles[3].ValueText = gpu != null && gpu.MemoryTotal > 0 && gpu.MemoryUsed.HasValue ? F(gpu.MemoryUsed.Value / 1073741824d) + " / " + F(gpu.MemoryTotal / 1073741824d) + " GB" : unknown;
         metricTiles[3].Percent = vramPct; metricTiles[3].IsCompressing = busy; metricTiles[3].Invalidate();
     }
 
@@ -795,7 +872,7 @@ sealed class MainWindow : Form {
             try { target = Path.GetFullPath(Suffix(target, f.Suffix)); }
             catch (Exception ex) { ShowFailure(ex, null, null); return; }
             overwrite = File.Exists(target);
-            if (overwrite && !MessageDialog.Confirm(this, I18n.T("output"), I18n.T("overwrite") + "\n\n" + target, I18n.T("continue"), I18n.T("cancel"))) return;
+            if (overwrite && !MessageDialog.Confirm(this, I18n.T("app.settings.output"), I18n.T("app.dialogs.overwrite") + "\n\n" + target, I18n.T("app.dialogs.continue"), I18n.T("common.cancel"))) return;
         } else {
             try { target = Path.GetFullPath(target); }
             catch (Exception ex) { ShowFailure(ex, null, null); return; }
@@ -812,19 +889,25 @@ sealed class MainWindow : Form {
             AdaptiveDecimate = chkAdaptive.Checked,
             Keep = keep.Value, Iterations = iterations.Value, Effort = effort.Value,
             Workers = workers.Value, VoxelSize = F(voxel.Value / 1000d), Opacity = F(opacity.Value / 100d),
-            Device = selectedDevice
+            Device = selectedDevice,
+            SogVersion = advState.SogVersion, ShColorError = advState.ShColorError, SpzVersion = advState.SpzVersion,
+            PlyLogitOpacity = advState.PlyLogitOpacity, HtmlUnbundled = advState.HtmlUnbundled,
+            VoxelExternalFill = advState.VoxelExternalFill, VoxelFloorFill = advState.VoxelFloorFill,
+            VoxelCarve = advState.VoxelCarve, SeedPos = advState.SeedPos, CollisionMesh = advState.CollisionMesh,
+            TargetMaxBytes = advState.TargetMaxBytes, MinKeepPct = advState.MinKeepPct, MaxAttempts = advState.MaxAttempts
         };
         job.Inputs.AddRange(inputs);
         job.Ops.AddRange(outputOps);
 
         active = new CancellationTokenSource();
+        jobClock.Restart(); latestProgress = null; etaDeadline = null;
         var token = active.Token;
         workspace.Enabled = false; language.Enabled = false; btnEngine.Enabled = false;
         cancel.Enabled = true; RefreshStart(); logView.Clear(); reveal.Visible = false;
         progressBar.Percent = 0; progressPctLabel.Text = "0%";
-        elapsedLabel.Text = I18n.T("elapsed") + " 00:00";
-        etaLabel.Text = I18n.T("etaRemaining") + " --:--";
-        SetStatus("preflight");
+        elapsedLabel.Text = I18n.T("app.status.elapsed") + " 00:00";
+        etaLabel.Text = I18n.T("app.status.etaRemaining") + " --:--";
+        SetStatus("app.status.preflight");
         MemoryEstimate estimate = null;
 
         try {
@@ -833,51 +916,46 @@ sealed class MainWindow : Form {
             resources = preflightResources; PaintMetrics();
             var risks = Budget.Assess(estimate, preflightResources, job.Device);
             if (risks.Count > 0) {
-                string message = Budget.Describe(estimate, preflightResources) + "\n\n" + I18n.T("memoryAdvice") + (risks.Contains("vram") ? "\n" + I18n.T("gpuAdvice") : "");
-                bool proceed = WarningOverride != null ? WarningOverride(message) : MessageDialog.ResourceWarning(this, estimate, preflightResources, message, I18n.T("continue"), I18n.T("adjust"));
-                if (!proceed) { SetStatus("ready"); return; }
+                string message = Budget.Describe(estimate, preflightResources) + "\n\n" + I18n.T("app.dialogs.memoryAdvice") + (risks.Contains("vram") ? "\n" + I18n.T("app.dialogs.gpuAdvice") : "");
+                bool proceed = WarningOverride != null ? WarningOverride(message) : MessageDialog.ResourceWarning(this, estimate, preflightResources, message, I18n.T("app.dialogs.continue"), I18n.T("app.dialogs.adjust"));
+                if (!proceed) { SetStatus("app.status.ready"); return; }
             }
 
             telemetry.MarkCompressionStarted();
 
-            var reportStatus = new Progress<string>(key => { if (active != null && !token.IsCancellationRequested) SetStatus(key); });
-            var reportProg = new Progress<ProgressInfo>(p => {
-                if (active == null || token.IsCancellationRequested) return;
-                progressBar.Percent = p.Percent;
-                progressPctLabel.Text = Math.Round(p.Percent).ToString("0") + "%";
-                elapsedLabel.Text = I18n.T("elapsed") + " " + FmtDuration(p.ElapsedSeconds);
-                etaLabel.Text = p.EtaSeconds.HasValue ? I18n.T("etaRemaining") + " " + FmtDuration(p.EtaSeconds.Value) : I18n.T("etaRemaining") + " --:--";
-                string batchTag = p.FileTotal > 1 ? "[" + p.FileIndex + "/" + p.FileTotal + "] " : "";
-                status.Text = batchTag + I18n.T(p.StageKey) + (String.IsNullOrWhiteSpace(p.Detail) ? "" : " · " + p.Detail);
-            });
-
+            var reportStatus = new Progress<string>(key => { if (jobClock.IsRunning && active != null && active.Token==token && !token.IsCancellationRequested) SetStatus(key); });
             await Task.Run(() => converter.Convert(job, token,
                 key => ((IProgress<string>)reportStatus).Report(key),
                 line => events.Enqueue(line),
-                info => ((IProgress<ProgressInfo>)reportProg).Report(info)));
+                info => Interlocked.Exchange(ref latestProgress, info)));
+
+            jobClock.Stop();
+            elapsedLabel.Text = I18n.T("app.status.elapsed") + " " + FmtDuration(jobClock.Elapsed.TotalSeconds);
 
             completed = batchMode ? job.OutputDirectory : job.Output;
             reveal.Visible = true;
-            SetStatus("done");
+            SetStatus("app.status.done");
             string summary = "";
             if (!batchMode && File.Exists(completed)) {
-                summary = I18n.T("output") + ": " + Path.GetFileName(completed) + " (" + SizeText(new FileInfo(completed).Length) + ")";
-                status.Text += " · " + SizeText(new FileInfo(completed).Length);
+                string sz = SizeText(new FileInfo(completed).Length);
+                summary = I18n.F("app.status.outputDoneSummary", "name", Path.GetFileName(completed), "size", sz);
+                status.Text += " · " + sz;
             } else if (batchMode) {
-                summary = I18n.T("batchMode") + " · " + job.Inputs.Count + " " + I18n.T("files");
-                status.Text += " · " + job.Inputs.Count + " " + I18n.T("files");
+                summary = I18n.F("app.status.batchDoneSummary", "count", job.Inputs.Count);
+                status.Text += " · " + I18n.F("app.inputs.fileCount", "count", job.Inputs.Count);
             }
-            events.Enqueue(I18n.T("output") + ": " + completed);
-            progressBar.Percent = 100; progressPctLabel.Text = "100%"; etaLabel.Text = I18n.T("done");
+            events.Enqueue(I18n.F("app.status.outputLogLine", "path", completed));
+            progressBar.Percent = 100; progressPctLabel.Text = "100%"; etaLabel.Text = I18n.T("app.status.done");
 
             if (!closing && StarPrompt.TryClaim(PromptMarker)) {
                 if (PromptOverride != null) PromptOverride();
                 else if (MessageDialog.StarCelebration(this, summary)) OpenRepository();
             }
         }
-        catch (OperationCanceledException) { SetStatus("canceled"); etaLabel.Text = I18n.T("canceled"); }
-        catch (Exception ex) { SetStatus("failed"); events.Enqueue(ex.ToString()); FlushLog(); if (!closing) ShowFailure(ex, job, estimate); }
+        catch (OperationCanceledException) { SetStatus("app.status.canceled"); etaLabel.Text = I18n.T("app.status.canceled"); }
+        catch (Exception ex) { SetStatus("app.status.failed"); events.Enqueue(ex.ToString()); FlushLog(); if (!closing) ShowFailure(ex, job, estimate); }
         finally {
+            jobClock.Stop(); latestProgress = null; etaDeadline = null;
             telemetry.MarkCompressionEnded();
             if (activeHoverMetric != null) chartPopup.RefreshIfVisible(telemetry.Snapshot(), resources);
             FlushLog();
@@ -892,7 +970,7 @@ sealed class MainWindow : Form {
         var diagnostic = Diagnostics.Classify(error, job == null ? "auto" : job.Device);
         string details = diagnostic.Text;
         if (estimate != null) details += "\n\n" + Budget.Describe(estimate, resources);
-        string raw = "Splat Convert Desktop 2.0.0\nOS: " + Environment.OSVersion + "\nEngine: " + EngineManager.ActiveVersion + "\n" +
+        string raw = "Splat Convert Desktop 3.2.3\nOS: " + Environment.OSVersion + "\nEngine: " + EngineManager.ActiveVersion + "\n" +
             (job == null ? "" : "Format: " + job.Format.Suffix + "; Device: " + job.Device + "; Workers: " + job.Workers + "\n") + details + "\n\n" + error;
         if (ErrorOverride != null) { ErrorOverride(diagnostic, raw); return; }
         MessageDialog.Failure(this, I18n.T(diagnostic.TitleKey), details, raw, () => {
@@ -901,10 +979,10 @@ sealed class MainWindow : Form {
         });
     }
 
-    void Stop() { if (active != null) { SetStatus("canceling"); cancel.Enabled = false; active.Cancel(); } }
+    void Stop() { if (active != null) { SetStatus("app.status.canceling"); cancel.Enabled = false; active.Cancel(); } }
     void FlushLog() {
         var text = new System.Text.StringBuilder(); string line;
-        while (events.TryDequeue(out line)) text.AppendLine(line);
+        while (text.Length < 24000 && events.TryDequeue(out line)) text.AppendLine(line);
         if (text.Length == 0) return;
         if (logView.TextLength > 180000) logView.Text = logView.Text.Substring(logView.TextLength - 120000);
         logView.AppendText(text.ToString());
@@ -915,4 +993,125 @@ sealed class MainWindow : Form {
         else if (File.Exists(completed)) Process.Start("explorer.exe", "/select,\"" + completed + "\"");
     }
     void OpenRepository() { try { Process.Start(new ProcessStartInfo(App.Repository) { UseShellExecute = true }); } catch (Exception ex) { ShowFailure(ex, null, null); } }
+
+    void OpenInspectDialog() {
+        if (inputs.Count == 0) { BrowseInputs(); return; }
+        int idx = fileList.SelectedIndex >= 0 && fileList.SelectedIndex < inputs.Count ? fileList.SelectedIndex : 0;
+        using (var dlg = new InspectDialog(this, inputs[idx].Path)) dlg.ShowDialog(this);
+    }
+
+    void OpenPreviewDialog() {
+        if (inputs.Count == 0) { BrowseInputs(); return; }
+        int idx = fileList.SelectedIndex >= 0 && fileList.SelectedIndex < inputs.Count ? fileList.SelectedIndex : 0;
+        EditScene(inputs[idx]);
+    }
+    void OpenNativeBypassDialog() {
+        if (inputs.Count == 0) { BrowseInputs(); return; }
+        int idx = fileList.SelectedIndex >= 0 && fileList.SelectedIndex < inputs.Count ? fileList.SelectedIndex : 0;
+        EditSceneNative(inputs[idx]);
+    }
+    void EditOutput(){string path=completed;if(Directory.Exists(path)){using(var pick=new OpenFileDialog{InitialDirectory=path,Filter="3D|*.ply;*.sog;*.spz;*.splat"}){if(pick.ShowDialog(this)!=DialogResult.OK)return;path=pick.FileName;}}if(!File.Exists(path)||!Converter.Supported(path))return;EditScene(inputs.FirstOrDefault(i=>String.Equals(i.Path,path,StringComparison.OrdinalIgnoreCase))??new InputFile(path));}
+    void EditOutputNative(){string path=completed;if(Directory.Exists(path)){using(var pick=new OpenFileDialog{InitialDirectory=path,Filter="3D|*.ply;*.sog;*.spz;*.splat"}){if(pick.ShowDialog(this)!=DialogResult.OK)return;path=pick.FileName;}}if(!File.Exists(path)||!Converter.Supported(path))return;EditSceneNative(inputs.FirstOrDefault(i=>String.Equals(i.Path,path,StringComparison.OrdinalIgnoreCase))??new InputFile(path));}
+    internal EncoderSettingsSnapshot BuildActiveEncoderPreset() {
+        var f = SelectedFormat ?? Converter.Formats[0];
+        string selectedDevice = !(f.Sog || f.Voxel || outputOps.Any(o => o.Enabled && o.Step.RequiresGpu)) ? "cpu"
+            : deviceSegment.SelectedIndex == 0 ? "auto"
+            : deviceSegment.SelectedIndex == 1 ? "vulkan" : "cpu";
+        var snap = new EncoderSettingsSnapshot {
+            Format = f,
+            AdaptiveDecimate = chkAdaptive.Checked,
+            Keep = keep.Value,
+            Iterations = iterations.Value,
+            Effort = effort.Value,
+            Workers = workers.Value,
+            VoxelSize = F(voxel.Value / 1000d),
+            Opacity = F(opacity.Value / 100d),
+            Device = selectedDevice,
+            SogVersion = advState.SogVersion,
+            ShColorError = advState.ShColorError,
+            SpzVersion = advState.SpzVersion,
+            PlyLogitOpacity = advState.PlyLogitOpacity,
+            HtmlUnbundled = advState.HtmlUnbundled,
+            VoxelExternalFill = advState.VoxelExternalFill,
+            VoxelFloorFill = advState.VoxelFloorFill,
+            VoxelCarve = advState.VoxelCarve,
+            SeedPos = advState.SeedPos,
+            CollisionMesh = advState.CollisionMesh,
+            TargetMaxBytes = advState.TargetMaxBytes,
+            MinKeepPct = advState.MinKeepPct,
+            MaxAttempts = advState.MaxAttempts
+        };
+        foreach (var op in outputOps) {
+            snap.OutputOps.Add(new Op { Step = op.Step, Value = op.Value, Enabled = op.Enabled });
+        }
+        return snap;
+    }
+
+    void EditScene(InputFile file){var prev=file.Ops.FirstOrDefault(o=>o.Step==Step.Scene);
+        string existingJson = prev == null ? null : SceneRecipe.ResolveRawJson(prev.Value);
+        using (var dlg = new SceneEditorDialog(this, file.Path, resources, existingJson, BuildActiveEncoderPreset())) {
+            if (dlg.ShowDialog(this) == DialogResult.OK) {
+                int idx=inputs.FindIndex(i=>String.Equals(i.Path,file.Path,StringComparison.OrdinalIgnoreCase));
+                if(idx<0){inputs.Add(file);idx=inputs.Count-1;RefreshFiles(idx);}else file=inputs[idx];
+                file.Ops.RemoveAll(o=>o.Step==Step.Scene);
+                if(!String.IsNullOrEmpty(dlg.Recipe) && dlg.Recipe!="null") {
+                    string stored = SceneRecipe.StoreIfLarge(dlg.Recipe);
+                    file.Ops.Insert(0,new Op{Step=Step.Scene,Value=stored,Enabled=true});
+                }
+                scope.SelectedIndex=idx+1;RefreshOps(0);
+                UpdateOutputEstimate();
+            }
+        }
+    }
+
+    void EditSceneNative(InputFile file) {
+        var prev = file.Ops.FirstOrDefault(o => o.Step == Step.Scene);
+        string existingJson = prev == null ? null : SceneRecipe.ResolveRawJson(prev.Value);
+        string fallbackRecipe = existingJson;
+        bool openWebViewFallback = false;
+        using (var dlg = new NativeViewportDialog(this, file.Path, existingJson, false, false)) {
+            var dr = dlg.ShowDialog(this);
+            if (dr == DialogResult.OK && !String.IsNullOrEmpty(dlg.Recipe) && dlg.Recipe != "null") {
+                int idx = inputs.FindIndex(i => String.Equals(i.Path, file.Path, StringComparison.OrdinalIgnoreCase));
+                if (idx < 0) { inputs.Add(file); idx = inputs.Count - 1; RefreshFiles(idx); } else file = inputs[idx];
+                file.Ops.RemoveAll(o => o.Step == Step.Scene);
+                string stored = SceneRecipe.StoreIfLarge(dlg.Recipe);
+                file.Ops.Insert(0, new Op { Step = Step.Scene, Value = stored, Enabled = true });
+                scope.SelectedIndex = idx + 1; RefreshOps(0);
+                UpdateOutputEstimate();
+                return;
+            }
+            if (dlg.FallbackToWebViewRequested) {
+                openWebViewFallback = true;
+                if (!String.IsNullOrEmpty(dlg.Recipe)) fallbackRecipe = dlg.Recipe;
+            }
+        }
+        if (openWebViewFallback) {
+            if (!String.IsNullOrEmpty(fallbackRecipe) && fallbackRecipe != existingJson) {
+                file.Ops.RemoveAll(o => o.Step == Step.Scene);
+                file.Ops.Insert(0, new Op { Step = Step.Scene, Value = SceneRecipe.StoreIfLarge(fallbackRecipe), Enabled = true });
+            }
+            EditScene(file);
+        }
+    }
+
+    void OpenAdvancedDialog() {
+        using (var dlg = new AdvancedOptionsDialog(this, advState, SelectedFormat.Suffix)) {
+            if (dlg.ShowDialog(this) == DialogResult.OK) UpdateOutputEstimate();
+        }
+    }
+
+    void OpenJobsDialog() {
+        using (var dlg = new JobsQueueDialog(this)) {
+            if (dlg.ShowDialog(this) == DialogResult.OK && dlg.SelectedToResume != null) {
+                var doc = dlg.SelectedToResume;
+                inputs.Clear();
+                foreach (var inp in doc.Inputs) {
+                    string resolved = PortablePaths.ResolvePortableOrAbsolute(inp.StoredPath);
+                    if (File.Exists(resolved)) inputs.Add(new InputFile(resolved));
+                }
+                RefreshFiles(-1);
+            }
+        }
+    }
 }

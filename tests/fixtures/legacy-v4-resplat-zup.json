@@ -1,0 +1,27 @@
+{
+  "version": 4,
+  "engine": "resplat-3.2.2",
+  "coordSystem": "z-up",
+  "sourceAsset": {
+    "assetId": "primary",
+    "fileName": "legacy_zup_scene.ply",
+    "pointCount": 12000,
+    "orderingVersion": "source-v1"
+  },
+  "stateRle": {
+    "deleted": [10, 12, 500, 505],
+    "hidden": []
+  },
+  "entityDeltaMatrix": [
+    1, 0, 0, 0,
+    0, 1, 0, 0,
+    0, 0, 1, 0,
+    0, 0, 7, 1
+  ],
+  "paletteMatrices": [
+    [1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1],
+    [1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 2, -3, 5, 1]
+  ],
+  "transformIdxRle": [0, 6000, 1, 6000],
+  "colorGrade": null
+}

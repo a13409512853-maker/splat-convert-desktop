@@ -1,0 +1,43 @@
+#version 450
+layout(local_size_x = 256, local_size_y = 1, local_size_z = 1) in;
+
+const uint NUM_BLOCKS = 512u;
+
+layout(std430, binding = 0) readonly buffer KeysIn { uint keysIn[]; };
+layout(std430, binding = 1) writeonly buffer BlockHist { uint blockHist[]; };
+layout(std430, binding = 2) readonly buffer IndirectBuf {
+  uint vertexCount;
+  uint instanceCount;
+  uint firstVertex;
+  uint firstInstance;
+} indirectCmd;
+
+layout(push_constant) uniform SortPC {
+  uint shift;
+} pc;
+
+shared uint sHist[16];
+
+void main() {
+  uint tid = gl_LocalInvocationID.x;
+  uint blockId = gl_WorkGroupID.x;
+
+  if (tid < 16u) sHist[tid] = 0u;
+  barrier();
+
+  uint count = indirectCmd.instanceCount;
+  if (count > 0u) {
+    uint perBlock = (count + NUM_BLOCKS - 1u) / NUM_BLOCKS;
+    uint start = blockId * perBlock;
+    uint end = min(start + perBlock, count);
+    for (uint i = start + tid; i < end; i += 256u) {
+      uint digit = (keysIn[i] >> pc.shift) & 0xFu;
+      atomicAdd(sHist[digit], 1u);
+    }
+  }
+  barrier();
+
+  if (tid < 16u) {
+    blockHist[tid * NUM_BLOCKS + blockId] = sHist[tid];
+  }
+}

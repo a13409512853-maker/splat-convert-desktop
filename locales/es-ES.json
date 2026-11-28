@@ -1,0 +1,2260 @@
+{
+  "_meta": {
+    "code": "es-ES",
+    "legacyCode": "es",
+    "name": "Spanish",
+    "nativeName": "Español",
+    "order": 7
+  },
+  "common": {
+    "ok": "Aceptar",
+    "cancel": "Cancelar",
+    "close": "Cerrar",
+    "default": "Estándar",
+    "unknown": "No disponible",
+    "copied": "Copiado ✓",
+    "allFiles": "Todos los archivos",
+    "on": "Activado",
+    "off": "Desactivado"
+  },
+  "app": {
+    "header": {
+      "local": "Conversión local",
+      "engineBadge": "Motor v{version} · Act.",
+      "themeLight": "Claro",
+      "themeDark": "Oscuro",
+      "language": "Idioma",
+      "portableBadge": "v3.2 Portátil"
+    },
+    "inputs": {
+      "title": "Entrada",
+      "add": "Archivos",
+      "remove": "Quitar",
+      "up": "Subir",
+      "down": "Bajar",
+      "fileName": "Nombre del archivo",
+      "size": "Tamaño",
+      "filesUnit": "archivos",
+      "emptyHint": "Arrastra PLY / SOG / SPZ / GLB aquí\no haz clic para añadir",
+      "batchMode": "Conversión por lotes",
+      "mergeMode": "Combinar",
+      "inspectBtn": "Revisar",
+      "fileCount": "{count} archivos",
+      "fileCountWithSize": "{count} archivos · {size}"
+    },
+    "pipeline": {
+      "title": "Edición",
+      "merged": "Resultado combinado",
+      "addOp": "Acción",
+      "editOp": "Editar acción",
+      "previewBtn": "Vista 3D",
+      "emptyHint": "Sin pasos personalizados\nHaz clic en '+ Añadir'",
+      "scopeLabel": "Ámbito",
+      "opsListLabel": "Operaciones en orden de ejecución",
+      "sceneEditName": "Selección y transformación 3D",
+      "sceneEditSub": "Resolución completa · Doble clic para editar",
+      "defaultAutoParam": "Parámetros automáticos",
+      "badgeClean": "Limpieza",
+      "badgeNew312": "Nuevo 3.12",
+      "badgeCompact": "Compacto",
+      "badgeCrop": "Recorte",
+      "badgeTransform": "Transform.",
+      "actionTypeLabel": "Tipo de acción"
+    },
+    "ops": {
+      "translate": "Trasladar",
+      "rotate": "Rotar (grados)",
+      "scale": "Escala uniforme",
+      "nan": "Quitar puntos no válidos",
+      "harmonics": "Límite de bandas SH",
+      "box": "Filtro de caja",
+      "sphere": "Filtro esférico",
+      "floaters": "Eliminar puntos flotantes",
+      "cluster": "Conservar grupo principal",
+      "filterValue": "Filtro de atributo",
+      "mortonOrder": "Orden Morton",
+      "factor": "Factor",
+      "radius": "Radio",
+      "band": "Bandas",
+      "min": "Mín",
+      "max": "Máx",
+      "floaterParams": "Tamaño,Opacidad,Mín",
+      "clusterParams": "Res,Opacidad,Mín",
+      "filterValueParams": "Columna,Op,Valor",
+      "quickFloaters": "Eliminar puntos flotantes (GPU)",
+      "quickNan": "Limpiar puntos inválidos",
+      "quickSh": "Limitar bandas SH",
+      "bandValue": "Banda: {value}",
+      "minAxis": "Mín {axis}",
+      "maxAxis": "Máx {axis}"
+    },
+    "settings": {
+      "title": "Ajustes de salida",
+      "format": "Formato de salida",
+      "output": "Archivo de salida",
+      "outputFolder": "Carpeta de salida",
+      "browse": "Elegir destino",
+      "keep": "Puntos conservados",
+      "adaptiveDecimate": "Diezmado adaptativo",
+      "uniformDecimate": "Diezmado uniforme",
+      "iterations": "Iteraciones SH",
+      "effort": "Esfuerzo WebP",
+      "workers": "Procesos de codificación",
+      "serial": "Secuencial",
+      "voxel": "Tamaño del vóxel",
+      "opacity": "Umbral de opacidad",
+      "device": "Dispositivo",
+      "estOutput": "Tamaño est.",
+      "estUnknown": "Añade un archivo para estimar",
+      "advBtn": "Avanzado",
+      "jobsBtn": "Tareas",
+      "licenses": "Licencias de código abierto",
+      "estPending": "Tamaño est.: {hint}",
+      "estRange": "Tamaño est.: ≈ {low} – {high}",
+      "estRangeSaved": "Tamaño est.: ≈ {low} – {high}  (-{pct}%)"
+    },
+    "presets": {
+      "fast": "Rápido",
+      "lite": "Compacto",
+      "balanced": "Equilibrado",
+      "hq": "Alta calidad"
+    },
+    "devices": {
+      "auto": "GPU automática",
+      "cpu": "CPU",
+      "vulkan": "Motor Vulkan",
+      "metal": "Motor Metal",
+      "shortAuto": "GPU auto",
+      "shortVulkan": "Vulkan",
+      "shortCpu": "Solo CPU"
+    },
+    "formats": {
+      "sog": "SOG / Paquete optimizado",
+      "ply": "PLY / Estándar",
+      "compressed": "PLY comprimido",
+      "spz": "SPZ / Comprimido Niantic",
+      "csv": "CSV / Datos de tabla",
+      "html": "HTML / Visor integrado",
+      "voxel": "ZIP vóxeles / Colisiones"
+    },
+    "actions": {
+      "start": "Convertir",
+      "openOutput": "Mostrar salida",
+      "logs": "Registro de actividad",
+      "toggleLogs": "Registros",
+      "clearLogs": "Limpiar",
+      "editOutput3d": "3D · Editar resultado…",
+      "progressAria": "Progreso de conversión",
+      "resourcesAria": "Recursos del sistema",
+      "openNativeVulkan": "Visor nativo Vulkan (Bypass experimental)…"
+    },
+    "status": {
+      "ready": "Listo",
+      "done": "Completado",
+      "canceled": "Cancelado",
+      "canceling": "Cancelando…",
+      "preflight": "Comprobando recursos…",
+      "preparing": "Preparando motor local…",
+      "converting": "Convirtiendo…",
+      "reducing": "Etapa 1 / 2: reduciendo puntos…",
+      "encoding": "Etapa 2 / 2: codificando salida…",
+      "packing": "Empaquetando vóxeles…",
+      "verifying": "Verificando salida...",
+      "failed": "Error de conversión",
+      "elapsed": "Transcurrido",
+      "etaRemaining": "Tiempo restante",
+      "batchProgress": "Lote",
+      "outputDoneSummary": "Archivo de salida: {name} ({size})",
+      "batchDoneSummary": "Conversión por lotes · {count} archivos",
+      "outputLogLine": "Archivo de salida: {path}"
+    },
+    "metrics": {
+      "memory": "RAM",
+      "vram": "VRAM",
+      "cpu": "CPU",
+      "gpu": "GPU",
+      "available": "Disponible ahora",
+      "commit": "Margen de memoria comprometida",
+      "sample": "Hora de medición",
+      "gpuUnknown": "Modo automático: el motor selecciona la GPU.",
+      "unified": "Memoria unificada",
+      "upperBound": "Límite de puntos antes del filtro",
+      "baseMemory": "Matrices de datos base",
+      "estimatedMemory": "Rango de memoria estimado",
+      "estimateNote": "La estimación no garantiza el pico. Los filtros y otras aplicaciones pueden cambiar los recursos.",
+      "chartIdle": "Inactivo",
+      "chartActive": "Comprimiendo",
+      "chartStartMark": "Inicio",
+      "chartCurrent": "Actual",
+      "chartPeak": "Pico activo",
+      "chartIdleAvg": "Prom. inactivo",
+      "historyCpu": "Historial de uso de CPU",
+      "historyRam": "Historial de uso de RAM",
+      "historyGpu": "Historial de motor GPU",
+      "historyVram": "Historial de VRAM dedicada",
+      "modeRecording": "Muestreo 0.5s · Eje X autoajustable",
+      "modeFrozen": "Última ejecución fijada · se reinicia en la próxima",
+      "modeIdle": "Muestreo 0.5s · últimos 60s"
+    },
+    "dialogs": {
+      "resourceWarning": "Los recursos disponibles podrían ser insuficientes",
+      "warnSubtitle": "La RAM o VRAM disponible podría ser insuficiente",
+      "warnNeed": "RAM estimada",
+      "warnAvail": "RAM disponible",
+      "warnVram": "VRAM disponible",
+      "memoryAdvice": "Reduzca bandas SH, puntos o procesos; cierre aplicaciones pesadas y revise la memoria virtual.",
+      "gpuAdvice": "Para SOG / HTML, pruebe CPU o menos bandas SH. Los vóxeles requieren una GPU compatible.",
+      "continue": "Convertir de todos modos",
+      "adjust": "Volver a ajustes",
+      "copy": "Copiar diagnóstico",
+      "viewLog": "Ver registro",
+      "failSubtitle": "Conversión fallida — diagnóstico y soluciones abajo",
+      "overwrite": "¿Reemplazar el archivo al completar?",
+      "invalid": "Parámetros no válidos",
+      "numeric": "Introduzca números válidos. Escala/radio positivos; mínimo no superior al máximo.",
+      "cleanup": "Limpieza temporal incompleta; revise la ruta del registro."
+    },
+    "errors": {
+      "memoryTitle": "Error de asignación de memoria",
+      "memoryDetail": "El motor no pudo asignar una matriz. Puede deberse a RAM, límites de compromiso o del entorno.",
+      "gpuTitle": "Error de recursos o dispositivo GPU",
+      "diskTitle": "Espacio en disco insuficiente",
+      "diskAdvice": "Libere espacio en el disco de salida y el temporal del sistema.",
+      "accessTitle": "No se puede acceder al archivo",
+      "accessAdvice": "Compruebe permisos, cambie de carpeta y cierre aplicaciones que usen el archivo.",
+      "inputTitle": "Archivo o datos de entrada no válidos",
+      "inputAdvice": "Verifique el origen y los atributos gaussianos; vuelva a exportar si es necesario.",
+      "emptyTitle": "No quedan puntos tras filtrar",
+      "emptyAdvice": "Amplíe los filtros o aumente los puntos conservados.",
+      "unknownAdvice": "Causa no identificada. Consulte el registro o adjunte el diagnóstico a un informe."
+    },
+    "star": {
+      "title": "Conversión completada. ¡Gracias!",
+      "message": "¡Primera conversión completada! Si le resulta útil, considere dar una estrella al proyecto en GitHub.",
+      "openProject": "Abrir proyecto",
+      "congrats": "¡Primera conversión completada!",
+      "subDefault": "Tu escena 3D Gaussian Splat se guardó localmente.",
+      "body": "Splat Convert Desktop es una herramienta de escritorio local gratuita y de código abierto, impulsada por el motor @playcanvas/splat-transform de PlayCanvas.\n\nMuchas gracias a los autores de PlayCanvas. Si te resultó útil, considera dar una estrella en GitHub a ambos proyectos (se muestra una sola vez).",
+      "btn": "Dar estrella en GitHub",
+      "later": "Más tarde",
+      "upstreamLink": "Motor original: "
+    },
+    "licenses": {
+      "engineCredit": "Interfaz de escritorio no oficial para @playcanvas/splat-transform. ¡Muchas gracias a los autores de PlayCanvas por el motor open source!",
+      "subtitle": "Créditos open source y resumen de licencias",
+      "coreTitle": "Proyectos principales",
+      "depsTitle": "Componentes incluidos",
+      "showRaw": "Ver texto completo de licencias",
+      "hideRaw": "Ocultar texto",
+      "depsList": "• PlayCanvas Engine & Splat Transform 3.12.0   [MIT]\n• ReSplat Editor (Re祁, modo anillos / color / selección / SAM 2)   [CC BY 4.0]\n• SuperSplat (PlayCanvas Ltd., paradigma de editor 3DGS y rotación SH)   [MIT]\n• Spirula Studio (harry7557558, controles de volumen 6 caras y autoalineado)   [GPL-3.0]\n• GaussianSplatEditor (TimChen1383, selección por opacidad/tamaño)   [MIT]\n• Three.js [MIT] · Meta SAM 2 [Apache-2.0] · ONNX Runtime Web [MIT]\n• Node.js 22.23.2 [MIT] · WebGPU/Dawn [BSD-3/Apache-2.0] · @adobe/spz [MIT] · Lucide [ISC]"
+    },
+    "engine": {
+      "updateTitle": "Actualizar motor",
+      "checkUpdates": "Buscar actualizaciones",
+      "pullUpdate": "Actualizar ahora",
+      "rollback": "Restaurar integrado",
+      "mirrorsLabel": "Servidores espejo",
+      "mirrorNpmmirror": "Alibaba npmmirror (directo CN)",
+      "mirrorTencent": "Tencent Cloud NPM (respaldo CN)",
+      "mirrorHuawei": "Huawei Cloud NPM (respaldo CN)",
+      "mirrorNpmjs": "Registro oficial npmjs (global)",
+      "decoupledHint": "El motor está desacoplado en la carpeta portátil de datos y admite actualización directa desde múltiples espejos para @playcanvas/splat-transform.",
+      "activeStatusBundled": "Motor activo: v{active} (integrado)   ·   Versión integrada: v{bundled}",
+      "activeStatusUpdated": "Motor activo: v{active} (actualizado)   ·   Versión integrada: v{bundled}",
+      "checkingMirrors": "Comprobando latencia y última versión en espejos...",
+      "connectingMirror": "Conectando al espejo (preferido: {mirrorId})...",
+      "mirrorResult": "Espejo: {mirror} ({latency} ms), última versión: v{version}",
+      "pullingVersion": "Descargando y verificando v{version}...",
+      "updatedSuccess": "¡Actualizado! Motor cambiado a v{version}",
+      "restoredBundled": "Motor integrado v{version} restaurado",
+      "rolledBackLog": "Revertido a la versión integrada v{version}",
+      "errLog": "Error: {error}",
+      "failLog": "Fallo: {error}",
+      "prepRuntime": "Preparando entorno de ejecución...",
+      "downloading": "Descargando v{version} desde {mirror} ...",
+      "verifyingSha": "Verificando integridad SHA-512...",
+      "shaMismatch": "Error de verificación SHA-512; actualización cancelada.",
+      "assemblingDir": "Preparando directorio de ejecución aislado...",
+      "extractingPkg": "Extrayendo nuevo paquete del motor...",
+      "selfChecking": "Ejecutando autocomprobación del motor (--version)...",
+      "selfCheckOk": "Autocomprobación correcta: @playcanvas/splat-transform {version}",
+      "selfCheckTimeout": "Tiempo de espera agotado en la autocomprobación del motor.",
+      "selfCheckFailed": "Error en la autocomprobación del motor: {error}",
+      "allMirrorsUnreachable": "Ningún espejo está accesible."
+    },
+    "inspector": {
+      "title": "Inspección de escena y almacenamiento — {name}",
+      "readingMeta": "Leyendo metadatos de contenedor y cabecera...",
+      "readFailed": "Error de lectura: {error}",
+      "deepBtn": "Análisis profundo (--stats)",
+      "deepRunning": "Ejecutando análisis profundo...",
+      "deepEmpty": "(El motor no devolvió estadísticas)",
+      "nonGaussianTag": " · Nube no gaussiana",
+      "headerSummary": "{name}  |  {format} ({version})  |  {count} pts  |  SH {bands} bandas  |  {size}{tags}\nHuella ({algo}): {fp}",
+      "storageBreakdown": "Desglose de almacenamiento",
+      "nonSogSummary": "Contenedor no SOG: tamaño total {size}, media {bpp} B/punto",
+      "extraColumns": "Columnas adicionales: {cols}",
+      "compatTitle": "Compatibilidad con formatos de destino",
+      "compatSogSh": "SOG v3 admite compresión SH de bandas 0–4",
+      "compatSog2dgs": "SOG v3 meta.json conserva la marca 2dgs",
+      "compatSogBlind": "SOG v3 conserva canales de textura blind por punto",
+      "compatSpzShClamped": "SPZ admite hasta 3 bandas; la banda 4 se recortará",
+      "compatSpzShOk": "Compatibilidad completa con bandas SH 0–3",
+      "compatSpz2dgs": "La cabecera SPZ no admite la marca 2DGS",
+      "compatSpzBlind": "SPZ no admite atributos blind personalizados",
+      "compatPlySh": "PLY estándar conserva todos los atributos sin pérdida",
+      "compatPlyOpacity": "Escribe opacity_linear por defecto; visores antiguos requieren --ply-logit-opacity",
+      "compatCompressed": "Posición y atributos cuantizados para reducir tamaño",
+      "compatVoxel": "El formato vóxel solo guarda ocupación espacial y colisión, sin color ni SH"
+    },
+    "advanced": {
+      "title": "Opciones avanzadas, consejos globales y capacidades 3.12.0",
+      "targetCapLabel": "Límite máx. tamaño (MB, 0=sin límite):",
+      "minKeepLabel": "% mín. puntos conservados:",
+      "targetCapNote": "(Solo SOG/HTML; máx. 3 intentos por defecto)",
+      "sogVersionLabel": "Versión SOG:",
+      "sogV3Rec": "v3 (Recomendado)",
+      "sogV2Legacy": "v2 (Heredado)",
+      "shErrorLabel": "Error de color SH:",
+      "spzVersionLabel": "Versión SPZ:",
+      "spzV4Default": "v4 (Por defecto)",
+      "plyLogitCheck": "Opacidad Logit compatible PLY (--ply-logit-opacity)",
+      "htmlUnbundledCheck": "HTML separado (--unbundled)",
+      "extFillCheck": "Sellar interior",
+      "floorFillCheck": "Rellenar suelo",
+      "carveCheck": "Tallado transitable",
+      "seedPosLabel": "Punto semilla:",
+      "collisionMeshLabel": "Malla colisión:",
+      "tipDelayLabel": "Retardo de consejos (ms):",
+      "maxHistoryLabel": "Límite de historial 3D:",
+      "autoSaveNote": "(Se guarda automáticamente en ajustes portátiles)",
+      "tipRegionMainLabel": "Consejos experto (Principal):",
+      "tipRegionInput": "Principal · Entrada",
+      "tipRegionPipeline": "Principal · Flujo",
+      "tipRegionOutput": "Principal · Salida",
+      "tipRegionDialog": "Ventanas emergentes",
+      "tipRegionEditorLabel": "Consejos experto (Editor 3D):",
+      "tipRegionEdTool": "Herramientas y barra inferior",
+      "tipRegionEdScene": "Escena y transformación",
+      "tipRegionEdColor": "Color e histograma",
+      "tipRegionEdModal": "Exportación y guardado",
+      "capNotApplicable": " · No aplicable al formato actual"
+    },
+    "jobs": {
+      "title": "Manifiestos de tareas reanudables (data/jobs)",
+      "resumeBtn": "Reanudar / Reintentar fallos",
+      "emptyList": "Aún no hay manifiestos guardados (se crean en data/jobs/ al convertir)",
+      "itemSummary": "{id}  |  {mode}  |  Completado {ok}/{total}",
+      "itemFailedSuffix": " (fallidos/interrumpidos {fail})",
+      "missingInput": "{path} (archivo ausente, requiere reubicación)",
+      "conflictDuplicate": "Conflicto de ruta de salida (destino duplicado): {path}",
+      "conflictExists": "El archivo de destino ya existe (sobrescritura denegada): {path}"
+    },
+    "converter": {
+      "targetExistsNoOverwrite": "El archivo de destino existe y no está autorizada su sobrescritura: {path}",
+      "targetSizeAttemptLog": "[Tamaño objetivo] Intento {attempt}/{max} (Keep={keep}%, Effort={effort}, Límite={limit})",
+      "targetSizeAttemptDetail": "Intento de tamaño {attempt}/{max} · {detail}",
+      "targetSizeActualLog": "[Tamaño objetivo] Tamaño real generado: {bytes} bytes ({gb})",
+      "targetSizeExceeded": "No se alcanzó el límite estricto de tamaño (límite {limit} bytes, mínimo obtenido {smallest} bytes, exceso {excess} bytes; se respetó la calidad mínima y no se reemplazó el archivo anterior).",
+      "verifyFailed": "Error de verificación tras exportar: {message}",
+      "badExtension": "Extensión de salida incorrecta.",
+      "overwriteSourceDenied": "No se puede sobrescribir el archivo de origen; elija otro nombre.",
+      "outputExists": "El archivo de salida ya existe; confirme sobrescritura o elija otro nombre.",
+      "sharedBakeReuseLog": "[Reutilización de horneado] Reutilizando intermedio congelado ({key})",
+      "losslessDirectCopyLog": "[Copia directa sin pérdida] Conservando columnas originales y atributos exactos de PLY",
+      "verifyLog": "[Verificación] {message} ({level})",
+      "engineExited": "El motor finalizó ({code}).\n{tail}"
+    },
+    "portable": {
+      "notWritable": "La carpeta portátil no es escribible (el modo portátil estricto prohíbe usar AppData o TEMP del sistema):\n{dir}\nMotivo: {error}",
+      "emptyPath": "La ruta no puede estar vacía.",
+      "outsideRoot": "Acceso denegado fuera de la raíz portátil: {path}",
+      "reparseBlocked": "Se detectó un enlace simbólico o punto de unión riesgoso; rechazado: {path}",
+      "onlyManagedCleanup": "Solo se permite limpiar subdirectorios gestionados bajo data/.",
+      "deleteParentDenied": "Prohibido eliminar el propio directorio padre gestionado."
+    },
+    "sceneRecipe": {
+      "invalid": "Receta de edición 3D no válida",
+      "missingObjects": "Receta de edición 3D no válida (v3 sin definición de objetos)"
+    },
+    "editorHost": {
+      "initNote": "Inicializando editor 3D Gaussian (+Y arriba)…",
+      "windowTitle": "Editor 3D Gaussian (+Y arriba) · {name}",
+      "lowMemory": "Memoria disponible insuficiente; editor 3D desactivado. La conversión normal sigue disponible.",
+      "previewUnavailable": "Vista previa no disponible · {error}",
+      "webviewNotReady": "Núcleo WebView2 aún no listo.",
+      "initTimeout": "Tiempo de espera agotado al iniciar el visor 3D; compruebe la compatibilidad con WebGL2.",
+      "stageBootWorker": "Iniciando decodificador local de nube de puntos…",
+      "stageOpenAsset": "Abriendo archivo de origen…",
+      "stageDecode": "Decodificando datos Gaussian Splat…",
+      "stageBuildSgc3": "Generando bloque en memoria SGC3 sin pérdida…",
+      "processFailed": "Proceso de renderizado/GPU de WebView2 detenido inesperadamente ({kind})",
+      "recoveryFailed": "Fallo en recuperación degradada: {error}",
+      "safeModeDefaultReason": "Sobrecarga de GPU o pérdida de contexto gráfico",
+      "safeModeReloadFailed": "Fallo al recargar en modo de ahorro de emergencia: {error}",
+      "sam2ImportTitle": "Seleccionar archivos locales del modelo SAM 2 ONNX (sam2_hiera_tiny.encoder.onnx / decoder.onnx / ort.webgpu.min.mjs)",
+      "sam2ImportFilter": "Modelos y entorno SAM 2 (*.onnx;*.mjs;*.wasm)|*.onnx;*.mjs;*.wasm|Todos los archivos|*.*",
+      "sam2Imported": "Importados {count} archivos a data/models/sam2/",
+      "sam2ImportFailed": "Error al importar archivos SAM 2: {error}",
+      "exportImageFilter": "Imagen PNG (*.png)|*.png",
+      "exportImageCanceled": "Guardado cancelado",
+      "exportImageFailed": "Error al exportar imagen de la vista: {error}",
+      "exportImageTitle": "Exportar imagen",
+      "saveAsFolderDesc": "Elija la carpeta de destino (Guardar como nunca modifica el archivo original)",
+      "saveAsCanceledFolder": "Selección de carpeta cancelada",
+      "saveAsNoObjects": "No hay objetos para exportar",
+      "saveAsInitEngine": "Inicializando motor de codificación…",
+      "saveAsSuccess": "Exportados {count} archivos correctamente a {dir}",
+      "saveAsCanceled": "Exportación cancelada; todos sus cambios siguen intactos y puede reintentar en cualquier momento.",
+      "saveAsFailed": "Exportación interrumpida (datos de edición conservados, puede reintentar): {error}",
+      "nativeTitle": "Visor nativo Vulkan 1.3 (+Y arriba) · {name}",
+      "nativeFallbackBtn": "Volver a WebView2",
+      "nativeSaveBtn": "Guardar receta",
+      "nativeOrbitTool": "Órbita",
+      "nativeBoxSelectTool": "Selección caja",
+      "nativeDeleteBtn": "Borrado suave",
+      "nativeUndoBtn": "Deshacer",
+      "nativeRedoBtn": "Rehacer",
+      "nativeSphereEnable": "Esfera envolvente",
+      "nativeSphereInvert": "Invertir exterior",
+      "nativeSphereSelectBtn": "Selec. interior",
+      "nativeUnavailable": "Visor nativo Vulkan no disponible; volviendo al editor WebView2 predeterminado: {reason}"
+    },
+    "models": {
+      "sam21TinyName": "SAM 2.1 Hiera Tiny (FP16)",
+      "sam21TinyBadge": "Integrado",
+      "sam21TinyTooltip": "[Integrado · Recomendado] SAM 2.1 Hiera Tiny FP16 (~74 MB). Integrado para uso sin conexión; logra el mejor equilibrio entre velocidad, VRAM, oclusión y precisión en objetos pequeños.",
+      "mobileSamName": "MobileSAM (Ligero rápido)",
+      "mobileSamBadge": "Ultrarrápido",
+      "mobileSamTooltip": "[Ultrarrápido · ~43 MB] Reduce notablemente el uso de VRAM y acelera la inferencia en iGPU/CPU (WASM); ideal para equipos modestos u objetos simples, algo menos preciso en bordes difusos que SAM 2.1.",
+      "sam21SmallName": "SAM 2.1 Hiera Small (Alta precisión)",
+      "sam21SmallBadge": "Alta precisión",
+      "sam21SmallTooltip": "[Alta precisión · ~88 MB] Backbone más profundo que Tiny para segmentar mejor mangos finos, follaje y solapamientos complejos; consume algo más de tiempo y VRAM.",
+      "lamaName": "LaMa Relleno de textura planar (L2)",
+      "lamaBadge": "Relleno IA",
+      "lamaTooltip": "[Motor predeterminado de relleno L2 · ~198 MB] Basado en convoluciones rápidas de Fourier (sin difusión); reconstruye vetas de madera, juntas o telas en 1–2 s y las reproyecta al plano ajustado.",
+      "missingBundle": "Este ejecutable no incluye el paquete de modelos integrado (bundled_models.zip).",
+      "integrityFailed": "Fallo de verificación de integridad del modelo integrado: {path}",
+      "extractFailed": "Error al extraer el modelo integrado: {error}",
+      "downloadingMb": "Descargando {done} / {total} MB…",
+      "verifyingSha256": "Verificando integridad SHA-256…",
+      "sha256Mismatch": "La suma SHA-256 no coincide (descarga posiblemente dañada)",
+      "unknownModel": "Modelo desconocido: {id}",
+      "alreadyReady": "El modelo está listo",
+      "alreadyDownloading": "El modelo ya se está descargando, espere por favor",
+      "probingMirrors": "Buscando automáticamente el mejor servidor de descarga…",
+      "switchingBackupMirror": "Servidor principal no disponible; cambiando a ruta alternativa…",
+      "allMirrorsFailed": "Error de descarga en todos los espejos: {error}",
+      "networkError": "Error de red",
+      "downloadVerified": "Descarga y verificación completadas",
+      "downloadedModel": "Descargado y verificado: {name}",
+      "downloadCanceled": "Descarga cancelada",
+      "downloadFailed": "Error en la descarga: {error}"
+    },
+    "electron": {
+      "invalidFormat": "Formato no válido",
+      "jobRunning": "Ya hay una tarea de conversión en ejecución",
+      "reselectInputs": "Vuelva a seleccionar los archivos de entrada",
+      "invalidOpCount": "Número de operaciones no válido",
+      "invalidOpParams": "Parámetros de operación no válidos",
+      "positiveScaleRadius": "El factor o el radio deben ser mayores que cero",
+      "shRange03": "Las bandas SH deben estar entre 0 y 3",
+      "invalidBoxRange": "El valor mínimo de la caja es mayor que el máximo",
+      "sliderOutOfRange": "Parámetro del control deslizante fuera de rango",
+      "invalidOutputFormat": "Formato de salida no válido",
+      "selectInputs": "Seleccione archivos de entrada",
+      "invalidInputFormat": "Formato de archivo de entrada no válido",
+      "invalidOutputPath": "Ruta o extensión de salida no válida",
+      "deviceUnsupported": "El dispositivo de cálculo no admite esta salida",
+      "invalidVoxelParams": "Parámetros de vóxel no válidos",
+      "engineFailed": "Error de conversión del motor:\n{tail}",
+      "cannotOverwriteSource": "No se puede sobrescribir el archivo de origen; elija otro nombre",
+      "outputExists": "La salida ya existe",
+      "emptyOutput": "No se generó ninguna salida válida"
+    },
+    "tips": {
+      "upPrefix": "Subir / Activar: ",
+      "downPrefix": "Bajar / Desactivar: ",
+      "recPrefix": "Consejo: ",
+      "mode": {
+        "title": "Modo: Por lotes vs Combinar",
+        "tag": "Flujo",
+        "summary": "Decide si varios archivos se convierten por separado o se fusionan en una sola escena.",
+        "up": "Conversión por lotes: genera automáticamente un archivo convertido por cada entrada.",
+        "down": "Combinar: fusiona múltiples escaneos en un único archivo de escena.",
+        "recommend": "Mantenga «Conversión por lotes» para convertir varios archivos a diario."
+      },
+      "format": {
+        "title": "Formato de exportación",
+        "tag": "Esencial",
+        "summary": "Determina en qué programas o visores web se abrirá y su tamaño final.",
+        "up": "SOG / HTML ofrecen compresión 10–20×; SPZ es ligero y portátil.",
+        "down": "PLY estándar es el más pesado pero el más compatible para seguir editando.",
+        "recommend": "Use SOG para web, HTML para compartir directo y PLY para archivo editable."
+      },
+      "preset": {
+        "title": "Preajustes rápidos",
+        "tag": "1 clic",
+        "summary": "Configura automáticamente retención de puntos, bandas SH, iteraciones y esfuerzo WebP.",
+        "up": "Rápido: vista previa veloz; Alta calidad: 100% de puntos y SH completo.",
+        "down": "Compacto: tamaño mínimo para móvil; Equilibrado: mejor relación calidad/peso.",
+        "recommend": "Use «Equilibrado» para web o «Rápido» para pruebas rápidas."
+      },
+      "keep": {
+        "title": "% puntos conservados (Diezmado)",
+        "tag": "Compresión",
+        "summary": "Fusiona puntos Gaussian redundantes para que la escena cargue fluida en móvil y web.",
+        "up": "100% conserva todos los puntos con calidad original pero mayor tamaño y VRAM.",
+        "down": "45%–75% reduce drásticamente el peso y acelera la carga; con diezmado adaptativo protege bordes.",
+        "recommend": "En escenas de >2M puntos, pruebe 50%–75% con diezmado adaptativo."
+      },
+      "adaptive": {
+        "title": "Diezmado adaptativo (--decimate-adaptive)",
+        "tag": "Nuevo 3.12",
+        "summary": "Elimina puntos según el error visual local en vez de uniformemente, protegiendo cielo y detalles.",
+        "up": "Activado mejora notablemente la calidad en escenas mixtas (exterior/cielo + primer plano).",
+        "down": "Desactivado (uniforme) es algo más rápido y usa menos RAM.",
+        "recommend": "Manténgalo activado siempre que conserve <100% de puntos."
+      },
+      "iterations": {
+        "title": "Iteraciones SH (SH Iterations)",
+        "tag": "Solo SOG",
+        "summary": "Controla la precisión del agrupamiento de reflejos y colores dependientes del ángulo.",
+        "up": "Más alto (15–25) da reflejos más suaves pero tarda bastante más.",
+        "down": "Más bajo (3–8) codifica muy rápido para vistas previas.",
+        "recommend": "3–6 para prueba rápida, 10 equilibrado, 20–25 archivo final."
+      },
+      "effort": {
+        "title": "Esfuerzo WebP (Effort 0–9)",
+        "tag": "Solo SOG",
+        "summary": "SOG usa texturas WebP sin pérdida; este valor controla cuánto se comprimen.",
+        "up": "Más alto (hasta 9) genera archivos más pequeños sin pérdida, con mayor tiempo de CPU.",
+        "down": "En 0 empaqueta al instante con un tamaño ligeramente mayor.",
+        "recommend": "0 para rápido, estándar para equilibrado, 8–9 para publicar."
+      },
+      "workers": {
+        "title": "Hilos de codificación (Max Workers)",
+        "tag": "Rendimiento",
+        "summary": "Cantidad de hilos CPU paralelos para comprimir y empaquetar texturas.",
+        "up": "Más hilos terminan antes pero aumentan el pico de CPU y RAM.",
+        "down": "Menos hilos (o 0 secuencial) ahorran memoria y evitan bloqueos.",
+        "recommend": "4 es seguro; en equipos con 32 GB+ de RAM puede usar 6–8."
+      },
+      "voxel": {
+        "title": "Resolución de vóxel (Voxel Size)",
+        "tag": "Solo Voxel",
+        "summary": "Longitud de lado de cada celda cúbica de colisión (en metros).",
+        "up": "Más grande (0.1–0.2) produce malla más gruesa, ligera y rápida.",
+        "down": "Más pequeño (0.03–0.05) se ajusta mejor a muebles y paredes, usando más VRAM.",
+        "recommend": "0.05 m en interiores; 0.1 m en exteriores amplios."
+      },
+      "opacity": {
+        "title": "Umbral de opacidad de vóxel",
+        "tag": "Solo Voxel",
+        "summary": "Opacidad mínima para considerar sólido un punto en las colisiones.",
+        "up": "Subirlo filtra la neblina tenue para evitar muros invisibles.",
+        "down": "Bajarlo conserva estructuras finas semitransparentes.",
+        "recommend": "0.1 por defecto funciona en la mayoría de escenas."
+      },
+      "device": {
+        "title": "Dispositivo y backend (con Vulkan)",
+        "tag": "Clave Windows",
+        "summary": "La compresión SOG, limpieza de flotantes y voxelización van 5–10× más rápido en GPU.",
+        "up": "Vulkan: recomendado para evitar fallos ocasionales del controlador D3D12 en Windows.",
+        "down": "Solo CPU: respaldo seguro sin límite de VRAM, aunque 5–10× más lento.",
+        "recommend": "Use GPU automática primero; cambie a «Vulkan» si la GPU da error."
+      },
+      "floaters": {
+        "title": "Eliminar puntos flotantes (--filter-floaters)",
+        "tag": "Nuevo 3.12",
+        "summary": "Usa voxelización GPU para limpiar ruido y neblina flotante aislada en el aire.",
+        "up": "Activado deja la escena más limpia y reduce tamaño.",
+        "down": "Desactivado conserva todos los puntos originales y es algo más rápido.",
+        "recommend": "Muy recomendable para escaneos con móvil o dron."
+      },
+      "cluster": {
+        "title": "Conservar grupo principal (--filter-cluster)",
+        "tag": "Nuevo 3.12",
+        "summary": "Conserva solo la escena principal conectada al punto semilla, eliminando islas lejanas.",
+        "up": "Ideal para limpiar fondo en habitaciones o esculturas aisladas.",
+        "down": "Desactivado conserva todas las regiones.",
+        "recommend": "Úselo cuando necesite eliminar fragmentos de fondo distantes."
+      },
+      "nan": {
+        "title": "Quitar puntos inválidos (NaN / Inf)",
+        "tag": "Limpieza",
+        "summary": "Elimina coordenadas corruptas o rotaciones nulas que causan manchas negras o parpadeos.",
+        "up": "Sin pérdida visual y mejora la compatibilidad posterior.",
+        "down": "Desactivado omite la comprobación.",
+        "recommend": "Se recomienda mantenerlo siempre activado."
+      },
+      "sh": {
+        "title": "Límite de bandas SH (SH Bands)",
+        "tag": "Peso",
+        "summary": "Limita los reflejos dependientes del ángulo; las bandas altas suelen ocupar >50% del archivo.",
+        "up": "Banda 3 conserva reflejos completos pero produce el archivo más pesado.",
+        "down": "Bajar a banda 0 (solo color base) o 1 reduce el archivo a la mitad.",
+        "recommend": "Recomendado 1 para web y 0 para máxima compresión móvil."
+      },
+      "translate": {
+        "title": "Trasladar (Translate)",
+        "tag": "Transformación",
+        "summary": "Desplaza toda la escena a lo largo de los ejes X / Y / Z (+Y arriba).",
+        "up": "Útil para recentrar escaneos alejados hacia el origen (0,0,0).",
+        "down": "En 0,0,0 no aplica desplazamiento.",
+        "recommend": "Práctico al alinear varios archivos combinados."
+      },
+      "rotate": {
+        "title": "Rotar (Rotate)",
+        "tag": "Transformación",
+        "summary": "Rota la escena alrededor de los ejes X / Y / Z (en grados).",
+        "up": "Endereza modelos invertidos o inclinados hacia +Y arriba.",
+        "down": "En 0,0,0 conserva la orientación original.",
+        "recommend": "Se recomienda usar Alineado automático o Nivelación de 3 puntos directamente en el Editor 3D."
+      },
+      "scale": {
+        "title": "Escala uniforme (Scale)",
+        "tag": "Transformación",
+        "summary": "Amplía o reduce toda la escena por un factor uniforme.",
+        "up": ">1 amplía; <1 reduce (ej. 0.5 reduce a la mitad).",
+        "down": "En 1 mantiene el tamaño original.",
+        "recommend": "Útil para igualar la escala de motores de juego."
+      },
+      "box": {
+        "title": "Filtro de caja (Filter Box)",
+        "tag": "Recorte",
+        "summary": "Conserva solo los puntos dentro del cubo XYZ mín./máx., recortando el exterior.",
+        "up": "Caja más grande conserva más entorno.",
+        "down": "Caja más ajustada recorta el sujeto con precisión.",
+        "recommend": "Ideal para habitaciones o zonas rectangulares."
+      },
+      "sphere": {
+        "title": "Filtro esférico (Filter Sphere)",
+        "tag": "Recorte",
+        "summary": "Conserva solo los puntos dentro de un radio alrededor del centro.",
+        "up": "Radio mayor conserva paisajes lejanos.",
+        "down": "Radio menor recorta el cielo lejano y bordes.",
+        "recommend": "Ideal para vuelos de dron o capturas 360°."
+      },
+      "estOutput": {
+        "title": "Tamaño estimado de salida",
+        "tag": "En vivo",
+        "summary": "Calculado en tiempo real según puntos del archivo, formato, retención y bandas SH.",
+        "up": "Permite prever el peso final y ahorro sin ejecutar la conversión.",
+        "down": "El tamaño real varía levemente según la complejidad de la textura.",
+        "recommend": "Mueva los controles o cambie de preajuste para comparar."
+      },
+      "engine": {
+        "title": "Actualizador del motor (Espejos)",
+        "tag": "Desacoplado",
+        "summary": "Incluye v3.12.0 sin conexión y permite descargar actualizaciones de @playcanvas/splat-transform.",
+        "up": "Alterna automáticamente entre espejos con verificación SHA-512.",
+        "down": "Permite volver en un clic a la versión integrada.",
+        "recommend": "Pulse para probar velocidad de espejos y ver créditos del proyecto."
+      },
+      "preview3d": {
+        "title": "Editor 3D Gaussian (+Y arriba · Sin pérdida)",
+        "tag": "Edición clave",
+        "summary": "Abre el editor 3D completo con modos Splat/Centros/Anillos, volúmenes de 6 caras, planos de recorte, selección semántica, color profesional y alineación.",
+        "up": "Sobrescribir solo reemplaza el archivo en el flujo de trabajo actual, sin tocar nunca el archivo original en disco.",
+        "down": "También puede usar «Guardar como» en el editor para exportar combinado, por objeto o por grupo.",
+        "recommend": "Seleccione cualquier archivo de entrada y pulse aquí para refinar sin pérdida."
+      },
+      "advTargetCap": {
+        "title": "Límite estricto de tamaño (MB)",
+        "tag": "Autoajuste",
+        "summary": "Fija un límite máximo para salidas SOG / HTML (0 = sin límite) reduciendo automáticamente la retención de puntos si se supera.",
+        "up": "Controla con precisión el tamaño final para cumplir límites de plataformas web.",
+        "down": "Con 0 se codifica una sola vez con los parámetros actuales, lo más rápido.",
+        "recommend": "Use 15–30 MB para compartir en móvil o 0 para escritorio."
+      },
+      "advMinKeep": {
+        "title": "% mínimo de puntos en autoajuste",
+        "tag": "Calidad mín.",
+        "summary": "Porcentaje mínimo al que puede bajar el diezmado automático al intentar cumplir el límite de tamaño.",
+        "up": "Subirlo evita una compresión excesiva que vuelva borroso el modelo.",
+        "down": "Bajarlo da mayor margen para alcanzar el tamaño objetivo.",
+        "recommend": "20% por defecto equilibra cumplimiento y legibilidad."
+      },
+      "advSogVer": {
+        "title": "Versión del contenedor SOG (v3 / v2)",
+        "tag": "Codif. SOG",
+        "summary": "Selecciona la versión del protocolo SuperSplat SOG.",
+        "up": "v3 usa cuantización mejorada de cuaterniones y opacidad: más calidad y menor peso.",
+        "down": "v2 solo es necesario para visores web muy antiguos.",
+        "recommend": "Mantenga v3 salvo requisito de compatibilidad heredada."
+      },
+      "advShErr": {
+        "title": "Objetivo de error de color SH",
+        "tag": "Ajuste fino",
+        "summary": "Define el umbral máximo de error visual aceptable para la agrupación SH (vacío = predeterminado).",
+        "up": "Valores más bajos conservan reflejos más fieles, pero tardan más y pesan más.",
+        "down": "Valores más altos aumentan la compresión.",
+        "recommend": "La mayoría de usuarios pueden dejarlo vacío."
+      },
+      "advSpzVer": {
+        "title": "Versión de compresión SPZ (v4 / v3)",
+        "tag": "Codif. SPZ",
+        "summary": "Selecciona la versión del formato Niantic/Adobe SPZ.",
+        "up": "v4 logra mayor compresión y es compatible con decodificadores recientes.",
+        "down": "v3 ofrece compatibilidad con complementos antiguos.",
+        "recommend": "Mantenga v4 por defecto."
+      },
+      "advPlyLogit": {
+        "title": "Opacidad Logit compatible en PLY",
+        "tag": "Compatibilidad",
+        "summary": "Al exportar PLY estándar, guarda la opacidad en el espacio Logit clásico de 3DGS.",
+        "up": "Actívelo para asegurar compatibilidad con herramientas clásicas 3DGS / SuperSplat / Blender.",
+        "down": "Desactivado usa la salida predeterminada del motor.",
+        "recommend": "Actívelo si va a editar el PLY en otro software."
+      },
+      "advHtmlUnbundled": {
+        "title": "Salida HTML separada",
+        "tag": "Despliegue web",
+        "summary": "Separa los scripts del visor y los datos Gaussian en archivos independientes en lugar de un único HTML.",
+        "up": "Ideal para servidores web estáticos y caché del navegador.",
+        "down": "Desactivado (archivo único) es mejor para enviar por mensajería o correo.",
+        "recommend": "Desactivado para compartir directo; activado para publicar en web."
+      },
+      "advVoxelFlags": {
+        "title": "Opciones avanzadas de relleno de vóxeles",
+        "tag": "Colisión",
+        "summary": "Controla el sellado interior, relleno de suelo exterior, tallado transitable y malla de colisión.",
+        "up": "Active las opciones adecuadas para tapar huecos y evitar que el personaje atraviese paredes o caiga.",
+        "down": "Desactivado conserva los vóxeles ocupados tal cual.",
+        "recommend": "Úselo solo al exportar paquetes de colisión Voxel según el tipo de escena."
+      },
+      "advTipDelay": {
+        "title": "Retardo global de consejos (ms)",
+        "tag": "Consejos",
+        "summary": "Constante global única: el puntero debe permanecer estos milisegundos antes de mostrar la ayuda.",
+        "up": "Valores altos (800–1200 ms) molestan menos a usuarios avanzados.",
+        "down": "Valores bajos (300–500 ms) muestran la explicación más rápido.",
+        "recommend": "500 ms equilibra respuesta y comodidad en toda la interfaz."
+      },
+      "advHistoryLimit": {
+        "title": "Límite de historial del Editor 3D",
+        "tag": "Deshacer",
+        "summary": "Controla el máximo de pasos incrementales en la pila Deshacer/Rehacer del editor 3D.",
+        "up": "Valores altos (80–200) permiten retroceder más pasos con un ligero gasto extra de memoria.",
+        "down": "Valores bajos ahorran RAM.",
+        "recommend": "50 pasos por defecto bastan para la mayoría de ediciones."
+      },
+      "advVeteranTips": {
+        "title": "Interruptores de consejos por zona",
+        "tag": "Sin estorbos",
+        "summary": "Activa o desactiva los consejos emergentes por sección de la interfaz para usuarios expertos.",
+        "up": "Marcado: muestra explicaciones detalladas al pasar el ratón.",
+        "down": "Desmarcado: silencia esa zona y guarda el ajuste automáticamente.",
+        "recommend": "Deje activos solo los paneles que aún esté aprendiendo."
+      },
+      "inspectDeep": {
+        "title": "Análisis profundo del motor (--stats)",
+        "tag": "Diagnóstico",
+        "summary": "Escanea todos los puntos Gaussian en el motor para mostrar rangos, escalas, opacidad y anomalías.",
+        "up": "Localiza con precisión puntos flotantes gigantes o valores anómalos.",
+        "down": "En archivos >2M puntos puede tardar unos segundos.",
+        "recommend": "Úselo al diagnosticar desenfoque o artefactos flotantes."
+      },
+      "jobsResume": {
+        "title": "Reanudar / Reintentar tareas",
+        "tag": "Reanudación",
+        "summary": "Lee manifiestos anteriores desde data/jobs/ y recarga los archivos de entrada en el flujo.",
+        "up": "Recupera lotes interrumpidos sin perder la lista de archivos.",
+        "down": "No modifica archivos antiguos en disco.",
+        "recommend": "Útil si se interrumpió una exportación por lotes grande."
+      }
+    },
+    "capability": {
+      "translate": {
+        "label": "Trasladar",
+        "desc": "Desplaza puntos Gaussian en ejes X/Y/Z"
+      },
+      "rotate": {
+        "label": "Rotar (grados)",
+        "desc": "Rota la escena por ángulos de Euler"
+      },
+      "scale": {
+        "label": "Escala uniforme",
+        "desc": "Escala la escena por un factor uniforme"
+      },
+      "morton": {
+        "label": "Reordenar Morton",
+        "desc": "Reordena puntos según curva Z de Morton para mejorar caché y compresión"
+      },
+      "filter_nan": {
+        "label": "Limpiar inválidos (NaN/Inf)",
+        "desc": "Elimina puntos con coordenadas anómalas o rotación nula"
+      },
+      "filter_sh": {
+        "label": "Límite bandas SH (0–4)",
+        "desc": "Recorta coeficientes SH superiores a la banda indicada (admite SH 0–4)"
+      },
+      "filter_box": {
+        "label": "Filtro de caja",
+        "desc": "Conserva puntos dentro de una caja alineada a los ejes"
+      },
+      "filter_sphere": {
+        "label": "Filtro esférico",
+        "desc": "Conserva puntos dentro del centro y radio indicados"
+      },
+      "filter_value": {
+        "label": "Filtro por atributo",
+        "desc": "Filtra puntos Gaussian por columnas como opacity / scale / color"
+      },
+      "filter_floaters": {
+        "label": "Limpiar flotantes (GPU)",
+        "desc": "Elimina ruido flotante mediante voxelización GPU"
+      },
+      "filter_cluster": {
+        "label": "Grupo principal (GPU)",
+        "desc": "Conserva solo el grupo principal conectado al punto semilla"
+      },
+      "decimate_uniform": {
+        "label": "Diezmado uniforme",
+        "desc": "Simplifica puntos mediante fusión uniforme global"
+      },
+      "decimate_adaptive": {
+        "label": "Diezmado adaptativo",
+        "desc": "Simplifica según error local para proteger cielo y detalles"
+      },
+      "scratch_dir": {
+        "label": "Carpeta temporal",
+        "desc": "Apunta automáticamente a data/tmp portátil mediante PortablePaths"
+      },
+      "sh_iterations": {
+        "label": "Iteraciones SH",
+        "desc": "Iteraciones K-Means de la paleta de armónicos esféricos"
+      },
+      "sh_color_error": {
+        "label": "Objetivo de error visual SH",
+        "desc": "Determina automáticamente la paleta SH mínima según error visual de 8 bits"
+      },
+      "sh_palette_size": {
+        "label": "Tamaño fijo de paleta SH",
+        "desc": "Fija explícitamente entradas de paleta SH (0 = automático)"
+      },
+      "sog_version": {
+        "label": "Versión SOG",
+        "desc": "v3 admite SH banda 4, opacidad >1 y datos blind; v2 es para visores antiguos"
+      },
+      "webp_effort": {
+        "label": "Esfuerzo WebP sin pérdida",
+        "desc": "Equilibrio velocidad/tamaño de compresión WebP sin pérdida (0–9)"
+      },
+      "html_unbundled": {
+        "label": "Salida HTML separada",
+        "desc": "Separa CSS/JS/SOG en archivos independientes en vez de un solo HTML"
+      },
+      "viewer_settings": {
+        "label": "JSON de configuración visor",
+        "desc": "Personaliza cámara inicial y ajustes del SuperSplat Viewer integrado"
+      },
+      "spz_version": {
+        "label": "Versión SPZ",
+        "desc": "Especifica la versión Niantic SPZ de salida (4 por defecto)"
+      },
+      "ply_logit": {
+        "label": "Opacidad Logit compatible",
+        "desc": "Limita la opacidad lineal >1 tras el diezmado al rango logit estándar"
+      },
+      "voxel_size": {
+        "label": "Resolución de vóxel (m)",
+        "desc": "Longitud de lado del cubo de colisión"
+      },
+      "voxel_opacity": {
+        "label": "Umbral opacidad vóxel",
+        "desc": "Opacidad mínima para considerar sólido un obstáculo"
+      },
+      "voxel_ext_fill": {
+        "label": "Sellado de huecos interiores",
+        "desc": "Sella huecos exteriores mediante inundación desde los límites en escenas interiores"
+      },
+      "voxel_floor_fill": {
+        "label": "Relleno de suelo exterior",
+        "desc": "Rellena hacia arriba desde el suelo para terrenos exteriores"
+      },
+      "voxel_carve": {
+        "label": "Tallado de cápsula transitable",
+        "desc": "Talla espacio transitable de cápsula desde el punto semilla"
+      },
+      "seed_pos": {
+        "label": "Posición semilla",
+        "desc": "Punto inicial para filtro de grupo y relleno/tallado de vóxeles"
+      },
+      "collision_mesh": {
+        "label": "Malla de colisión (.glb)",
+        "desc": "Exporta malla de colisión suave o cúbica desde la rejilla de vóxeles"
+      },
+      "lod_select": {
+        "label": "Seleccionar nivel LOD",
+        "desc": "Elige niveles LOD específicos desde entrada Streamed SOG/LCC"
+      },
+      "lod_chunk": {
+        "label": "Puntos por bloque LOD (K)",
+        "desc": "Puntos objetivo por bloque LOD en streaming (miles)"
+      },
+      "gpu": {
+        "label": "Dispositivo de cálculo",
+        "desc": "Elige GPU o solo CPU para compresión y cálculo de vóxeles"
+      },
+      "gpu_backend": {
+        "label": "Backend gráfico (Vulkan/D3D12)",
+        "desc": "En Windows se recomienda Vulkan para evitar fallos del controlador D3D12"
+      },
+      "max_workers": {
+        "label": "Hilos de codificación",
+        "desc": "Hilos paralelos de codificación (0 = secuencial)"
+      },
+      "info_stats": {
+        "label": "Análisis profundo y estadísticas",
+        "desc": "Genera metadatos estructurales completos e histogramas por columna"
+      },
+      "mjs_generator": {
+        "label": "Script generador JS",
+        "desc": "Implica ejecución arbitraria de JS local",
+        "reason": "Control de seguridad: ejecución de scripts locales no autorizados desactivada por defecto."
+      },
+      "remote_url": {
+        "label": "Entrada por URL remota",
+        "desc": "Descarga escenas desde red externa",
+        "reason": "Control de seguridad: modo sin conexión estricto por defecto; entradas remotas desactivadas."
+      },
+      "camera_render": {
+        "label": "Renderizado offline de cámara",
+        "desc": "Renderiza secuencias WebP con profundidad de campo y desenfoque de movimiento",
+        "reason": "Se habilitará en una próxima iteración de renderizado; registrado en la lista de capacidades."
+      }
+    }
+  },
+  "editor": {
+    "window": {
+      "title": "Editor 3D Gaussian (+Y arriba) · Splat Convert Desktop 3.2.3"
+    },
+    "banners": {
+      "autoAlignTitle": "Escena real inclinada detectada",
+      "autoAlignDescDefault": "El suelo parece inclinado. ¿Desea ejecutar el alineado automático en un clic? Puede deshacerlo con Ctrl+Z en cualquier momento.",
+      "autoAlignDescDeg": "Se detectó una inclinación del suelo de ~{deg}°. ¿Alinear automáticamente en un clic? Puede deshacerlo con Ctrl+Z.",
+      "autoAlignAccept": "Alinear",
+      "autoAlignDismiss": "Ahora no",
+      "splitHandle": "Orig. ◀ ▶ Color",
+      "gotIt": "Entendido",
+      "safeModeText": "Protección de rendimiento activada: se cambió al modo «Centros» y se congelaron los filtros y herramientas de color de alto coste, manteniendo selección básica, borrado suave y alineación.",
+      "exitSafeMode": "Restaurar modo completo",
+      "semanticModeDefault": "Detectando modo de segmentación…",
+      "preparing": "Preparando…",
+      "cancelBtn": "Cancelar"
+    },
+    "loading": {
+      "title": "Cargando nube de puntos Gaussian…",
+      "preparing": "Preparando…",
+      "interrupted": "Carga interrumpida",
+      "readError": "Error al leer la nube de puntos Gaussian",
+      "errorHint": "Compruebe la integridad del archivo o el uso de VRAM e inténtelo de nuevo",
+      "etaMinSec": "{min} min {sec} s",
+      "etaSec": "{sec} s",
+      "etaRemaining": "{elapsed} s transcurridos · ~{eta} restantes",
+      "etaProcessing": "{elapsed} s transcurridos · Procesando nube de gran tamaño…",
+      "buildingWebgl": "Construyendo estructuras Gaussian WebGL2…",
+      "rebuildingContextLost": "Se perdió el contexto gráfico; reconstruyendo visor en modo Centros de emergencia…",
+      "transferringBinary": "Transfiriendo datos binarios de la nube…",
+      "loadBinaryHttpErr": "Error al cargar binario HTTP {status}",
+      "decodingMassive": "Decodificando nube de puntos masiva…",
+      "loadFailed": "Error al cargar la nube de puntos Gaussian"
+    },
+    "menu": {
+      "file": "Archivo",
+      "saveOverwrite": "Sobrescribir (flujo sin pérdida)",
+      "saveAs": "Guardar como en carpeta…",
+      "cancelClose": "Cancelar y cerrar",
+      "edit": "Edición",
+      "undo": "↶ Deshacer",
+      "redo": "↷ Rehacer",
+      "autoAlign": "⊞ Alineado auto (+Y arriba)",
+      "verticalAlign": "┃ Alinear vertical",
+      "groundAlign": "⊿ Nivelar plano",
+      "scaleCalib": "📐 Calibrar escala",
+      "smartMeasure": "📏 Medidor inteligente",
+      "select": "Selección",
+      "selAll": "Seleccionar todo",
+      "selNone": "Deseleccionar",
+      "selInvert": "Invertir selección",
+      "selIsolate": "Aislar (solo seleccionados)",
+      "selHide": "Ocultar seleccionados",
+      "selShowAll": "Mostrar todo",
+      "selSplit": "Dividir en objeto independiente",
+      "selDup": "Duplicar selección",
+      "selDelete": "Borrar suavemente selección",
+      "render": "Vista",
+      "exportView": "Exportar imagen actual…",
+      "toggleGrid": "Alternar cuadrícula infinita (+Y arriba)",
+      "toggleBounds": "Alternar esquinas de contorno",
+      "fitView": "Encuadrar escena",
+      "advanced": "Avanzado",
+      "secPerfDisplay": "Rendimiento y ayudas visuales",
+      "showBoundsTitle": "Mostrar esquinas de contorno",
+      "showBoundsDesc": "Muestra guías en las 8 esquinas de la caja delimitadora (B)",
+      "showGridTitle": "Mostrar cuadrícula infinita del suelo",
+      "showGridDesc": "Muestra una cuadrícula antialias en el plano Y=0 (G)",
+      "secToolMonitor": "Herramientas y monitorización",
+      "toolAdvOptions": "Opciones avanzadas de herramientas",
+      "secSemantic3dAdv": "Segmentación semántica 3D",
+      "silent3dTitle": "Selección semántica 3D silenciosa",
+      "silent3dDesc": "Captura vistas fuera de pantalla sin mover el visor principal (si se desactiva, muestra las vistas válidas)",
+      "semanticViewsLabel": "Vistas de muestreo 3D",
+      "viewsFast4": "Rápido 4",
+      "viewsBal6": "Equil. 6",
+      "viewsFine8": "Fino 8",
+      "viewsUltra12": "Ultra 12",
+      "semanticModelsLabel": "Modelo semántico 3D (pasar ratón)",
+      "inpaintModelsLabel": "Modelo de relleno planar (L2)",
+      "perfHudSettings": "Ajustes del monitor de rendimiento",
+      "secPerfFields": "Métricas en esquina inferior derecha",
+      "secCamCoord": "Cámara y coordenadas",
+      "toggleProj": "Alternar perspectiva / ortográfica",
+      "toggleCamMode": "Alternar cámara órbita / vuelo",
+      "opencvZup": "Voltear OpenCV (-Y) → +Y arriba",
+      "secHelpAbout": "Ayuda y acerca de",
+      "showShortcuts": "Atajos de teclado",
+      "showCredits": "Créditos open source y acerca de",
+      "saveOverwriteShort": "Sobrescribir",
+      "saveAsShort": "Guardar como"
+    },
+    "topBar": {
+      "colorPanel": "Color Pro",
+      "isolate": "Aislar",
+      "hide": "Ocultar",
+      "showAll": "Mostrar todo",
+      "bounds": "Contorno",
+      "grid": "Cuadrícula",
+      "exportImg": "Exportar vista",
+      "displayMode": "Visualización",
+      "camOrbit": "Órbita",
+      "camFly": "Vuelo",
+      "flySpeed": "Veloc.",
+      "flySpeedAria": "Velocidad de vuelo",
+      "gizmoTranslateAria": "Mover (W)",
+      "gizmoRotateAria": "Rotar (E)",
+      "gizmoScaleAria": "Escalar (R)",
+      "axisGizmoAria": "Navegación de ejes +Y arriba"
+    },
+    "rail": {
+      "orbit": "Navegar",
+      "rect": "Caja",
+      "lasso": "Lazo",
+      "ellipse": "Elipse",
+      "poly": "Políg.",
+      "brush": "Pincel",
+      "filter": "Filtro",
+      "filterHead": "Selección inteligente",
+      "eyedropperFull": "Cuentagotas",
+      "opacitySelFull": "Por opacidad",
+      "sizeSelFull": "Por tamaño",
+      "semanticSelFull": "Semántica",
+      "floaterSelFull": "Flotantes",
+      "eyedropper": "Gotero",
+      "opacitySel": "Opac.",
+      "sizeSel": "Tamaño",
+      "semanticSel": "Semánt.",
+      "floaterSel": "Flot.",
+      "smart": "Smart",
+      "smartHead": "Reparación inteligente",
+      "planeInpaintFull": "Relleno planar",
+      "planeInpaint": "Relleno",
+      "align": "Alinear",
+      "alignHead": "Alineación (+Y)",
+      "autoAlignFull": "Autoalinear",
+      "autoAlign": "Auto",
+      "verticalAlignFull": "Vertical",
+      "verticalAlign": "Vert.",
+      "groundAlignFull": "Nivelar plano",
+      "groundAlign": "Plano",
+      "measure": "Medir",
+      "measureHead": "Medición espacial",
+      "scaleCalibFull": "Calibrar escala",
+      "scaleCalib": "Escala",
+      "smartMeasureFull": "Medidor inteligente",
+      "smartMeasure": "Medidor",
+      "localSpace": "Local",
+      "localSpaceAria": "Usar espacio local (X)",
+      "boundsCenter": "Centro",
+      "boundsCenterAria": "Usar centro de límites (Z)"
+    },
+    "boolOps": {
+      "replace": {
+        "label": "Reemplazar",
+        "desc": "Reemplazar la selección actual"
+      },
+      "add": {
+        "label": "Añadir",
+        "desc": "Añadir a la selección actual (mantener Shift al seleccionar)"
+      },
+      "subtract": {
+        "label": "Restar",
+        "desc": "Restar de la selección actual (mantener Alt al seleccionar)"
+      },
+      "intersect": {
+        "label": "Intersec.",
+        "desc": "Conservar solo la intersección (Shift+Alt al seleccionar)"
+      }
+    },
+    "volBoolOps": {
+      "union": {
+        "label": "Unión (Sumar)",
+        "short": "Unión"
+      },
+      "subtract": {
+        "label": "Sustraer (Recortar)",
+        "short": "Restar"
+      },
+      "intersect": {
+        "label": "Intersección (Solapar)",
+        "short": "Intersec."
+      }
+    },
+    "displayModes": {
+      "splat": "Modo Splat",
+      "centers": "Modo Centros",
+      "rings": "Modo Anillos",
+      "splatShort": "Splat",
+      "centersShort": "Centro",
+      "ringsShort": "Anillo"
+    },
+    "guides": {
+      "orbit": "[Navegar] Izquierdo orbita, derecho/central desplaza, rueda zoom; doble clic en un punto fija el pivote y muestra el gizmo 3D (W/E/R); clic derecho abre volúmenes y menú rápido.",
+      "rect": "[Rectángulo] Arrastra izq. para seleccionar (Reemplazar por defecto · Ctrl Sumar temp. · Alt Restar temp. · Ctrl+Alt Intersección); clic der. orbita.",
+      "lasso": "[Lazo] Arrastra izq. para trazar región cerrada (Reemplazar por defecto · Ctrl Sumar temp. · Alt Restar temp.).",
+      "ellipse": "[Elipse] Arrastra izq. para trazar elipse (Reemplazar por defecto · Ctrl Sumar temp. · Alt Restar temp.).",
+      "poly": "[Polígono] Clic punto a punto; doble clic, Enter o clic en el inicio para cerrar; Esc cancela.",
+      "brush": "[Pincel] Arrastra izq. para pintar selección (Reemplazar por defecto · Ctrl Sumar temp. · Alt Restar temp.); [ / ] o deslizador ajusta radio (máx. 360px).",
+      "eyedropper": "[Cuentagotas] Clic izq. en el modelo muestrea el color y selecciona gaussianas similares (Reemplazar por defecto · Ctrl Sumar temp. · Alt Restar temp.); 1 alterna navegación.",
+      "opacitySel": "[Opacidad] Ajuste el rango inferior para previsualizar en tiempo real y pulse Reemplazar/Añadir/Restar/Intersec.",
+      "sizeSel": "[Tamaño] Filtre agujas gigantes o ruido diminuto por eje máx., media o relación de aspecto y confirme abajo.",
+      "semanticSel": "[Selección semántica] Shift + arrastre izq. para encuadrar objeto (arrastre izq. normal orbita; Reemplazar por defecto · Ctrl Sumar temp. · Alt Restar temp.); M para salir.",
+      "planeInpaint": "[Relleno plano] Shift + arrastre izq. para encuadrar el hueco (arrastre izq. normal orbita); soporta L0 Color sólido, L1 Rápido y L2 IA; J para salir.",
+      "floaterSel": "[Flotantes] Detecta ruido aislado en el aire según densidad voxel 3D; ajuste escala y vecinos abajo y pulse Aplicar.",
+      "volume": "[Controles de volumen] Arrastre una cara de color para mover solo esa cara; mantenga Shift para escalar simétricamente; también puede usar W/E/R o Transformar. Si está activo, las selecciones se limitan al volumen.",
+      "plane": "[Plano de recorte infinito] Solo actúa en el lado entre el plano y la cámara; al girar detrás del plano el lado activo se invierte al instante. Con volúmenes activos aplica intersección.",
+      "autoAlign": "[Autoalinear (+Y arriba)] Detecta el suelo en Y=0, alinea paredes a ejes X/Z y centra sobre el origen en un único paso deshacible con Ctrl+Z.",
+      "verticalAlign": "[Alinear vertical (+Y arriba)] Haga clic en la base y luego en la cima de una arista vertical real; al 2.º punto nivela suavemente a +Y. Permite Voltear / Deshacer / Repetir abajo.",
+      "groundAlign": "[Nivelar plano (+Y arriba)] Haga clic en 3 puntos no colineales del plano a nivelar; al 3.º punto nivela suavemente a Y=0. Permite Voltear / Deshacer / Repetir abajo.",
+      "scaleCalib": "[Calibrar escala] Haga clic en 2 puntos con distancia real conocida e introduzca longitud y unidad (m/cm/mm) para calibrar globalmente sin alterar los puntos.",
+      "smartMeasure": "[Lápiz de medición] Clic izq. en superficie para distancia/polilínea (>=3 pts: doble clic en inicio o botón Cerrar para Área/Volumen); Retroceso deshace, T sale."
+    },
+    "scene": {
+      "title": "Gestor de escena",
+      "groupBtn": "Agrupar",
+      "ungroupBtn": "Desagrupar",
+      "addVolBtn": "+ Volumen",
+      "objectsHead": "Objetos de escena (Ctrl múltiple · Doble clic renombrar)",
+      "clearSel": "Limpiar",
+      "expand": "Expandir",
+      "collapse": "Contraer",
+      "volumesHead": "Volúmenes y planos (arrastrar · booleano en grupo)",
+      "mainCloud": "Nube principal",
+      "mainSceneShort": "Principal",
+      "volumeDefault": "Volumen",
+      "objectGroupDefault": "Grupo de objetos",
+      "allScene": "Toda la escena",
+      "sceneObjectDefault": "Objeto de escena",
+      "selectedCount": "{count} seleccionados",
+      "objectGroupName": "Grupo #{num}",
+      "splitObjectName": "División #{num}",
+      "dupObjectName": "Copia #{num}",
+      "inpaintObjectName": "Relleno {mode} #{num}",
+      "objectFallbackName": "Objeto #{id}",
+      "emptyVolumesHint": "Clic derecho en el visor o pulse «+ Volumen» arriba para crear caja/elipsoide/cilindro/plano",
+      "expandObjGroup": "Expandir grupo de objetos",
+      "collapseObjGroup": "Contraer grupo de objetos",
+      "collapseObjGroupTitle": "Contraer/expandir grupo",
+      "collapseObjGroupTip": "Contrae o expande todos los objetos dentro de este grupo.",
+      "renameObjGroupPrompt": "Renombrar grupo de objetos:",
+      "soloObjGroupTitle": "Aislar este grupo",
+      "soloObjGroupTip": "Muestra solo los modelos de este grupo y oculta el resto temporalmente; clic de nuevo para restaurar.",
+      "hideObjGroupTitle": "Ocultar grupo",
+      "showObjGroupTitle": "Mostrar grupo",
+      "toggleObjGroupTip": "Alterna la visibilidad de todos los miembros del grupo.",
+      "deleteObjGroupTitle": "Eliminar grupo",
+      "deleteObjGroupTip": "Elimina este grupo y todos sus objetos (deshacible con Ctrl+Z).",
+      "deleteObjGroupDisabledTip": "Debe quedar al menos un objeto; no se puede eliminar un grupo que contiene todos los objetos.",
+      "renameObjectPrompt": "Renombrar objeto de escena:",
+      "soloObjectTitle": "Aislar objeto",
+      "soloObjectTip": "Muestra solo este objeto Gaussian y oculta los demás; clic de nuevo para restaurar.",
+      "hideObjectTitle": "Ocultar objeto",
+      "showObjectTitle": "Mostrar objeto",
+      "toggleObjectTip": "Alterna la visibilidad de este objeto en el visor.",
+      "deleteObjectTitle": "Eliminar objeto",
+      "deleteObjectTip": "Elimina este objeto y sus puntos Gaussian (deshacible con Ctrl+Z).",
+      "deleteObjectDisabledTip": "Debe quedar al menos un objeto de escena",
+      "expandVolGroup": "Expandir grupo de volúmenes",
+      "collapseVolGroup": "Contraer grupo de volúmenes",
+      "collapseVolGroupTitle": "Contraer/expandir grupo",
+      "collapseVolGroupTip": "Contrae o expande los miembros y subgrupos de este grupo de volúmenes.",
+      "renameVolGroupPrompt": "Renombrar grupo de volúmenes:",
+      "disableVolGroupTitle": "Desactivar grupo de volúmenes",
+      "enableVolGroupTitle": "Activar grupo de volúmenes",
+      "enableVolGroupTip": "Activa o desactiva si este grupo limita selecciones y muestra la previsualización booleana (independiente de la selección).",
+      "toggleWireTitle": "Mostrar/ocultar estructura",
+      "toggleWireTip": "Solo oculta o muestra la malla y guía visual, sin afectar su estado activo.",
+      "deleteVolGroupTitle": "Eliminar grupo de volúmenes",
+      "deleteVolGroupTip": "Elimina este grupo de volúmenes y todos sus miembros (deshacible).",
+      "volFlowArrow": "↓ En secuencia: {symbol} {label}",
+      "renameVolPrompt": "Renombrar volumen:",
+      "disableVolTitle": "Desactivar volumen",
+      "enableVolTitle": "Activar volumen",
+      "enableVolTip": "Activa o desactiva si este volumen/plano limita selecciones y muestra la guía amarilla.",
+      "hideVolTitle": "Ocultar volumen",
+      "showVolTitle": "Mostrar volumen",
+      "toggleVolTip": "Solo oculta o muestra la estructura en el visor, sin desactivar el ámbito.",
+      "deleteVolTitle": "Eliminar volumen",
+      "deleteVolTip": "Elimina este volumen (deshacible con Ctrl+Z).",
+      "planeScopeInfo": "Plano infinito: actúa solo entre el plano y la cámara (se invierte al rodear)",
+      "axisBtn": "Ejes",
+      "toggleAxisTitle": "Alternar gizmo 3D",
+      "toggleAxisTip": "Muestra u oculta el gizmo 3D de mover/rotar/escalar de este volumen; ocultarlo facilita arrastrar las caras.",
+      "copySuffix": " Copia",
+      "ctxDelete": "Eliminar",
+      "ctxGroup": "Agrupar",
+      "ctxMerge": "Combinar",
+      "ctxUngroup": "Desagrupar",
+      "mergedVolumeName": "Volumen combinado #{num}"
+    },
+    "transform": {
+      "title": "Transformar (+Y arriba)",
+      "position": "Posición",
+      "rotation": "Rotación",
+      "scale": "Escala",
+      "pivotEditAria": "Editar pivote",
+      "resetPos": "Restabl. pos.",
+      "resetRot": "Restabl. rot.",
+      "resetScale": "Restabl. esc.",
+      "resetAll": "Restablecer",
+      "scaleLockAria": "Bloquear escala uniforme",
+      "modeTranslate": "Mover",
+      "modeRotate": "Rotar",
+      "modeScale": "Escalar"
+    },
+    "color": {
+      "title": "Gradación de color",
+      "scopeDefault": "Objeto actual",
+      "scopeSelection": "Selección ({count} pts)",
+      "scopeObjects": "Partes ({count} obj.)",
+      "levelsInTitle": "Arrastre los triángulos para ajustar niveles de entrada (negros / gamma / blancos); doble clic restablece",
+      "lvlInBlackAria": "Nivel negro entrada",
+      "lvlInMidAria": "Gamma medios entrada",
+      "lvlInWhiteAria": "Nivel blanco entrada",
+      "outputLevels": "Niveles salida",
+      "levelsOutTitle": "Arrastre los controles para niveles de salida; doble clic restablece",
+      "lvlOutBlackAria": "Nivel negro salida",
+      "lvlOutWhiteAria": "Nivel blanco salida",
+      "compareHold": "Original",
+      "compareSplit": "Dividir",
+      "resetAll": "Restablecer",
+      "secLight": "Luz",
+      "eyeLightAria": "Activar ajuste de luz",
+      "secColor": "Color",
+      "eyeColorAria": "Activar ajuste de color",
+      "whiteBalance": "Balance bl.",
+      "wbEyedropperAria": "Cuentagotas balance de blancos",
+      "wbCustom": "Manual",
+      "secHsl": "Mezclador HSL",
+      "eyeHslAria": "Activar mezclador HSL",
+      "hslEyedropper": "Selector HSL",
+      "chanHue": "Tono",
+      "chanSatShort": "Sat.",
+      "chanSat": "Saturación",
+      "chanLight": "Luminancia",
+      "pickRange": "Rango sel.",
+      "rangePreview": "Ver rango",
+      "resetShort": "Rein.",
+      "eyeLutAria": "Activar 3D LUT",
+      "lutIntensity": "Intens.",
+      "lutDefault": "Ninguno (sin 3D LUT)",
+      "applyBake": "Aplicar (Hornear a SH)",
+      "dblClickReset": "Doble clic para restablecer",
+      "clickEditVal": "Clic para editar valor",
+      "sliders": {
+        "exposure": "Exposición",
+        "contrast": "Contraste",
+        "highlights": "Altas luces",
+        "shadows": "Sombras",
+        "whites": "Blancos",
+        "blacks": "Negros",
+        "transparency": "Transpar.",
+        "temperature": "Temperatura",
+        "tintShift": "Matiz",
+        "vibrance": "Intensidad",
+        "saturation": "Saturación",
+        "tolerance": "Tolerancia",
+        "colorRange": "Rango color",
+        "pcHue": "Tono sel.",
+        "pcSat": "Sat. sel.",
+        "pcLight": "Lum. sel.",
+        "hue": "Tono",
+        "light": "Luminosidad"
+      },
+      "hslBands": {
+        "red": "Rojo",
+        "orange": "Naranja",
+        "yellow": "Amarillo",
+        "green": "Verde",
+        "aqua": "Cian",
+        "blue": "Azul",
+        "purple": "Púrpura",
+        "magenta": "Magenta"
+      },
+      "wbPresets": {
+        "asis": "Original",
+        "daylight": "Luz día",
+        "cloudy": "Nublado",
+        "shade": "Sombra",
+        "tungsten": "Tungsteno",
+        "fluorescent": "Fluoresc."
+      },
+      "histZones": {
+        "blacks": "Negros",
+        "shadows": "Sombras",
+        "exposure": "Exposición",
+        "highlights": "Altas luces",
+        "whites": "Blancos"
+      },
+      "pickedColorFallback": "Muestra",
+      "wbHintHover": "Clic en gris neutro o blanco para calibrar balance",
+      "hslHintHover": "{band} · Arrastrar para ajustar {chan}",
+      "wbLabel": "Balance de blancos"
+    },
+    "history": {
+      "title": "Historial",
+      "initialState": "Estado inicial",
+      "stepFallback": "Paso #{step}",
+      "lastOpStatus": "Última acción: {label} (Pila {count}/{max})",
+      "transformMode": "Transformar ({mode})",
+      "preciseTransform": "Transformación precisa",
+      "deleteObject": "Eliminar objeto ({name})",
+      "deleteObjectGroup": "Eliminar grupo ({name})",
+      "reorderVolumes": "Reordenar volúmenes",
+      "reorderVolumesDrag": "Reordenar volumen",
+      "reorderVolGroupDrag": "Reordenar grupo de volúmenes",
+      "changeBoolOp": "Cambiar booleano ({op})",
+      "enableNode": "Activar {name}",
+      "disableNode": "Desactivar {name}",
+      "deleteVolGroup": "Eliminar grupo de volúmenes ({name})",
+      "deleteVol": "Eliminar {name}",
+      "createVol": "Crear {name}",
+      "dragVolHandles": "Ajustar volumen ({name})",
+      "groupVolumes": "Agrupar volúmenes ({name})",
+      "ungroupVolumes": "Desagrupar volúmenes ({name})",
+      "volumeSelect": "Selección de volumen: {op}",
+      "flagDelta": "{label} ({count} pts)",
+      "selectAll": "Seleccionar todo",
+      "clearSelAutoBake": "Auto-horneado al limpiar selección",
+      "deselectAll": "Deseleccionar",
+      "invertSel": "Invertir selección",
+      "softDelete": "Borrado suave",
+      "isolate": "Aislar",
+      "hide": "Ocultar",
+      "showAll": "Mostrar todo",
+      "splitObject": "Dividir objeto ({name}, {count} pts)",
+      "dupObject": "Duplicar objeto ({name}, {count} pts)",
+      "switchToolAutoBake": "Auto-horneado al cambiar herramienta",
+      "eyedropperSel": "Cuentagotas ({space})",
+      "opacitySel": "Selección por opacidad",
+      "sizeSel": "Selección por tamaño",
+      "floaterSel": "Selección de flotantes",
+      "semantic2dDepth": "Semántica 2D prof. ({depth})",
+      "semantic2d": "Semántica 2D",
+      "semantic3d": "Semántica 3D ({views} vistas)",
+      "planeInpaint": "Relleno planar {mode} (+{count} pts)",
+      "autoAlign": "Autoalinear (+Y arriba)",
+      "opencvZup": "OpenCV (-Y) a +Y arriba",
+      "flip180": "Voltear 180°",
+      "verticalAlign": "Alinear vertical (+Y arriba)",
+      "verticalFlip": "Alinear vertical · Volteo 180°",
+      "groundAlign": "Nivelar plano (+Y arriba)",
+      "groundFlip": "Nivelar plano · Volteo 180°",
+      "colorBakeDefault": "Hornear color (SH)",
+      "colorCloseAutoBake": "Auto-hornear al cerrar panel de color",
+      "colorApplyBake": "Aplicar y hornear color a SH",
+      "colorSaveAutoBake": "Auto-hornear antes de guardar",
+      "selectOp": "Selección {op}",
+      "restoreTransform": "Restaurar transformación",
+      "restoreVolumes": "Restaurar volúmenes",
+      "restoreDelete": "Restaurar borrado",
+      "restoreColor": "Restaurar color",
+      "lassoTest": "Prueba de lazo",
+      "depthAdjust2d": "Ajuste profundidad 2D",
+      "colorStep": "Ajuste de color",
+      "colorStepDetail": "Color: {detail}",
+      "deleteObjectsMulti": "Eliminar {count} objetos de escena",
+      "deleteVolsMulti": "Eliminar {count} volúmenes",
+      "dupMoveObj": "Duplicar y mover {name}",
+      "dupMoveVol": "Duplicar y mover volumen {name}",
+      "groupColor": "Gradación de color",
+      "groupCountBadge": "×{count}",
+      "groupEditVis": "Visibilidad y borrado",
+      "groupRotate": "Rotación",
+      "groupScale": "Escala",
+      "groupSelect": "Selección",
+      "groupTransform": "Transformación",
+      "groupTranslate": "Mover",
+      "groupVolDrag": "Asas de volumen",
+      "mergeObjects": "Combinar {count} objetos en {name}",
+      "mergeVolumes": "Combinar volúmenes: {name}"
+    },
+    "contextMenu": {
+      "recallTool": "↺ Volver a: {ico} {label}",
+      "undo": "↶ Deshacer",
+      "redo": "↷ Rehacer",
+      "secQuick": "Acciones rápidas",
+      "cycleMode": "Cambiar visualización (Centros/Splat/Anillos)",
+      "colorPanel": "Panel Color Pro",
+      "fitView": "Encuadrar escena",
+      "autoAlign": "Autoalinear (+Y arriba)",
+      "secVolumes": "Volúmenes y planos",
+      "volBox": "+ Crear caja envolvente",
+      "volEllipsoid": "+ Crear elipsoide envolvente",
+      "volCylinder": "+ Crear cilindro (+Y)",
+      "volPlane": "+ Crear plano de recorte (infinito)",
+      "secSelection": "Selección y objetos",
+      "isolate": "Aislar selección",
+      "hide": "Ocultar selección",
+      "showAll": "Mostrar todo",
+      "split": "Dividir en objeto independiente",
+      "dup": "Duplicar selección",
+      "delete": "Borrar suavemente selección"
+    },
+    "statusBar": {
+      "coordBadge": "+Y arriba",
+      "ready": "Listo",
+      "totalPoints": "Puntos totales",
+      "selectedPoints": "Seleccionados",
+      "deletedPoints": "Borrados",
+      "totalWithRendered": "{total} (render {rendered})"
+    },
+    "contextBar": {
+      "selectionFallback": "Selección",
+      "brushRadius": "Radio",
+      "onlyVisible": "Solo visibles",
+      "onlyVisibleTip": "Selección por ID y profundidad en GPU; selecciona solo los puntos frontales visibles desde la cámara.",
+      "wholeGaussian": "Gaussian completo",
+      "wholeGaussianTip": "Selecciona un punto si cualquier parte de su elipsoide entra en el área, coincidiendo exactamente con el contorno del modo Anillos.",
+      "tolerance": "Tolerancia",
+      "colorSpace": "Espacio de color",
+      "colorSpaceRgb": "Distancia euclídea RGB",
+      "colorSpaceHsv": "Tono/Saturación HSV",
+      "minBound": "Mín",
+      "maxBound": "Máx",
+      "minVal": "Mín",
+      "maxVal": "Máx",
+      "sizeMetric": "Métrica de tamaño",
+      "sizeMetricMax": "Eje principal máximo",
+      "sizeMetricMean": "Escala media (3 ejes)",
+      "sizeMetricRatio": "Relación aguja (Máx/Mín)",
+      "semModeAuto": "Auto",
+      "semModeAutoTip": "Tras la primera vista, distingue automáticamente entre 2D (región planar) y 3D (objeto volumétrico, prioritario) según coplanaridad y salto de profundidad.",
+      "semMode2d": "2D",
+      "semMode2dTip": "Fuerza segmentación planar 2D (superficie o profundidad regulable/infinita); recalcula al instante si hay un recuadro previo.",
+      "semMode3d": "3D",
+      "semMode3dTip": "Fuerza segmentación 3D multivista (órbita horizontal + hemisferio superior + filtrado de oclusiones); recalcula si hay un recuadro previo.",
+      "semModeTitle": "Modo de segmentación: {mode}",
+      "depthSurface": "Superficie",
+      "depthThrough": "Prof.",
+      "depthInfinite": "Profundidad infinita",
+      "depthInfiniteShort": "Infinita",
+      "voxelSize": "Escala vóxel",
+      "maxNeighbors": "Máx. vecinos",
+      "maxOpacityFilter": "Solo opacidad ≤",
+      "advancedUp": "Opciones avanzadas ▴",
+      "inpaintL1": "L1 Geométrico rápido",
+      "inpaintL1Tip": "Relleno sin conexión y sin IA (<0.5 s): ajuste de plano RANSAC + splats planos + textura vecina, ideal para mesas o paredes lisas.",
+      "inpaintL2": "L2 Relleno IA",
+      "inpaintL2Tip": "Recomendado: relleno LaMa por Fourier sin difusión + reproyección exacta al plano; reconstruye vetas de madera, baldosas y estampados.",
+      "edgeFeather": "Difuminado",
+      "downloadL2": "Descargar modelo L2",
+      "downloadL2Title": "Descargar modelo L2 en un clic",
+      "downloadL2Tip": "Selecciona el mejor espejo para descargar LaMa ONNX (~198 MB). Puede cambiar a L1 inmediatamente mientras tanto.",
+      "reuseLastHole": "Reutilizar último hueco",
+      "verticalDone": "Alineado vertical completado (+Y arriba)",
+      "verticalStep0": "0/2 pts: clic en la base de la arista vertical (nivela al 2.º punto)",
+      "verticalStep1": "1/2 pts: clic en la cima de la arista vertical (nivela al instante)",
+      "groundDone": "Nivelado de plano completado (Y=0 · +Y arriba)",
+      "groundStep0": "0/3 pts: clic en el 1.er punto del plano (nivela al 3.º punto)",
+      "groundStep1": "1/3 pts: clic en el 2.º punto del mismo plano",
+      "groundStep2": "2/3 pts: clic en el 3.er punto no colineal para nivelar",
+      "flipVertical": "Voltear 180°",
+      "undoShort": "Deshacer",
+      "repick": "Repetir puntos",
+      "repickPoints": "Repetir selección",
+      "calibTagCalibrated": "Calibrado (1u={factor}m · {unit})",
+      "calibTagDefault": "Estándar 1:1 ({unit})",
+      "calibStep0": "{tag} · Clic en el 1.er punto conocido",
+      "calibStep1": "{tag} · Inicio fijado; clic en el 2.º punto",
+      "calibStep2": "{tag} · 2 puntos fijados; confirme la longitud real arriba",
+      "resetScale1to1": "Restabl. 1:1",
+      "toMeasurePen": "Ir al Medidor (T)",
+      "measureBasePick": "Base de 3 pts: {count}/3 puntos elegidos (Esc cancela)",
+      "measureVolumeMode": "Modo Volumen ({count} pts) · Arrastre vértices / rombo base / esfera cima",
+      "measureAreaMode": "Modo Área ({count} pts) · Arrastre vértices o pulse «Ajuste inteligente»",
+      "measureStep0": "Clic en superficie sólida para medir (2 pts dist. · 3+ polilínea · cerrar área/vol.)",
+      "measureStep1": "Inicio fijado · Clic en 2.º punto para distancia/ΔH/pendiente (Backspace deshace)",
+      "measureStep2": "Distancia/ΔH/pendiente listos · Siga clicando para polilínea (Backspace deshace)",
+      "measureStepPoly": "Polilínea {count} pts · Doble clic en inicio o 'Cerrar polígono' para Área/Volumen",
+      "closePolygon": "Cerrar polígono",
+      "undoLastPt": "Deshacer punto",
+      "cancelBasePick": "Cancelar base",
+      "remeasure": "Nueva medición",
+      "scaleCalibFactor": "Escala ×{factor}",
+      "eyedropSwatchTitle": "Color objetivo muestreado",
+      "eyedropSwatchTipEmpty": "Muestra el color muestreado por el cuentagotas (aún sin muestrear).\nHaz clic izq. en el modelo para tomar el color y seleccionar gaussianas según la tolerancia.",
+      "eyedropSwatchTipPicked": "Color objetivo: {hex} (RGB {r}, {g}, {b}).\nHaz clic izq. en el modelo para volver a muestrear; ajusta la tolerancia a la derecha.",
+      "voxelSizeTip": "Tamaño de arista de la celda vóxel 3D (unidades de escena): valores menores detectan puntos aislados finos; mayores capturan nubes flotantes alejadas.",
+      "maxNeighborsTip": "Máximo de vecinos permitidos en los 3×3×3 vóxeles adyacentes: los puntos con <= este número de vecinos se marcan como flotantes aislados.",
+      "inpaintL0": "L0 Sólido",
+      "inpaintL0Tip": "Relleno plano instantáneo de color sólido sin modelo IA: rellena el plano ajustado con el color elegido y abre la rueda cromática hacia arriba.",
+      "inpaintL0ColorTitle": "Color sólido L0",
+      "inpaintL0ColorTip": "Haz clic para abrir la rueda de color con cuentagotas e historial reciente."
+    },
+    "modals": {
+      "exportImgTitle": "Exportar imagen de vista actual",
+      "resCurrent": "Ventana actual",
+      "widthPx": "Ancho (px)",
+      "heightPx": "Alto (px)",
+      "pngTransparent": "Fondo transparente PNG (Alpha directo sin pérdida)",
+      "hideHelpers": "Ocultar ayudas automáticamente (cuadrícula, volúmenes, selección, gizmo)",
+      "confirmExportPng": "Renderizar y exportar PNG",
+      "overwriteTitle": "Sobrescribir en flujo de trabajo",
+      "overwriteNoticeHtml": "<strong>Edición sin pérdida:</strong> Solo reemplaza el archivo en el flujo de trabajo actual, nunca modifica el archivo original en disco. Todos los puntos borrados suavemente se excluirán; la recodificación final usa los ajustes principales.",
+      "overwriteSelectLabel": "Seleccione los objetos a enviar de vuelta al flujo (varios se combinan):",
+      "overwriteObjItem": "{name} ({count} pts)",
+      "overwriteConfirm": "Confirmar reemplazo en flujo",
+      "compatProtectUnsupported": "Protección de compatibilidad: {warnings} Al guardar se conservará la receta original sin sobrescribir ni descartar campos.",
+      "compatProtectV4": "Protección v4: {warnings}",
+      "saveAsTitle": "Guardar como (exportar a carpeta)",
+      "saveAsModeLabel": "Modo de exportación múltiple (excluye borrados):",
+      "saveAsMerged": "Combinar todo (un solo archivo)",
+      "saveAsPerObject": "Por objeto (un archivo por cada objeto)",
+      "saveAsPerGroup": "Por grupo (fusionado por grupo)",
+      "saveAsFormatLabel": "Formato de destino:",
+      "fmtPly": "PLY estándar (conserva SH completo sin pérdida)",
+      "fmtCompressedPly": "PLY comprimido",
+      "fmtSog": "SOG (paquete SuperSplat alta compresión)",
+      "fmtSpz": "SPZ (compresión ligera multiplataforma)",
+      "fmtHtml": "HTML interactivo independiente",
+      "saveAsUseMainParams": "Usar parámetros principales de codificación (retención, iteraciones SH, esfuerzo, backend GPU, etc.)",
+      "saveAsSummary": "Ajustes principales: Retención {keep}% · Iter. {iterations} · Disp. {device} · SOG v{sogVersion} · SPZ v{spzVersion}",
+      "saveAsSummaryDefault": "Ajustes principales: Retención 100% · Configuración por defecto",
+      "saveAsNoticeHtml": "<strong>Protección ante fallos:</strong> Se guarda un punto de recuperación antes de exportar. Si la recodificación falla o se cancela, su edición e historial permanecen intactos.",
+      "saveAsConfirm": "Elegir carpeta y exportar…",
+      "saveAsNoActiveObjects": "No hay objetos no vacíos para exportar",
+      "saveAsWaitingFolder": "Esperando carpeta de destino y preparando codificación…",
+      "saveAsProgress": "Codificando y exportando ({percent}%) · {detail}",
+      "saveAsDone": "Exportación completada",
+      "saveAsFailed": "Error al exportar",
+      "infoTitle": "Información",
+      "crashTitle": "Protección automática de rendimiento",
+      "crashHeading": "Sobrecarga de renderizado o VRAM baja detectada; se activó el modo «Centros» para ahorrar recursos.",
+      "crashDesc": "Para evitar bloqueos, se han congelado los filtros inteligentes, Color Pro y modos pesados; permanecen activos selección básica, borrado suave, volúmenes, transformación y alineación. Su historial está intacto.",
+      "crashTelemetryLabel": "Telemetría al activarse la protección:",
+      "crashTelemetryFmt": "Motivo: {reason}\n{telemetry}",
+      "crashContinue": "Continuar en modo Centros"
+    },
+    "shortcuts": {
+      "title": "Atajos de teclado (también visibles en cada botón)",
+      "gizmo": "Gizmo Mover / Rotar / Escalar",
+      "spaceBounds": "Espacio local / Centro de límites",
+      "undoRedo": "Deshacer / Rehacer",
+      "softDelete": "Borrado suave de seleccionados",
+      "boolMods": "Añadir / Restar / Intersección temporal",
+      "basicTools": "Navegar / Caja / Lazo / Elipse / Polígono / Pincel",
+      "brushRadius": "Ajustar radio del pincel",
+      "filterTools": "Gotero / Opacidad / Tamaño / Semántica / Flotantes",
+      "alignTools": "Autoalinear / Vertical / Nivelar plano",
+      "measureTools": "Medidor inteligente / Calibrar escala (Backspace deshace punto)",
+      "ctrlDragTools": "Recuadro semántico / Relleno planar (usable en Navegar)",
+      "ctrlLeftDrag": "Ctrl + Arrastre izq.",
+      "displayMode": "Alternar modo Splat / Centros / Anillos",
+      "cameraMode": "Alternar cámara Órbita / Vuelo",
+      "colorPanel": "Abrir/cerrar panel Color Pro",
+      "compareColor": "Mantener original / Comparar dividido",
+      "visibility": "Aislar / Ocultar / Mostrar todo",
+      "selOps": "Seleccionar todo / Nada / Invertir",
+      "splitDup": "Dividir objeto / Duplicar selección",
+      "groupUngroup": "Agrupar / Desagrupar",
+      "viewHelpers": "Cuadrícula / Contorno / Persp.-Orto. / Encuadrar",
+      "exportView": "Exportar vista actual",
+      "saveOps": "Sobrescribir (sin pérdida) / Guardar como",
+      "shiftLeftDrag": "Shift + arrastre izq."
+    },
+    "credits": {
+      "title": "Créditos open source y licencias",
+      "resplat": "Inspiración en parámetros de renderizado del modo Anillos, flujo completo de color (HSL 8 bandas / 3D LUT / horneado SH), selecciones especiales, segmentación SAM 2 local, exportación PNG exacta y diseño oscuro profesional.",
+      "supersplat": "Paradigma de editor 3D Gaussian base de ReSplat y algoritmo de rotación matricial SH (bandas 1–3, basado en sh-lib de Andrew Willmott).",
+      "spirula": "Inspiración en controles de volumen de 6 caras (Shift simétrico), alineación automática de suelo y paredes +Y arriba y flujo de selección (reimplementación limpia).",
+      "splatTransform": "Motor principal de codificación/decodificación 3DGS, conversión SOG/SPZ/PLY/HTML y diezmado.",
+      "gse": "Referencia de interacción para selección por opacidad y tamaño."
+    },
+    "tips": {
+      "saveOverwrite": {
+        "title": "Sobrescribir (sin pérdida)",
+        "tip": "Reemplaza únicamente este archivo en el flujo principal, sin modificar jamás el archivo original en disco."
+      },
+      "saveAs": {
+        "title": "Guardar como",
+        "tip": "Exporta el resultado editado a una carpeta elegida (combinado, por objeto o por grupo) usando la configuración principal."
+      },
+      "menuBounds": {
+        "title": "Esquinas de contorno",
+        "tip": "Muestra finas marcas blancas en las 8 esquinas de la caja delimitadora 3D del modelo."
+      },
+      "menuGrid": {
+        "title": "Cuadrícula infinita del suelo",
+        "tip": "Muestra una cuadrícula de referencia infinita suavizada en el plano Y=0 (+Y arriba, ejes X rojo / Z azul)."
+      },
+      "colorPanel": {
+        "title": "Panel Color Pro",
+        "tip": "Ajusta el objeto completo si no hay selección, o solo la selección; incluye histograma, HSL 8 bandas, 3D LUT y horneado SH."
+      },
+      "isolate": {
+        "title": "Aislar selección",
+        "tip": "Muestra únicamente los puntos Gaussian seleccionados y oculta temporalmente el resto."
+      },
+      "hide": {
+        "title": "Ocultar selección",
+        "tip": "Oculta temporalmente los puntos seleccionados para acceder a estructuras internas."
+      },
+      "showAll": {
+        "title": "Mostrar todo",
+        "tip": "Restaura todos los puntos no borrados cancelando aislamientos y ocultamientos."
+      },
+      "boundsTop": {
+        "title": "Esquinas de contorno",
+        "tip": "Muestra u oculta las 8 esquinas L de la caja delimitadora del modelo."
+      },
+      "gridTop": {
+        "title": "Cuadrícula infinita",
+        "tip": "Mostrar/ocultar la cuadrícula infinita Y=0 y los ejes de origen X/Z."
+      },
+      "exportImgTop": {
+        "title": "Exportar imagen de vista",
+        "tip": "Renderiza la vista actual a PNG con resolución personalizada (admite fondo transparente y ocultar ayudas)."
+      },
+      "displayMode": {
+        "title": "Modo de visualización",
+        "tip": "Control total por punto: Splat (Gaussian 3D real), Centros (rombos ultrarrápidos) y Anillos (contorno exterior para detectar flotantes)."
+      },
+      "camOrbit": {
+        "title": "Cámara Orbital",
+        "tip": "Orbita alrededor del foco: izq. rotar, der./central desplazar, rueda zoom; doble clic en un punto fija el nuevo pivote y muestra el gizmo 3D."
+      },
+      "camFly": {
+        "title": "Cámara de Vuelo",
+        "tip": "Primera persona libre para escenas amplias: arrastrar izq. mira alrededor, rueda avanza, W/A/S/D mueve y Q/E sube/baja en +Y (Shift acelera / Alt precisión)."
+      },
+      "flySpeed": {
+        "title": "Velocidad de vuelo",
+        "tip": "Calibrada automáticamente según el tamaño del modelo cargado; arrastre para ajustar, doble clic restablece (en vuelo: Shift 2.8× / Alt 0.3×)."
+      },
+      "orbit": {
+        "title": "Navegar y seleccionar objeto",
+        "tip": "Izquierdo orbita, derecho desplaza; doble clic en un punto fija el pivote y abre el gizmo 3D."
+      },
+      "rect": {
+        "title": "Selección rectangular",
+        "tip": "Arrastra rectángulo para seleccionar (Reemplazar por defecto · Ctrl Sumar temp. / Alt Restar temp.)."
+      },
+      "lasso": {
+        "title": "Selección lazo",
+        "tip": "Trace libremente cualquier área cerrada."
+      },
+      "ellipse": {
+        "title": "Selección elipse",
+        "tip": "Arrastre para dibujar una selección elíptica."
+      },
+      "poly": {
+        "title": "Selección poligonal",
+        "tip": "Clic vértice a vértice; doble clic o Enter para cerrar."
+      },
+      "brush": {
+        "title": "Pincel de selección",
+        "tip": "Mantenga pulsado para pintar selección; [ / ] ajustan el radio."
+      },
+      "eyedropper": {
+        "title": "Cuentagotas",
+        "tip": "Muestrea un color y selecciona puntos similares según tolerancia RGB/HSV."
+      },
+      "opacitySel": {
+        "title": "Selección por opacidad",
+        "tip": "Filtra niebla semitransparente o fantasmas por rango de opacidad."
+      },
+      "sizeSel": {
+        "title": "Selección por tamaño",
+        "tip": "Filtra puntos gigantes o agujas alargadas por longitud de eje o relación de aspecto."
+      },
+      "semanticSel": {
+        "title": "Selección semántica",
+        "tip": "Shift + arrastre izq. para encuadrar objeto con segmentación 2D/3D auto (Ctrl Sumar temp. / Alt Restar temp.; arrastre izq. normal orbita)."
+      },
+      "floaterSel": {
+        "title": "Selección de flotantes",
+        "tip": "Detecta puntos flotantes aislados en el aire según densidad voxel 3D."
+      },
+      "autoAlign": {
+        "title": "Autoalinear (+Y arriba)",
+        "tip": "Detecta suelo en Y=0, alinea paredes a X/Z y centra sobre el origen (deshacer en un paso)."
+      },
+      "verticalAlign": {
+        "title": "Alinear vertical",
+        "tip": "Clic en base y cima de una arista vertical para alinear suavemente a +Y; admite voltear y deshacer."
+      },
+      "groundAlign": {
+        "title": "Nivelar plano",
+        "tip": "Clic en 3 puntos de una superficie para nivelarla suavemente a Y=0; admite voltear y deshacer."
+      },
+      "scaleCalib": {
+        "title": "Calibrar escala",
+        "tip": "Clic en 2 puntos de distancia conocida e indique la longitud real (m/cm/mm) sin alterar los puntos."
+      },
+      "smartMeasure": {
+        "title": "Medidor inteligente",
+        "tip": "2 pts distancia/ΔH/pendiente · 3+ polilínea · cierre para área/volumen (ajuste inteligente + 4 vistas de inspección)."
+      },
+      "flyoutFilter": {
+        "title": "Filtros inteligentes",
+        "tip": "Agrupa Gotero (Y), Opacidad (O), Tamaño (K), Semántica (M) y Flotantes (F)."
+      },
+      "flyoutAlign": {
+        "title": "Alineación (+Y)",
+        "tip": "Agrupa Autoalinear (A), Vertical (U) y Nivelar plano (L)."
+      },
+      "flyoutMeasure": {
+        "title": "Medición espacial",
+        "tip": "Agrupa Calibrar escala (Shift+T) y Medidor inteligente (T)."
+      },
+      "undo": {
+        "title": "Deshacer",
+        "tip": "Deshace de forma incremental y sin pérdida la última acción."
+      },
+      "redo": {
+        "title": "Rehacer",
+        "tip": "Rehace la acción deshecha."
+      },
+      "gizmoTranslate": {
+        "title": "Gizmo de traslación",
+        "tip": "Mueve con precisión objetos o volúmenes a lo largo de X/Y/Z."
+      },
+      "gizmoRotate": {
+        "title": "Gizmo de rotación",
+        "tip": "Rota objetos o volúmenes alrededor del pivote."
+      },
+      "gizmoScale": {
+        "title": "Gizmo de escala",
+        "tip": "Escala objetos o volúmenes por eje o uniformemente."
+      },
+      "flyoutSmart": {
+        "title": "Herramientas inteligentes",
+        "tip": "Herramientas inteligentes de reparación (Relleno plano L0 Sólido / L1 / L2)."
+      },
+      "planeInpaint": {
+        "title": "Relleno planar",
+        "tip": "Shift + arrastre izq. para encuadrar hueco en plano (arrastre izq. normal orbita); soporta L0 Color sólido / L1 / L2."
+      },
+      "localSpace": {
+        "title": "Usar espacio local",
+        "tip": "Alterna la orientación del gizmo 3D entre coordenadas locales y mundiales (+Y arriba)."
+      },
+      "boundsCenter": {
+        "title": "Usar centro de límites",
+        "tip": "Acopla el gizmo al centro geométrico de la caja delimitadora; se desactiva al fijar pivote manualmente."
+      },
+      "pivotEdit": {
+        "title": "Editar origen (pivote)",
+        "tip": "Mueve solo el gizmo sin desplazar el modelo; al desactivar, las transformaciones usan el nuevo pivote."
+      },
+      "scaleLock": {
+        "title": "Bloquear escala uniforme",
+        "tip": "Al activarlo, editar X/Y/Z escala los tres ejes proporcionalmente."
+      },
+      "resetPos": {
+        "title": "Restablecer posición",
+        "tip": "Devuelve modelos a (0, 0, 0) y volúmenes a su posición inicial (deshacible)."
+      },
+      "resetRot": {
+        "title": "Restablecer rotación",
+        "tip": "Devuelve modelos a (0, 0, 0) y volúmenes a su orientación inicial (deshacible)."
+      },
+      "resetScale": {
+        "title": "Restablecer escala",
+        "tip": "Devuelve modelos a (1, 1, 1) y volúmenes a su tamaño inicial (deshacible)."
+      },
+      "clearObjSel": {
+        "title": "Limpiar selección de objetos",
+        "tip": "Deselecciona el objeto actual para que el contorno abarque todos los puntos activos."
+      },
+      "expandObjects": {
+        "title": "Expandir/contraer lista de objetos",
+        "tip": "Muestra toda la lista de objetos sin necesidad de desplazarse."
+      },
+      "expandVolumes": {
+        "title": "Expandir/contraer lista de volúmenes",
+        "tip": "Muestra todos los volúmenes y grupos anidados."
+      },
+      "historyToggle": {
+        "title": "Expandir/contraer historial",
+        "tip": "Contraído muestra los últimos 3 pasos; clic en cualquier paso salta al instante sin pérdida."
+      },
+      "groupBtn": {
+        "title": "Agrupar",
+        "tip": "Agrupa objetos o volúmenes seleccionados (Ctrl+G); los grupos de volúmenes admiten anidamiento y booleanos en cascada."
+      },
+      "ungroupBtn": {
+        "title": "Desagrupar",
+        "tip": "Disuelve el grupo de objetos o volúmenes seleccionado."
+      },
+      "addVolBtn": {
+        "title": "Crear volumen / plano",
+        "tip": "Permite crear caja, elipsoide, cilindro y plano de recorte infinito."
+      },
+      "transformCard": {
+        "title": "Transformación precisa (+Y arriba)",
+        "tip": "Edita numéricamente posición, rotación y escala del objeto, volumen o grupo seleccionado."
+      },
+      "histogram": {
+        "title": "Histograma RGB y luminancia",
+        "tip": "Muestra la distribución actual de color y exposición; punto azul = subexposición, punto rojo = sobreexposición."
+      },
+      "compareHold": {
+        "title": "Mantener para ver original",
+        "tip": "Mantenga pulsado (o tecla \\) para ver el original previo al ajuste de color."
+      },
+      "compareSplit": {
+        "title": "Comparación dividida",
+        "tip": "Activa la pantalla dividida arrastrable por píxeles (izquierda original / derecha ajustado)."
+      },
+      "colorApply": {
+        "title": "Aplicar y hornear a SH",
+        "tip": "Hornea los ajustes de color en tiempo real dentro de los coeficientes SH de la selección o el objeto."
+      },
+      "imgTransparent": {
+        "title": "Fondo transparente PNG",
+        "tip": "Exporta PNG con canal Alpha directo sin pérdida para composición posterior."
+      },
+      "imgHideHelpers": {
+        "title": "Ocultar ayudas al exportar",
+        "tip": "Oculta automáticamente cuadrícula, volúmenes, controles, gizmo y resaltados al capturar."
+      }
+    },
+    "measure": {
+      "cardAria": "Resultados de medición inteligente",
+      "calibCardAria": "Calibración de escala",
+      "cardTitle": "Medidor inteligente",
+      "dragTitle": "Arrastrar barra de título para mover el panel",
+      "copyBtn": "Copiar",
+      "copiedBtn": "Copiado",
+      "copyTip": "Copiar resultados de medición",
+      "pinBtn": "Fijar",
+      "pinTip": "Fijar esta medición e iniciar una nueva",
+      "clearBtn": "Limpiar",
+      "clearTip": "Limpiar medición actual",
+      "vizStandard": {
+        "label": "Estándar",
+        "tip": "Visualización normal de puntos y superposiciones de medida"
+      },
+      "vizTranslucent": {
+        "label": "Translúcido",
+        "tip": "Reduce la opacidad interior para ver claramente el plano base y el mástil de cima"
+      },
+      "vizHeatmap": {
+        "label": "Mapa altura",
+        "tip": "Colorea de azul a rojo según altura sobre la base para detectar ruido flotante"
+      },
+      "vizGrid": {
+        "label": "Malla 2.5D",
+        "tip": "Atenúa puntos internos y resalta la malla 2.5D y el plano base para verificar ajuste"
+      },
+      "baseFit": "Ajustar base",
+      "baseLowest": "Punto mín.",
+      "baseHorizontal": "Horizontal",
+      "baseThreePoint": "Base 3 pts",
+      "baseFitHist": "Ajustar plano base",
+      "baseLowestHist": "Base al punto mínimo",
+      "baseHorizontalHist": "Plano base horizontal",
+      "baseSwitchHist": "Cambiar plano base",
+      "baseThreePointHist": "Redefinir base con 3 pts",
+      "errPointsTooClose": "Los puntos están demasiado cerca para calibrar la escala",
+      "errInvalidLength": "Introduzca una longitud real mayor que 0",
+      "calibHist": "Calibrar escala ({val} {unit})",
+      "calibDone": "Escala calibrada sin pérdida (1 u virtual = {factor} m; medidas convertidas)",
+      "calibAlreadyDefault": "Ya se encuentra en la escala predeterminada 1:1",
+      "calibResetHist": "Restablecer escala (1:1)",
+      "calibResetDone": "Escala global restablecida a 1:1",
+      "basePickCanceled": "Selección de base en 3 pts cancelada",
+      "vizExited": "Vista de inspección cerrada; vista estándar restaurada",
+      "calibUndoFirst": "Primer punto deshecho; haga clic en el 1.er punto",
+      "calibUndoSecond": "Segundo punto deshecho; haga clic en el 2.º punto",
+      "baseUndoPt": "Punto de base deshecho ({count}/3)",
+      "undoAllPts": "Todos los puntos deshechos",
+      "undoPrevPt": "Último punto deshecho (quedan {count} pts)",
+      "polyClosed": "Polígono cerrado: cambie entre Área / Volumen o pulse «Ajuste inteligente»",
+      "smartSnapHist": "Ajuste inteligente de borde",
+      "smartSnapDone": "Ajuste completado ({count} puntos de borde ajustados; deshacible con Ctrl+Z)",
+      "basePickStart": "Base 3 pts: clic en 3 puntos de referencia sobre la base (Esc cancela)",
+      "baseSwitched": "Plano base cambiado a «{mode}»",
+      "baseHeightHist": "Ajustar altura del plano base",
+      "noiseFilterOnHist": "Activar filtro de ruido flotante",
+      "noiseFilterOffHist": "Desactivar filtro de ruido flotante",
+      "resetPeakHist": "Restaurar cima automática",
+      "kindDistance": "Distancia",
+      "kindPolyline": "Polilínea",
+      "kindArea": "Área",
+      "kindVolume": "Volumen",
+      "pinName": "{kind} #{id}",
+      "pinnedStatus": "Fijado «{name}»; listo para la siguiente medición",
+      "reportCalib": "[Escala calibrada: 1u = {factor} m · unidad {unit}]",
+      "reportStraight": "Distancia directa: {val}",
+      "reportHoriz": "Distancia horizontal: {val}",
+      "reportDeltaH": "Desnivel (ΔH): {val}",
+      "reportSlope": "Pendiente: {deg}° ({pct})",
+      "reportPolyTotal": "Longitud total ({segs} tramos): {val}",
+      "reportSeg": "  Tramo {idx}: {val}",
+      "reportAreaHead": "[Resultado de área]",
+      "reportProjArea": "Área proyectada horizontal: {val}",
+      "reportSurfArea": "Área de superficie: {val}",
+      "reportFitArea": "Área de plano ajustado: {val}",
+      "reportPerim": "Perímetro cerrado: {val}",
+      "reportVolHead": "[Resultado de volumen]",
+      "reportVolume": "Volumen estimado: {val}",
+      "reportMaxH": "Altura máxima: {val}",
+      "reportMeanH": "Altura media: {val}",
+      "reportBaseArea": "Área de base proyectada: {val}",
+      "copiedStatus": "Resultados copiados al portapapeles",
+      "softDeformNote": " (deformación suave)",
+      "dragVertexHint": "Arrastrando vértice{note}",
+      "dragBaseHint": "Desplazamiento base {offset}",
+      "dragPeakHint": "Altura de cima {height}",
+      "hoverBaseHint": "Arrastrar arriba/abajo para ajustar altura base",
+      "hoverPeakHint": "Arrastrar para corregir cima del volumen",
+      "hoverVertexSoftHint": "Arrastrar borde (deformación suave automática)",
+      "hoverVertexHint": "Arrastrar para mover el punto",
+      "hoverClosePoly": "Doble clic en el punto inicial para cerrar polígono (Área / Volumen)",
+      "hoverCalib1": "Clic en inicio de longitud conocida (1/2)",
+      "hoverCalib2": "Clic en fin de longitud conocida (2/2)",
+      "hoverBasePt": "Clic en punto de referencia base ({step}/3)",
+      "hoverPt1": "Clic en superficie sólida para 1.er punto (filtra flotantes)",
+      "hoverPt2": "Clic en 2.º punto (distancia / ΔH / pendiente)",
+      "hoverPtMore": "Seguir polilínea ({count} pts) · clic en inicio o cerrar abajo",
+      "noSolidHit": "No se detectó superficie sólida; pruebe otro punto",
+      "dragVertexHist": "Mover vértice de medición",
+      "manualPeakHist": "Ajustar cima manualmente",
+      "base3PtDone": "Plano base reajustado con 3 puntos sólidos",
+      "base3PtProgress": "Punto de base {count}/3 fijado",
+      "pinBadgeTotal": "📌 Total {val}",
+      "pinBadgeArea": "📌 Área {val}",
+      "pinBadgeVol": "📌 Vol. {vol} · Alt. {height}",
+      "virtualBadge": "Virtual {dist} u",
+      "peakBadge": "▲ Alt. máx {height}",
+      "calibTitle": "Calibrar escala",
+      "calibVirtualDist": "Distancia virtual",
+      "calibCurrentScaled": "Equivalencia actual {val} {unit}",
+      "calibPlaceholder": "Longitud real",
+      "calibNote": "Calibración no destructiva: solo actualiza el factor global sin modificar los puntos.",
+      "calibConfirm": "Aplicar escala",
+      "badgeTwoPt": "2 puntos",
+      "badgeCalibPill": "Calibrado ×{factor}",
+      "lblStraight": "Distancia directa",
+      "lblHoriz": "Dist. horizontal",
+      "lblDeltaH": "Desnivel ΔH",
+      "lblSlope": "Pendiente",
+      "lblSeg": "Tramo {idx}",
+      "badgePolyline": "Polilínea · {count} pts",
+      "lblPolyTotal": "Longitud total",
+      "tabArea": "Área",
+      "tabVolume": "Volumen",
+      "smartSnapAgain": "Reajustar borde",
+      "smartSnapBtn": "Ajuste inteligente",
+      "snapHintMini": "{count} vértices · Arrastrables · Ctrl+Z deshace",
+      "lblProjArea": "Área proyectada",
+      "lblSurfArea": "Área superficial",
+      "lblFitArea": "Área plano ajustado",
+      "lblPerim": "Perímetro",
+      "lblEstVol": "Volumen estimado",
+      "lblMaxH": "Altura máxima",
+      "lblManualTag": "(Manual)",
+      "lblMeanH": "Altura media",
+      "lblBaseArea": "Área de base",
+      "secBasePlane": "Plano base (arrastrar rombo cian)",
+      "lblOffset": "Despl. {val}",
+      "secPeakPole": "Cima (arrastrar esfera amarilla)",
+      "btnResetPeak": "Automático",
+      "chkNoiseFilter": "Filtrar ruido flotante (ignora puntos tenues dispersos)",
+      "secVizModes": "Vistas de inspección (Esc restaura)",
+      "emptyHint": "Haga clic en la superficie para medir; los elementos fijados permanecen abajo.",
+      "removePinTitle": "Quitar medición fijada",
+      "pinnedHeader": "Fijadas ({count})",
+      "clearPinsBtn": "Borrar todo",
+      "hoverStartVertexCloseHint": "Mantén y arrastra para ajustar el punto\nDoble clic para cerrar el polígono actual"
+    },
+    "align": {
+      "errCollinear": "Los tres puntos son casi colineales; elija tres puntos no alineados sobre el suelo.",
+      "errCoincident": "Los dos puntos coinciden; haga clic en la base y cima de una arista vertical.",
+      "errInsufficientPoints": "Puntos válidos insuficientes para el alineado automático.",
+      "hoverGroundPt": "Clic en la superficie a nivelar ({step}/3)",
+      "hoverVertPt1": "Clic en la base vertical (1/2)",
+      "hoverVertPt2": "Clic en la cima vertical (2/2)"
+    },
+    "semantic": {
+      "legacyUnloaded": "Sin cargar (en espera)",
+      "legacyWebgpu": "SAM 2 local (WebGPU cargado)",
+      "legacyWasm": "SAM 2 local (WASM cargado)",
+      "legacyBuiltin": "Motor integrado 2D/3D (acepta SAM 2 local)",
+      "legacyLoading": "Cargando modelo SAM 2 local en VRAM bajo demanda…",
+      "legacyReadFailed": "No se pudo leer el modelo SAM 2 local",
+      "samStandby": "{name} (en espera)",
+      "samFallbackEngine": "Motor integrado de respaldo",
+      "samExtractingBundled": "Extrayendo por primera vez SAM 2.1 integrado y motor de inferencia…",
+      "samLoadingModel": "Cargando {name}…",
+      "samFallbackWasm": "WebGPU no disponible; usando CPU (WASM) para cargar el modelo…",
+      "reasonDefault3dFewPixels": "3D por defecto (pocos píxeles objetivo)",
+      "reasonDefault3dFewRing": "3D por defecto (pocos puntos de referencia)",
+      "reasonCoplanar2d": "Coplanar y continuo con el fondo (región planar)",
+      "reasonVolumetric3d": "Espesor volumétrico o salto de profundidad (objeto 3D)",
+      "aborted": "Segmentación semántica cancelada",
+      "stageInitEngine": "Inicializando motor de segmentación semántica…",
+      "cpuWasmNote": "Usando inferencia CPU (WASM) (puede reducir vistas o usar el modelo ligero en Avanzado → Herramientas)",
+      "stagePrimaryTitle": "Segmentando objeto en vista principal…",
+      "stagePrimaryDesc": "Capturando vista principal y ejecutando segmentación…",
+      "modeAuto3d": "Detectado automáticamente: segmentación semántica 3D (objeto)",
+      "modeAuto2d": "Detectado automáticamente: segmentación semántica 2D (planar)",
+      "modeLocked3d": "Modo fijado: segmentación semántica 3D",
+      "modeLocked2d": "Modo fijado: segmentación semántica 2D",
+      "stageExtractSurface": "Extrayendo puntos Gaussian superficiales…",
+      "stageFilterDepth": "Filtrando puntos según profundidad de penetración…",
+      "stagePrimaryAnchors": "Extrayendo anclajes principales y envolvente 3D…",
+      "stageScreenViews": "Evaluando vistas sin oclusión en paralelo…",
+      "stageInferView": "Analizando vista válida {current} / {total} ({mode})…",
+      "viewModeSilent": "silencioso",
+      "viewModeVisible": "cambio visible",
+      "stageFuseViews": "Fusionando {count} vistas válidas y limpiando bordes de soporte…",
+      "prepAuto": "Detectando modo de segmentación 2D / 3D…",
+      "prepLocked": "Preparando segmentación semántica {mode}…",
+      "initStage": "Inicializando…",
+      "doneMsg": "{mode} completado: {count} pts seleccionados · {reason}",
+      "doneSkippedSuffix": " ({skipped} vistas ocluidas omitidas)"
+    },
+    "inpaint": {
+      "stagePrepareOrt": "Preparando entorno de inferencia ONNX…",
+      "stageLoadLama": "Cargando modelo de relleno planar LaMa (L2)…",
+      "stageLoadLamaWasm": "Cargando modelo LaMa en CPU (WASM)…",
+      "errLamaNotLoaded": "El modelo LaMa L2 aún no está cargado",
+      "stageFitPlane": "Muestreando borde del hueco y ajustando plano de soporte 3D…",
+      "errInsufficientCollar": "Pocos puntos planares alrededor del hueco; reduzca ligeramente el recuadro y asegure superficie alrededor.",
+      "errPlaneFitFailed": "No se pudo ajustar un plano de soporte válido desde los puntos circundantes.",
+      "errViewParallel": "La cámara está casi paralela al plano; elévela un poco mirando hacia la superficie e intente de nuevo.",
+      "needDownloadL2": "El modelo L2 (LaMa ONNX) no está descargado; descárguelo en un clic o cambie temporalmente a L1 geométrico rápido.",
+      "lamaUnavailable": "Modelo LaMa L2 no disponible; vuelva a descargarlo o cambie a L1.",
+      "cpuWasmNote": "Ejecutando L2 en CPU (WASM), tardará ~1–3 s…",
+      "stageOrthoCapture": "Capturando vista ortográfica HD según la normal del plano…",
+      "stageRunLama": "Ejecutando relleno Fourier LaMa y reproyectando al plano 3D…",
+      "stageRunL1": "Ejecutando relleno geométrico rápido L1 y síntesis local…",
+      "errEmptyProjection": "La proyección del recuadro está vacía; trace de nuevo sobre el hueco.",
+      "opTitleL2": "Relleno planar · L2 IA",
+      "opTitleL1": "Relleno planar · L1 Geométrico",
+      "stageSynth": "Ajustando plano de soporte y generando parche Gaussian…",
+      "opTitleL0": "Relleno plano · L0 Color sólido",
+      "stageRunL0": "Rellenando gaussianas planas L0 de color sólido..."
+    },
+    "volumes": {
+      "box": "Caja",
+      "ellipsoid": "Elipsoide",
+      "cylinder": "Cilindro",
+      "plane": "Plano de recorte",
+      "fallback": "Volumen",
+      "itemName": "{kind} #{num}",
+      "groupName": "Grupo vol. #{num}"
+    },
+    "perfHud": {
+      "fps": {
+        "label": "FPS actuales",
+        "desc": "Fotogramas por segundo del visor (conserva el último valor activo en reposo)"
+      },
+      "frameMs": {
+        "label": "Tiempo cuadro (ms)",
+        "desc": "Tiempo JavaScript + WebGL por fotograma en milisegundos"
+      },
+      "gpuUsage": {
+        "label": "Uso de GPU (%)",
+        "desc": "Carga en tiempo real del motor de cómputo GPU"
+      },
+      "vram": {
+        "label": "VRAM GPU (GB)",
+        "desc": "Memoria dedicada usada / total en GPU (GB Windows)"
+      },
+      "gpuShared": {
+        "label": "VRAM compartida (GB)",
+        "desc": "Memoria del sistema compartida utilizada por la GPU"
+      },
+      "gpuTemp": {
+        "label": "Temp. GPU (°C)",
+        "desc": "Temperatura del núcleo GPU (requiere sensor/NVML)"
+      },
+      "gpuPower": {
+        "label": "Consumo GPU (W)",
+        "desc": "Consumo total de la tarjeta GPU (requiere sensor/NVML)"
+      },
+      "gpuName": {
+        "label": "Modelo de GPU",
+        "desc": "Nombre del adaptador gráfico principal"
+      },
+      "cpuUsage": {
+        "label": "Uso de CPU (%)",
+        "desc": "Carga global en tiempo real del procesador"
+      },
+      "ram": {
+        "label": "RAM del sistema (GB)",
+        "desc": "Memoria física usada / total (GB Windows)"
+      },
+      "appRam": {
+        "label": "RAM del proceso (MB)",
+        "desc": "Memoria física usada por el proceso principal"
+      },
+      "commit": {
+        "label": "Commit disponible (GB)",
+        "desc": "Margen restante de memoria virtual asignable"
+      },
+      "scenePoints": {
+        "label": "Puntos y modo",
+        "desc": "Puntos activos en el visor y modo de renderizado"
+      },
+      "sharedVram": "Comp. {gb} GB",
+      "appRamFmt": "App {mb}",
+      "commitFmt": "Commit {gb}",
+      "pointsFmt": "{mode} {pts} pts",
+      "resetDefaults": "Restaurar predeterminados (FPS + GPU + CPU)"
+    },
+    "advMenu": {
+      "bundledActive": "Integrado · En uso",
+      "bundledDefault": "Integrado por defecto",
+      "installedActive": "Descargado · En uso",
+      "ready": "Listo",
+      "notDownloaded": "No descargado · {mb} MB",
+      "connecting": "Conectando al mejor servidor…",
+      "probing": "Buscando mejor servidor…",
+      "sizeMeta": "{badge} · ~{mb} MB",
+      "downloadBtn": "Descargar",
+      "switchUseBtn": "Usar"
+    },
+    "watchdog": {
+      "contextLost": "Contexto gráfico WebGL2 perdido (sobrecarga de VRAM o controlador)",
+      "mainThreadHang": "Hilo principal sin respuesta durante {sec} s",
+      "noTelemetry": "Sin telemetría en tiempo real",
+      "defaultReason": "Rendimiento insuficiente de GPU o memoria",
+      "stressTestReason": "Activado por prueba automática de estrés"
+    },
+    "domain": {
+      "boxReplace": "Caja reemplazar",
+      "boxAdd": "Caja añadir",
+      "boxSubtract": "Caja restar",
+      "boxIntersect": "Caja intersección",
+      "boxOpFallback": "Caja ({op})",
+      "selectOpFallback": "Selección ({op})",
+      "softDelete": "Borrado suave",
+      "deselect": "Deseleccionar",
+      "mismatchPointCount": "El número de puntos del origen \"{name}\" ha cambiado (receta {expected}, actual {actual}); se rechazó aplicar índices antiguos.",
+      "mismatchFingerprint": "La huella del origen \"{name}\" ha cambiado (posiblemente reordenado o reemplazado); se rechazó aplicar índices antiguos.",
+      "mismatchOrdering": "La versión de orden del origen \"{name}\" ha cambiado (receta {expected}, actual {actual}); se rechazó aplicar índices antiguos.",
+      "recipeInvalid": "La receta está vacía o no es un objeto JSON válido.",
+      "recipeV3Extra": "Campos extendidos v3 detectados ({keys}); se conservarán intactos al guardar.",
+      "recipeV4SubPalette": "Contiene paleta de transformación por subselección 3.2.2 (paletteMatrices/transformIdxRle); se conservará intacta en formato v4 al guardar.",
+      "recipeV4PaintDelta": "Contiene datos de pincel disperso 3.2.2 ({count} pts paintDelta); se conservarán intactos en formato v4 al guardar.",
+      "recipeV4OnlyIndices": "Contiene máscara de inclusión de grupo 3.2.2 (onlyIndicesRle); se conservará intacta en formato v4 al guardar.",
+      "recipeV4UnknownField": "Contiene campo v4 desconocido \"{field}\"; se conservará intacto al guardar.",
+      "recipeV4Loaded": "Receta 3.2.2 (v4) cargada (máscara de borrado / transformación / color); se guardará como v4 sin degradar a v3.",
+      "recipeUnsupportedVersion": "Versión de receta no compatible de forma segura (version={version}); original conservado sin descartar campos.",
+      "cameraTrackSidecarWarn": "El formato {label} ({suffix}) no admite fotogramas clave de cámara incrustados; se acompañará del manifiesto {sidecar} para no perder la pista.",
+      "recipeUnsupportedCoord": "Sistema de coordenadas de receta no reconocido ({coordSystem}); abierto en solo lectura para preservar el original sin sobrescritura silenciosa."
+    },
+    "status": {
+      "safeModeEntered": "Modo de ahorro de emergencia activado: bloqueado en «Centros» con selección básica y borrado; filtros, IA y herramientas pesadas congelados",
+      "safeModeExited": "Modo de ahorro desactivado; filtros, color y modos de visualización restaurados",
+      "boundsCenterOn": "«Usar centro de límites» activado: gizmo acoplado al centro geométrico del modelo seleccionado",
+      "boundsCenterOff": "«Usar centro de límites» desactivado: gizmo restaurado a su posición anterior",
+      "pivotEditOn": "Edición de pivote activada: arrastre las flechas para mover solo el origen; desactívela para transformar desde allí",
+      "pivotEditOff": "Edición de pivote desactivada: las transformaciones usarán el nuevo origen",
+      "spaceLocal": "Cambiado a «Espacio local»",
+      "spaceWorld": "Cambiado a «Espacio mundial (+Y arriba)»",
+      "keepAtLeastOneObj": "Debe permanecer al menos un objeto de escena; no se puede eliminar el último",
+      "keepAtLeastOneObjGroup": "Debe permanecer al menos un objeto; no se puede eliminar el grupo que contiene todos",
+      "groupedVolumes": "{count} volúmenes/subgrupos agrupados: {name}",
+      "groupedObjects": "{count} objetos agrupados: {name}",
+      "safeModeLockCenters": "Modo de ahorro bloqueado en «Centros» para evitar bloqueos (pulse «Restaurar modo completo» arriba)",
+      "safeModeLockCentersCycle": "Modo de ahorro bloqueado en «Centros» (pulse «Restaurar modo completo» arriba para cambiar)",
+      "flySpeedReset": "Velocidad de vuelo restablecida al valor recomendado ({speed})",
+      "camFlySwitched": "Cámara de Vuelo activada (vel. {speed} · izq. mirar · rueda avanzar · WASD/QE volar)",
+      "camOrbitSwitched": "Cámara Orbital activada (izq. rotar · der. desplazar · rueda zoom · doble clic pivote)",
+      "selectBeforeIsolate": "Seleccione puntos Gaussian antes de aislar",
+      "maxObjectsReached": "Máximo de {max} objetos independientes alcanzado",
+      "maxObjectsInpaint": "Máximo de {max} objetos independientes alcanzado; no se puede añadir capa de relleno",
+      "selectBeforeSplit": "Seleccione los puntos Gaussian que desea dividir",
+      "selectBeforeDup": "Seleccione los puntos Gaussian que desea duplicar",
+      "semanticCanceled": "Segmentación semántica cancelada",
+      "semanticAborted": "Segmentación semántica interrumpida",
+      "semanticFailed": "Error de segmentación semántica: {error}",
+      "semanticEscCanceled": "Segmentación semántica cancelada con Esc",
+      "wbPickEnabled": "Cuentagotas de balance de blancos activo: clic en gris neutro o blanco (Esc sale)",
+      "hslPickEnabled": "Selector HSL activo: mantenga izq. sobre un color y deslice horizontalmente (Esc sale)",
+      "safeModeToolsFrozen": "En modo de ahorro solo están activos selección básica y borrado",
+      "exitedBrowse": "Modo Navegar desactivado y gizmo oculto (pulse 1 o doble clic para reactivar)",
+      "activatedBrowse": "Modo Navegar activado",
+      "toolCanceledToBrowse": "Herramienta cancelada; regreso a modo Navegar (1)",
+      "browseCoexistOn": "«Navegar» + «{tool}» activos: clic izq. orbita libremente (pulse 1 para volver al clic de herramienta)",
+      "browseCoexistOff": "Modo de lienzo de la herramienta restaurado",
+      "leftSemanticFreed": "Salida de selección semántica; VRAM del modelo local liberada al instante",
+      "leftInpaintFreed": "Salida de relleno planar; VRAM del modelo LaMa liberada al instante",
+      "semanticReady": "Selección semántica lista: {status} · Mantenga Ctrl + arrastre izq. sobre el objeto",
+      "semanticDragHint": "Mantenga Ctrl + arrastre izq. para encuadrar el objeto a segmentar",
+      "downloadL2Started": "Buscando mejor servidor e iniciando descarga del modelo LaMa L2…",
+      "inpaintDone": "Relleno planar ({mode}) listo: {count} puntos generados sobre el plano",
+      "inpaintFailed": "Error en relleno planar: {error}",
+      "autoAlignDone": "Autoalineado listo: suelo en Y=0 (+Y arriba), {detail} (Ctrl+Z deshace)",
+      "autoAlignWall": "paredes alineadas con los ejes X/Z",
+      "autoAlignCentered": "centrado sobre el origen",
+      "autoAlignFailed": "Error al autoalinear: {error}",
+      "opencvZupDone": "Modelo volteado de OpenCV (-Y) a +Y arriba (Ctrl+Z para deshacer)",
+      "safeModeColorFrozen": "«Color Pro» congelado en modo de ahorro; pulse «Restaurar modo completo» arriba para desbloquear",
+      "colorDefaultNoBake": "Los parámetros de color están por defecto; no requiere horneado",
+      "noSceneHit": "No se alcanzó ningún punto de la escena; pruebe otro lugar",
+      "wbCalibrated": "Balance de blancos calibrado desde el punto muestreado",
+      "semanticBoxMinPx": "Arrastre un rectángulo sobre el objeto (mínimo 8 px)",
+      "inpaintBoxMinPx": "Arrastre un rectángulo sobre el hueco planar (mínimo 8 px)",
+      "eyedropperPicked": "Color muestreado; ajuste la tolerancia y pulse Reemplazar / Añadir / Restar / Intersec.",
+      "semanticUseCtrlDrag": "Semántica: mantenga Ctrl + arrastre izq. sobre el objeto (clic izq. normal orbita)",
+      "verticalAlignDone": "Alineado vertical listo (+Y arriba); use Voltear / Deshacer / Repetir abajo",
+      "groundAlignDone": "Nivelado de plano listo (Y=0 · +Y arriba); use Voltear / Deshacer / Repetir abajo",
+      "pivotSet": "Pivote fijado en ({x}, {y}, {z}) · W/E/R cambia el gizmo",
+      "gizmoHidden": "Gizmo 3D oculto (pulse W/E/R o doble clic en un punto para mostrarlo)",
+      "camOrthoSwitched": "Cámara cambiada a proyección ortográfica",
+      "camPerspSwitched": "Cámara cambiada a proyección en perspectiva",
+      "eyedropperExited": "Cuentagotas desactivado",
+      "viewImageRendered": "Imagen renderizada {w}×{h}",
+      "viewImageFailed": "Error al exportar imagen: {error}",
+      "viewImageSaved": "Imagen guardada en {path}",
+      "exportCanceled": "Exportación cancelada",
+      "selectOneObject": "Marque al menos un objeto de escena",
+      "unsupportedRecipeKept": "Formato de receta no compatible detectado; original conservado",
+      "restoreRecipeFailed": "Error al restaurar receta existente: {error} (original conservado sin sobrescribir)",
+      "journalReplayed": "Cargado con menor densidad y {count} pasos de historial restaurados",
+      "modelLoadFailed": "Error al cargar el modelo: {error}",
+      "modelDownloading": "Descargando modelo ({percent}%): {stage}",
+      "mergedObjects": "Se combinaron {count} objetos de escena en «{name}» (Ctrl+Z para deshacer)",
+      "mergedVolumes": "Se combinaron {count} volúmenes en «{name}» (Ctrl+Z para deshacer)",
+      "semanticUseShiftDrag": "Selección semántica: mantén Shift + arrastre izq. para encuadrar (Ctrl Sumar · Alt Restar; arrastre izq. normal orbita)",
+      "colorWheelPickEnabled": "Cuentagotas activo: haz clic en el modelo para muestrear color (Esc para salir)",
+      "colorWheelPicked": "Color muestreado desde la vista"
+    },
+    "colorWheel": {
+      "title": "Elegir color",
+      "eyedropper": "Cuentagotas",
+      "recent": "Colores recientes",
+      "pickHoverHint": "Clic para muestrear {hex}"
+    }
+  }
+}

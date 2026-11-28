@@ -143,6 +143,28 @@ async function notices(runtime) {
   for (const name of licensePaths) parts.push(name, fs.readFileSync(path.join(root, 'node_modules', name), 'utf8'));
   const libwebp = await download('https://raw.githubusercontent.com/webmproject/libwebp/v1.6.0/COPYING', path.join(cache, 'libwebp-COPYING'));
   parts.push('libwebp (upstream WebP codec)', fs.readFileSync(libwebp, 'utf8'));
+  parts.push(
+    '3D Gaussian Editor Open-Source Acknowledgments & Third-Party Notices\n' +
+    '--------------------------------------------------------------------\n' +
+    '1. ReSplat Editor (Copyright (c) 2025 Re祁) - CC BY 4.0\n' +
+    '   Referenced & adapted for Ring Mode shader parameters, full Color Grading & 8-band HSL/3D LUT/SH baking,\n' +
+    '   Special Selection workflows, local SAM 2 ONNX lazy-loading design, bit-exact PNG writer, and pro dark UI layout.\n' +
+    '   License: https://creativecommons.org/licenses/by/4.0/\n\n' +
+    '2. SuperSplat (Copyright (c) 2011-2026 PlayCanvas Ltd.) - MIT License\n' +
+    '   Upstream 3D Gaussian Splatting editor architecture and Spherical Harmonics Band 1-3 rotation math.\n' +
+    '   https://github.com/playcanvas/supersplat\n\n' +
+    '3. Spirula Studio (harry7557558) - GPL-3.0 (UX & algorithmic inspiration only; clean-room implementation)\n' +
+    '   Inspired 6-face push/pull bounding volume handles (Shift symmetric stretch), +Z-up auto ground/wall alignment, and lasso/ellipse selection UX.\n' +
+    '   https://github.com/harry7557558/spirula-studio\n\n' +
+    '4. GaussianSplatEditor (TimChen1383 / PlayCanvas Ltd.) - MIT License\n' +
+    '   Opacity and scale/size selection tool design reference.\n\n' +
+    '5. Three.js (The Three.js Authors) - MIT License\n' +
+    '   WebGL2 viewport, camera, OrbitControls, and TransformControls.\n\n' +
+    '6. Meta Segment Anything 2 (SAM 2) (Meta Platforms, Inc.) - Apache-2.0 License\n' +
+    '   & ONNX Runtime Web (Microsoft Corporation) - MIT License\n' +
+    '   Optional local ONNX semantic segmentation model interface with lazy VRAM load/release.\n\n' +
+    '7. Lucide Icons - ISC License\n'
+  );
   const dest = path.join(cache, 'THIRD-PARTY-LICENSES.txt');
   fs.writeFileSync(dest, parts.join('\n\n'));
   return dest;
