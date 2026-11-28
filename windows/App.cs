@@ -188,7 +188,7 @@ sealed class MainWindow : Form {
         MinimumSize = new Size(1180, 760);
         Size = new Size(1360, 870);
         StartPosition = FormStartPosition.CenterScreen;
-        Text = "Splat Convert Desktop 3.2.3";
+        Text = "Splat Convert Desktop 1.9.0";
         TooltipConfig.Load();
         advState.LoadFromSettings();
         try { Icon = System.Drawing.Icon.ExtractAssociatedIcon(Application.ExecutablePath) ?? SystemIcons.Application; }
@@ -970,7 +970,7 @@ sealed class MainWindow : Form {
         var diagnostic = Diagnostics.Classify(error, job == null ? "auto" : job.Device);
         string details = diagnostic.Text;
         if (estimate != null) details += "\n\n" + Budget.Describe(estimate, resources);
-        string raw = "Splat Convert Desktop 3.2.3\nOS: " + Environment.OSVersion + "\nEngine: " + EngineManager.ActiveVersion + "\n" +
+        string raw = "Splat Convert Desktop 1.9.0\nOS: " + Environment.OSVersion + "\nEngine: " + EngineManager.ActiveVersion + "\n" +
             (job == null ? "" : "Format: " + job.Format.Suffix + "; Device: " + job.Device + "; Workers: " + job.Workers + "\n") + details + "\n\n" + error;
         if (ErrorOverride != null) { ErrorOverride(diagnostic, raw); return; }
         MessageDialog.Failure(this, I18n.T(diagnostic.TitleKey), details, raw, () => {

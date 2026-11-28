@@ -12,7 +12,7 @@ using System.Threading;
 
 [assembly: AssemblyTitle("SuperSplat Convert Desktop")]
 [assembly: AssemblyProduct("SuperSplat Convert Desktop")]
-[assembly: AssemblyVersion("3.2.3.0")]
+[assembly: AssemblyVersion("1.9.0.0")]
 
 sealed class Format {
     public readonly string Suffix;

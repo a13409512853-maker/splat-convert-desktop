@@ -312,7 +312,7 @@ static class ModelManager {
             req.Timeout = 4500;
             req.ReadWriteTimeout = 4500;
             req.AllowAutoRedirect = true;
-            req.UserAgent = "SplatConvertDesktop/3.2.3";
+            req.UserAgent = "SplatConvertDesktop/1.9.0";
             using (ct.Register(() => { try { req.Abort(); } catch { } }))
             using (var resp = (HttpWebResponse)req.GetResponse()) {
                 int code = (int)resp.StatusCode;
@@ -332,7 +332,7 @@ static class ModelManager {
             req.Timeout = 15000;
             req.ReadWriteTimeout = 30000;
             req.AllowAutoRedirect = true;
-            req.UserAgent = "SplatConvertDesktop/3.2.3";
+            req.UserAgent = "SplatConvertDesktop/1.9.0";
 
             using (ct.Register(() => { try { req.Abort(); } catch { } }))
             using (var resp = (HttpWebResponse)req.GetResponse())

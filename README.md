@@ -4,11 +4,11 @@
 
 > **创作者归属保证**：你用本软件编辑、压缩或封装导出的任何 `.ply` / `.sog` / `.exe` / `.apk` 成品，其版权与商业分发权 **100% 归你所有**，本软件不主张任何权利，无需开源你的业务资产。
 
-当前 Windows 里程碑版本：**`v3.2.3-rc14`**（内置引擎 `@playcanvas/splat-transform` **3.12.0**，内置离线 `SAM 2.1 Hiera Tiny` 语义模型，7 语种 **1,797 Key** 完整覆盖）。
+当前 Windows 发行版本：**`V1.9`（`1.9.0`）**（内置引擎 `@playcanvas/splat-transform` **3.12.0**，内置离线 `SAM 2.1 Hiera Tiny` 语义模型，7 语种 **1,797 Key** 完整覆盖）。
 
 ---
 
-## 核心特性（v3.2.3）
+## 核心特性（V1.9）
 
 ### 1. 严格便携的现代桌面转换工作台
 - **零外部残留便携架构**：所有配置、缓存、日志、语言扩展与解耦引擎均落在程序同级 `data/` 目录，不写注册表或 `AppData`。
@@ -34,9 +34,9 @@
 
 ---
 
-## 下一代 V4 重构规划（Godot 4.6 + C++ RenderingDevice）
+## 下一代 V2.0 重构规划（重构验收无误后发布 V2.0）（Godot 4.6 + C++ RenderingDevice）
 
-为进一步突破千万级点云编辑帧率并实现「**3D 展示编排（人物/小鸟骨骼动画、1/3 人称物理漫游、热点切入建筑内部、天空球、9 系数 SH 探针光照反推与重打光）+ 零 SDK 一键封装独立 Windows `.exe` / Android `.apk`**」，后续 V4 将全面升级至 **Godot 4.6 + 同一套 C++ `RenderingDevice` / `CompositorEffect (POST_SKY)`** 统一原生底座。
+为进一步突破千万级点云编辑帧率并实现「**3D 展示编排（人物/小鸟骨骼动画、1/3 人称物理漫游、热点切入建筑内部、天空球、9 系数 SH 探针光照反推与重打光）+ 零 SDK 一键封装独立 Windows `.exe` / Android `.apk`**」，下一代 **V2.0** 将全面升级至 **Godot 4.6 + 同一套 C++ `RenderingDevice` / `CompositorEffect (POST_SKY)`** 统一原生底座。
 
 ---
 
@@ -61,7 +61,7 @@ node tests/parallel-bake-bench.test.mjs
 node tests/domain-contract.test.mjs
 
 # 3. 构建 Windows 单文件便携版 EXE
-.\windows\Build.ps1 -Output ".\dist\Splat-Convert-Desktop-3.2.3-win-x64.exe"
+.\windows\Build.ps1 -Output ".\dist\Splat-Convert-Desktop-1.9.0-win-x64.exe"
 ```
 
 ---

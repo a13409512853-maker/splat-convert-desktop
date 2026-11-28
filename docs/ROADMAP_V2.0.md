@@ -1,7 +1,7 @@
-# Splat Convert Desktop V4 · 下一步开发计划、详细技术路线与未来展望（审阅版）
+# Splat Convert Desktop V2.0 · 下一步开发计划、详细技术路线与未来展望（审阅版）
 
 > **文档状态**：待用户技术审阅与开工授权（编制日期：2026-11-28）。
-> **当前基线**：`v3.2.3-rc14` 已整理为可独立备份上传的 GitHub 开源快照（见 `05_构建发布产物/GitHub_Release_v3.2.3/`）。
+> **当前基线**：`V1.9`（`1.9.0`） 已整理为可独立备份上传的 GitHub 开源快照（见 `05_构建发布产物/GitHub_Release_V1.9/`）。
 > **开源协议**：**Apache 2.0**（含完整 `NOTICE` 与 `THIRD_PARTY_LICENSES.md`，并随导出的 `.exe` / `.apk` 模板包附带）。
 >
 > **创作者归属保证（写入仓库首页、关于页与导出界面）**：
@@ -9,9 +9,9 @@
 
 ---
 
-## 一、战略目标：为什么要在此刻启动 V4 架构跃迁？
+## 一、战略目标：为什么要在此刻启动 V2.0 架构跃迁？
 
-经过 `v3.2.0 → v3.2.3-rc14` 的完整打磨，我们已经把 3DGS 编辑交互范式（`+Y` 朝上、组合包裹体 CSG、Camera Raw 调色、SAM 2.1 语义分割、LaMa 平面补洞、智能测量、7 国语言）和 64 MiB 有界多核无损烘焙全部跑通，并通过 `002-B` 原生 Vulkan 旁路实测证实了原生显卡管线带来的 **5.6×–11× 帧率跃升**与 **4.7×–6.2× 内存骤降**。
+经过 `V1.1 → V1.9`（内部演进至 `3.2.3-rc14` 封口） 的完整打磨，我们已经把 3DGS 编辑交互范式（`+Y` 朝上、组合包裹体 CSG、Camera Raw 调色、SAM 2.1 语义分割、LaMa 平面补洞、智能测量、7 国语言）和 64 MiB 有界多核无损烘焙全部跑通，并通过 `002-B` 原生 Vulkan 旁路实测证实了原生显卡管线带来的 **5.6×–11× 帧率跃升**与 **4.7×–6.2× 内存骤降**。
 
 同时，产品规划已从单纯的“格式转换 + 清洗工具”升级为**全链路 3DGS 生产与跨端交互发布平台**：
 1. **阶段一 · 资产管理与 3D 清洗编辑**：极速导入千万级点云，保留完整 3 阶球谐反光、零拷贝非破坏性精修与无损导出；
@@ -22,7 +22,7 @@
 
 ---
 
-## 二、V4 核心技术宪法与详细架构设计
+## 二、V2.0 核心技术宪法与详细架构设计
 
 ### 2.1 总体分层架构（单进程、单显存、三工作区统一）
 
@@ -157,7 +157,7 @@ project_bundle/
 
 | 任务编号 | 核心内容 | 对照参考源码（`02_参考源码/`） | 验收硬指标 |
 | :---: | --- | --- | --- |
-| **M0.1** | 初始化 V4 Godot 4.6 仓库骨架（`LICENSE` / `NOTICE` / `THIRD_PARTY_LICENSES.md` + CMake/SCons Windows x64 `.dll` & Android ARM64 `.so` 构建脚本） | `godot-cpp`, `godot-cpp-template` | Win64 `.dll` 与 Android `.so` 编译 0 告警，Godot 4.6 成功加载插件 |
+| **M0.1** | 初始化 V2.0 Godot 4.6 仓库骨架（`LICENSE` / `NOTICE` / `THIRD_PARTY_LICENSES.md` + CMake/SCons Windows x64 `.dll` & Android ARM64 `.so` 构建脚本） | `godot-cpp`, `godot-cpp-template` | Win64 `.dll` 与 Android `.so` 编译 0 告警，Godot 4.6 成功加载插件 |
 | **M0.2** | 实现 `CompositorEffect (POST_SKY)` + `RenderingDevice` 渲染核：32B 紧凑几何 + 量化 `SH0–3`（`.ply` 分块 8-bit + `.sog` 色卡）+ Float 高 16 位 2-pass Reduce-then-Scan 排序 + 视锥/Min Splat Size 剔除 + Indirect Draw + `Stochastic Alpha` + `Radial` 排序 + 真 `POINT_LIST` `Centers` | `godot-gaussian-splatting`, `engine`, `pocketsplat`, `vk_gaussian_splatting`, `spz` | 3,487 万点《妖娆塞上》全量 SH3 编辑显存 `≤ 3.5 GB`，拖动期（Stochastic Alpha）`≥ 60 FPS`、静止精排 `≥ 30 FPS`，`Centers+SH0` `≥ 100 FPS`；Vulkan Validation 0 Error |
 | **M0.3** | 验证 `EDIT_PROFILE` vs `STAGE_PROFILE` 同核零拷贝切换：插入带骨骼 `.glb` 人物 + 天空球 + Reverse-Z 像素遮挡 + 9 系数 SH 探针受光 + 编辑态色准比对 | `godot-gaussian-splatting`, `supersplat` | 人物穿行高斯柱体前后像素级遮挡无穿帮；编辑态与原图色准 ΔE 达标；双模式切换显存增量 `≈ 0 MB` |
 | **M0.4** | 验证零 SDK 导出最小 `.exe`（Embedded PCK）与 `.apk`（含 Streamed SOG LOD），在真实 Windows PC 与真机/模拟器安卓端跑通 | `splat-transform` | 导出耗时 `< 5s`，导出的 `.exe` 与 `.apk` 脱离开发环境独立启动流畅，内附 `NOTICE` |
@@ -165,7 +165,7 @@ project_bundle/
 ---
 
 ### Milestone 1 · 精简两栏主界面 + 完整 3D 清洗编辑模块迁移
-> **目标**：把你在其他对话设计好的新版两栏 Studio 主界面，以及 `v3.2.3` 经过验证的全套 3D 编辑工具无损迁移到 Godot 4.6，全面替代旧 WebView2 编辑器。
+> **目标**：把你在其他对话设计好的新版两栏 Studio 主界面，以及 `V1.9` 经过验证的全套 3D 编辑工具无损迁移到 Godot 4.6，全面替代旧 V1.9 WebView2 编辑器。
 
 - **M1.1 新版主界面与通用控件落地**：按新 UI 原型与 `design-tokens.json` 脚本自动生成 Godot `theme_dark.tres / theme_light.tres`；封装 `DragFloatField`、`ScrubSlider`、可复用色相环组件、延时 `BeginnerTipPopup`、0.5s 硬件遥测曲线 `_draw()`、`FileDialog.use_native_dialog`、7 国语言 `locales/*.json` 加载器。
 - **M1.2 零拷贝非破坏性编辑会话与 GPU Compute 选区**：
@@ -199,15 +199,15 @@ project_bundle/
 
 ---
 
-### Milestone 3 · 生态扩展与未来中长期展望（V4.1 – V5.0）
+### Milestone 3 · 生态扩展与未来中长期展望（V2.1 – V3.0）
 
 | 演进方向 | 核心能力规划 | 技术预留接口 |
 | --- | --- | --- |
-| **静态 HTML 网页第二出口（V4.1）** | 复用标准化 `scene.json` + Streamed SOG + `.glb`，一键导出兼容 PlayCanvas WebGPU/WebGL2 的纯静态网页包（支持微信/手机浏览器扫码直开） | `supersplat-viewer` 协议已在 M2 对齐 |
-| **亿级超大规模点云编辑（V4.2）** | 八叉树空间分块 + 巨型点强制置顶根节点常驻显存 + 后台按视锥流式换页 + 全量原始索引 Bitmask 非破坏删除 | 底层引用共享与稀疏 Bitmask 已在 M1 预留 |
-| **离线高精逆渲染重打光插件（V4.3）** | 可选下载扩展插件（基于 `GI-GS` / `GHPT` 等 Apache/MIT 方案），把静态高斯分解为 Albedo / 法线 / 粗糙度，实现任意旋转太阳的影院级重打光 | 插件化 AI 侧车与多链路下载器统一承接 |
-| **4DGS 动态时序泼溅（V4.5+）** | 支持导入与剪辑动态 4D 高斯序列，在展示编排中作为动态人物/水流/火焰元素融入静态扫描场景 | `RenderingDevice` 双缓冲异步流式帧更新 |
-| **创作者插件生态与模板库（V5.0）** | 开放 Godot GDExtension / 脚本扩展 API（自定义选区工具、自定义导出器、交互小部件模板如展馆语音导览/房产户型切换），结合 Apache 2.0 聚拢创作者社区 | `scene.json` 插件扩展字段 + 外部 `locales/` 热加载 |
+| **静态 HTML 网页第二出口（V2.1）** | 复用标准化 `scene.json` + Streamed SOG + `.glb`，一键导出兼容 PlayCanvas WebGPU/WebGL2 的纯静态网页包（支持微信/手机浏览器扫码直开） | `supersplat-viewer` 协议已在 M2 对齐 |
+| **亿级超大规模点云编辑（V2.2）** | 八叉树空间分块 + 巨型点强制置顶根节点常驻显存 + 后台按视锥流式换页 + 全量原始索引 Bitmask 非破坏删除 | 底层引用共享与稀疏 Bitmask 已在 M1 预留 |
+| **离线高精逆渲染重打光插件（V2.3）** | 可选下载扩展插件（基于 `GI-GS` / `GHPT` 等 Apache/MIT 方案），把静态高斯分解为 Albedo / 法线 / 粗糙度，实现任意旋转太阳的影院级重打光 | 插件化 AI 侧车与多链路下载器统一承接 |
+| **4DGS 动态时序泼溅（V2.5+）** | 支持导入与剪辑动态 4D 高斯序列，在展示编排中作为动态人物/水流/火焰元素融入静态扫描场景 | `RenderingDevice` 双缓冲异步流式帧更新 |
+| **创作者插件生态与模板库（V3.0）** | 开放 Godot GDExtension / 脚本扩展 API（自定义选区工具、自定义导出器、交互小部件模板如展馆语音导览/房产户型切换），结合 Apache 2.0 聚拢创作者社区 | `scene.json` 插件扩展字段 + 外部 `locales/` 热加载 |
 
 ---
 
@@ -223,12 +223,12 @@ project_bundle/
 
 ---
 
-## 五、审阅确认清单（请审阅后批复，确认即启动 Milestone 0）
+## 五、审阅确认清单（请审阅后批复，确认即启动 V2.0 Milestone 0（重构完成并通过你验收后正式发布 V2.0））
 
 在下一轮对话正式开工前，请你确认以下 5 项关键决策：
 
-1. [ ] **Godot 版本锁定**：同意直接以 **Godot 4.6 稳定版**（内置 Jolt 物理默认启用）作为 V4 开发与导出模板基线（同意本机安装 Godot 4.6 与 Android NDK / SCons 交叉编译链用于编 `.so`）。
+1. [ ] **Godot 版本锁定**：同意直接以 **Godot 4.6 稳定版**（内置 Jolt 物理默认启用）作为 V2.0 开发与导出模板基线（同意本机安装 Godot 4.6 与 Android NDK / SCons 交叉编译链用于编 `.so`）。
 2. [ ] **渲染与双档位设计**：同意 `CompositorEffect` 挂点定在 **`POST_SKY`**、禁用 MSAA、Float 高 16 位 2-pass Reduce-then-Scan 排序、`EDIT_PROFILE` vs `STAGE_PROFILE` 同核零拷贝切换，以及正常编辑满血量化 `SH3` vs 应急 Safe Mode 硬件 `POINT_LIST + SH0`。
-3. [ ] **开源协议与声明**：同意 V4 仓库采用 **`Apache 2.0`** + `NOTICE` 完整传递 + 文首「创作者归属保证」。
+3. [ ] **开源协议与声明**：同意 V2.0 仓库采用 **`Apache 2.0`** + `NOTICE` 完整传递 + 文首「创作者归属保证」。
 4. [ ] **推进节奏**：同意先跑完 **Milestone 0（最小核心验证 POC：3,487 万点渲染 + 遮挡 + SH 探针 + 最小 `.exe`/`.apk` 模板验证）** 并通过真机验收后，再全面启动 Milestone 1（接入你在其他对话设计好的新版两栏主 UI + 迁移完整编辑工具）。
 5. [ ] **其他补充要求**：如有需要增删的功能、目标测试手机型号或偏好调整，请直接批注。

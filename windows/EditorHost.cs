@@ -68,7 +68,7 @@ static class EditorAssets {
         }
     }
 
-    internal static string Version { get { return Manifest.version ?? "3.2.3"; } }
+    internal static string Version { get { return Manifest.version ?? "1.9.0"; } }
     internal static string EditorKind { get { return Manifest.editorKind ?? "native-owned"; } }
     internal static string Entry { get { return Manifest.entry.Replace('\\', '/').TrimStart('/'); } }
     internal static string AssetsHash { get { return Manifest.assetsHash; } }

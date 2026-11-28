@@ -108,7 +108,7 @@ handle('convert', async request => {
     if (active.signal.aborted) return { canceled: true };
     const diagnosis = classify(error);
     const detail = [t(diagnosis.detail || diagnosis.title), t(diagnosis.advice), estimateText(estimate, state)].filter(Boolean).join('\n\n');
-    const raw = 'Splat Convert Desktop 3.2.3\n' + process.platform + ' / ' + process.arch + '\n' + detail + '\n\n' + error.stack;
+    const raw = 'Splat Convert Desktop 1.9.0\n' + process.platform + ' / ' + process.arch + '\n' + detail + '\n\n' + error.stack;
     if (!quitting) {
       let response;
       do {

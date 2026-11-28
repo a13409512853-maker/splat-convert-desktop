@@ -1,4 +1,4 @@
-// Complete +Y-Up 3D Gaussian Splatting Editor Orchestrator (v3.2.3)
+// Complete +Y-Up 3D Gaussian Splatting Editor Orchestrator (V1.9 / 1.9.0)
 // Integrates:
 // - WebGL2 Instanced-Quad 3DGS Cloud (Points / 100% Lossless Splat / ReSplat Rings) + Async Sort Worker
 // - Multi-Object & Group Scene Graph with O(1) GPU per-object 4x4 transforms
@@ -120,7 +120,7 @@ let hostBootInfo = {
   editorKind: "native-owned",
   editorEntry: "index.html",
   assetsHash: "",
-  version: "3.2.3",
+  version: "1.9.0",
 };
 let lastRecipeCompat = null;
 let totalSourcePoints = 0;
@@ -7672,7 +7672,7 @@ window.chrome?.webview?.addEventListener("message", async (e) => {
       editorKind: msg.editorKind || "native-owned",
       editorEntry: msg.editorEntry || "index.html",
       assetsHash: msg.assetsHash || "",
-      version: msg.appVersion || "3.2.3",
+      version: msg.appVersion || "1.9.0",
       fileName: currentFileName,
       locationHref: window.location.href,
     };

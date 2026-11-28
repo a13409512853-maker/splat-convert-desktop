@@ -48,7 +48,7 @@ import { layout, readExact } from "../windows/editor/ply.mjs";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const PROJ_DIR = path.resolve(__dirname, "..");
-const DEFAULT_EXE = path.join(PROJ_DIR, "dist", "Splat-Convert-Desktop-3.2.3-rc2-win-x64.exe");
+const DEFAULT_EXE = path.join(PROJ_DIR, "dist", "Splat-Convert-Desktop-1.9.0-win-x64.exe");
 const WORKER_JS = path.join(PROJ_DIR, "windows", "editor", "worker.mjs");
 const EXE_PATH = process.argv[2] ? path.resolve(process.argv[2]) : DEFAULT_EXE;
 const REPORT_OUT = process.argv[3] ? path.resolve(process.argv[3]) : null;

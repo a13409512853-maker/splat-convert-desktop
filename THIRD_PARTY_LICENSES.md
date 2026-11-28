@@ -6,12 +6,12 @@
 
 ---
 
-## 一、核心依赖与捆绑组件（v3.2.3 当前版本）
+## 一、核心依赖与捆绑组件（V1.9 当前版本）
 
 | 项目 | 上游仓库 | 版权声明 | 许可证 | 用途说明 |
 | --- | --- | --- | :---: | --- |
 | **PlayCanvas Splat Transform** | https://github.com/playcanvas/splat-transform | Copyright (c) 2011-2026 PlayCanvas Ltd. | **MIT** | 高斯泼溅核心编解码、压缩转换与体素生成引擎（v3.12.0） |
-| **Three.js** | https://github.com/mrdoob/three.js | Copyright (c) 2010-2026 three.js authors | **MIT** | v3.2.3 WebGL2 3D 编辑器视口、相机与变换控点基础库 |
+| **Three.js** | https://github.com/mrdoob/three.js | Copyright (c) 2010-2026 three.js authors | **MIT** | V1.9 WebGL2 3D 编辑器视口、相机与变换控点基础库 |
 | **Meta SAM 2 / SAM 2.1 Tiny ONNX** | https://github.com/facebookresearch/sam2 | Copyright (c) Meta Platforms, Inc. and affiliates | **Apache 2.0** | 本地 2D/3D 语义框选分割模型权重与接口 |
 | **ONNX Runtime (Web / C++)** | https://github.com/microsoft/onnxruntime | Copyright (c) Microsoft Corporation | **MIT** | 本地离线 AI 模型推理运行时（WebGPU/WASM / DirectML） |
 | **LaMa Inpainting** | https://github.com/advimman/lama | Copyright (c) Samsung AI Center Moscow | **Apache 2.0** | 平面补洞 L2 智能纹理修复模型（可选下载） |
@@ -26,17 +26,17 @@
 | 项目 | 上游仓库 | 版权声明 | 许可证 | 说明 |
 | --- | --- | --- | :---: | --- |
 | **PlayCanvas SuperSplat & Engine** | https://github.com/playcanvas/supersplat | Copyright (c) PlayCanvas Ltd. | **MIT** | 3DGS 编辑范式、球谐旋转、量化 SH 与状态零拷贝架构参考 |
-| **ReSplat Editor** | https://github.com/Re-qi/ReSplat_Editor | Copyright (c) 2025 Re祁 | **CC BY 4.0** | 环模式、专业调色与选区交互理念参考（v3.2.3 源码已 100% 自主重写，零包含非商用 NanoGS） |
+| **ReSplat Editor** | https://github.com/Re-qi/ReSplat_Editor | Copyright (c) 2025 Re祁 | **CC BY 4.0** | 环模式、专业调色与选区交互理念参考（V1.9 源码已 100% 自主重写，零包含非商用 NanoGS） |
 | **GaussianSplatEditor** | https://github.com/TimChen1383/GaussianSplatEditor | Copyright (c) TimChen1383 | **MIT** | 透明度与尺寸筛选工具设计参考 |
 | **Spirula Studio** | https://github.com/harry7557558/spirula-studio | Copyright (c) harry7557558 | **GPL-3.0** | **仅参考交互概念**（六面推拉包裹体控点思路），**零代码复制与衍生** |
 
 ---
 
-## 三、V4 下一代重构计划引入的兼容组件（MIT / Apache 2.0）
+## 三、V2.0 下一代重构计划引入的兼容组件（MIT / Apache 2.0）
 
 | 项目 | 上游仓库 | 许可证 | 计划用途 |
 | --- | --- | :---: | --- |
-| **Godot Engine 4.6 & godot-cpp** | https://github.com/godotengine/godot | **MIT** | V4 统一原生应用底座、Jolt 物理引擎与 C++ GDExtension 接口 |
+| **Godot Engine 4.6 & godot-cpp** | https://github.com/godotengine/godot | **MIT** | V2.0 统一原生应用底座、Jolt 物理引擎与 C++ GDExtension 接口 |
 | **godot-gaussian-splatting (GDGS)** | https://github.com/ReconWorldLab/godot-gaussian-splatting | **MIT** | `CompositorEffect` 深度遮挡、体素碰撞与近似重打光参考 |
 | **pocketsplat** | https://github.com/Artemarius/pocketsplat | **MIT** | Android Adreno/Mali 原生 Vulkan 排序与移动端优化参考 |
 | **Niantic SPZ** | https://github.com/nianticlabs/spz | **MIT** | C++ 原生高速 `.spz` 格式读写库 |

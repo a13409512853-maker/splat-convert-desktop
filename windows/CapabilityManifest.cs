@@ -108,7 +108,7 @@ static class CapabilityManifest {
     internal static string ToHelpJson() {
         var doc = new Dictionary<string, object> {
             { "app", "Splat Convert Desktop" },
-            { "version", "3.2.3" },
+            { "version", "1.9.0" },
             { "schemaVersion", SchemaVersion },
             { "bundledEngineVersion", EngineTargetVersion },
             { "portableMode", true },
